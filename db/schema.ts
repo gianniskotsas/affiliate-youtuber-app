@@ -2,8 +2,7 @@ import { pgTable, uuid, text, timestamp, json } from "drizzle-orm/pg-core";
 
 // Users table to store YouTuber profiles
 export const users = pgTable("users", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  clerkId: text("clerk_id").unique().notNull(), // Clerk authentication ID
+  id: text("id").primaryKey(),
   email: text("email").notNull(),
   username: text("username").unique().notNull(),
   profilePicture: text("profile_picture"), // URL to profile image
@@ -14,13 +13,11 @@ export const users = pgTable("users", {
 // Videos table to store YouTube video details
 export const videos = pgTable("videos", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id").notNull().references(() => users.id),
+  userId: text("user_id").notNull().references(() => users.id),
   videoTitle: text("video_title").notNull(),
   videoSlug: text("video_slug").unique().notNull(), // URL-friendly slug
-  videoDescription: text("video_description"),
-  videoThumbnail: text("video_thumbnail"), // URL to thumbnail image
+  videoThumbnail: text("video_thumbnail").notNull(), // URL to thumbnail image
   videoShortLink: text("video_short_link").notNull(), // Dub.co shortened link
-  videoQRCode: text("video_qr_code").notNull(), // QR Code Image URL
   createdAt: timestamp("created_at").defaultNow(),
 });
 

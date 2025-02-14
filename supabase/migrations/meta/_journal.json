@@ -15,6 +15,27 @@
       "when": 1739382560167,
       "tag": "0001_even_boomerang",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1739544480610,
+      "tag": "0002_spotty_puck",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1739548719417,
+      "tag": "0003_big_garia",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1739550234775,
+      "tag": "0004_peaceful_xorn",
+      "breakpoints": true
     }
   ]
 }
