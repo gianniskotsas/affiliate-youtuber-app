@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { videos, products } from "@/db/schema";
+import { products } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
 import { Dub } from "dub";
 
 const dub = new Dub({

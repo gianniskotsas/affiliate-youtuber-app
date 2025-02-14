@@ -5,7 +5,6 @@ import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { useAuth, useUser } from "@clerk/nextjs";
 import Image from "next/image";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
-import { Button } from "@/components/ui/button";
 import AddVideoModal from "@/components/dashboard/create-video-button";
 import { SelectVideo } from "@/db/schema";
 

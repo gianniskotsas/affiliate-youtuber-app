@@ -1,9 +1,7 @@
 import { useState, useEffect } from "react";
-import { Dialog, DialogClose, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -27,14 +25,12 @@ interface AddVideoModalProps {
 export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
-  const router = useRouter();
+  // const router = useRouter();
   const supabase = getSupabaseClient()
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: { videoTitle: "", videoSlug: "", videoThumbnail: "" },
   });
-
-  const [isOpenStatus, setIsOpenStatus] = useState(isOpen);
 
   const handleSubmit = async (values: FormValues) => {
     setIsLoadingCreate(true);
@@ -55,8 +51,7 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
       },
       body: JSON.stringify(requestData)
     });
-    const data = await response.json();
-    console.log(data);
+
     setIsLoadingCreate(false);
     onClose();
     // router.push(`/video/${data.videoSlug}`);
