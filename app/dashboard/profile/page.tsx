@@ -151,7 +151,6 @@ export default function EditVideoPage() {
   }, [userDb?.profilePicture]);
 
   if (!isLoaded) return <div>Loading...</div>;
-  if (!userId) return null;
 
   async function onSubmit(data: ProfileFormValues) {
     try {

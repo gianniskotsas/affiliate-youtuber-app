@@ -24,13 +24,16 @@ export default function Page() {
     socialAccounts: [],
   });
 
-  if (!userId) {
-    router.push("/sign-in");
-    return null;
-  }
-
   useEffect(() => {
+
+    if (!userId) {
+      router.push("/sign-in");
+    }
+    
     if (isLoaded && userId && user) {
+
+  
+
       setLoading(true);
       fetch("/api/user/check-user", {
         method: "POST",
