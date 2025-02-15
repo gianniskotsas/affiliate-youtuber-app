@@ -8,7 +8,7 @@ import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
 import { supabase } from "@/lib/supabase";
-
+import Image from "next/image";
 const formSchema = z.object({
   videoTitle: z.string().min(3, "Title must be at least 3 characters"),
   videoSlug: z.string().min(3, "Slug must be at least 3 characters"),
@@ -128,7 +128,7 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
                 <FormControl>
                   <Input type="file" accept="image/*" onChange={handleThumbnailChange} />
                 </FormControl>
-                {preview && <img src={preview} alt="Preview" className="mt-2 w-32 h-32 object-cover" />}
+                {preview && <Image src={preview} alt="Preview" className="mt-2 w-32 h-32 object-cover" width={128} height={128} />}
                 <FormMessage />
               </FormItem>
             )} />

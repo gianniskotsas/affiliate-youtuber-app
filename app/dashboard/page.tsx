@@ -14,6 +14,15 @@ export default function Page() {
   const { isLoaded, userId } = useAuth();
   const { user } = useUser();
   const [videos, setVideos] = useState<SelectVideo[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [userDb, setUserDb] = useState(null);
+  const [profileImage, setProfileImage] = useState("");
+  const [form, setForm] = useState({
+    username: "",
+    email: "",
+    bio: "",
+    socialAccounts: [],
+  });
 
   if (!userId) {
     router.push("/sign-in");
@@ -22,6 +31,7 @@ export default function Page() {
 
   useEffect(() => {
     if (isLoaded && userId && user) {
+      setLoading(true);
       fetch("/api/user/check-user", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -29,10 +39,25 @@ export default function Page() {
           userId,
           email: user.primaryEmailAddress?.emailAddress,
           username: user.username ?? user.firstName,
+          profilePicture: user.imageUrl,
         }),
-      }).catch((error) => {
-        console.error("Failed to ensure user is in DB:", error);
-      });
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          setUserDb(data);
+          setProfileImage(data.profilePicture);
+          console.log(data);
+          setForm({
+            username: data.username ?? "",
+            email: data.email ?? "",
+            bio: data.bio ?? "",
+            socialAccounts: Array.isArray(data.socialAccounts)
+              ? data.socialAccounts
+              : [],
+          });
+        })
+        .catch((error) => console.error("Failed to fetch user:", error))
+        .finally(() => setLoading(false));
     }
   }, [isLoaded, userId, user]);
 
@@ -44,10 +69,6 @@ export default function Page() {
         .catch((error) => console.error("Failed to fetch videos:", error));
     }
   }, [userId]);
-
-  if (!isLoaded) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <SidebarProvider>

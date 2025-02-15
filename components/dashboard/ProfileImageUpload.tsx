@@ -6,9 +6,15 @@ import FilePondPluginImagePreview from "filepond-plugin-image-preview";
 import "filepond/dist/filepond.min.css";
 import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { useToast } from "@/hooks/use-toast";
-import { Dialog, DialogContent, DialogTrigger, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import {
+  Dialog,
+  DialogContent,
+  DialogTrigger,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Button } from "../ui/button";
-
+import Image from "next/image";
 // Register FilePond Plugin
 registerPlugin(FilePondPluginImagePreview);
 
@@ -17,21 +23,23 @@ type ProfileImageUploadProps = {
   existingImage?: string | null;
 };
 
-export default function ProfileImageUpload({ userId, existingImage }: ProfileImageUploadProps) {
+export default function ProfileImageUpload({
+  userId,
+  existingImage,
+}: ProfileImageUploadProps) {
   const [imageUrl, setImageUrl] = useState(existingImage || null);
   const [isUploading, setIsUploading] = useState(false); // Prevents duplicate uploads
   const { toast } = useToast();
 
-  async function handleFileUpload(fileItems: any[]) {
-    if (fileItems.length === 0 || isUploading) return; // Prevent multiple requests
+  async function handleFileUpload(files: File[]) {
+    if (files.length === 0 || isUploading) return;
 
-    const file = fileItems[0].file as File;
+    const file = files[0];
     if (!file) return;
 
-    setIsUploading(true); // Set uploading state to true
+    setIsUploading(true);
 
     try {
-      // Prepare form data for API request
       const formData = new FormData();
       formData.append("userId", userId);
       formData.append("file", file);
@@ -39,7 +47,6 @@ export default function ProfileImageUpload({ userId, existingImage }: ProfileIma
         formData.append("existingImage", existingImage);
       }
 
-      // Send file to API route
       const response = await fetch("/api/user/upload-profile-image", {
         method: "POST",
         body: formData,
@@ -50,25 +57,31 @@ export default function ProfileImageUpload({ userId, existingImage }: ProfileIma
       }
 
       const data = await response.json();
-      setImageUrl(data.imageUrl); // Update UI with new image
-      toast({ title: "Profile image updated successfully!" });
+      setImageUrl(data.imageUrl);
+      toast({
+        title: "Profile Image Updated",
+        description: "Your profile image has been updated successfully!",
+      });
     } catch (error) {
       console.error("Upload error:", error);
       toast({ title: "Failed to upload image", variant: "destructive" });
     } finally {
-      setIsUploading(false); // Reset uploading state
+      setIsUploading(false);
     }
   }
 
   return (
     <div className="flex items-center space-x-4 mt-8">
       {/* Profile Image Display */}
-      <div className="w-24 h-24 flex items-center justify-center rounded-full border border-gray-800 overflow-hidden">
+      <div className="w-24 h-24 flex items-center justify-center rounded-full border-2 border-gray-800 overflow-hidden">
         {imageUrl ? (
-          <img
+          <Image
             src={imageUrl}
             alt="Profile"
             className="w-full h-full object-cover"
+            width={150}
+            height={150}
+            quality={100}
           />
         ) : (
           <span className="text-gray-500 text-sm">No Image</span>
@@ -92,7 +105,10 @@ export default function ProfileImageUpload({ userId, existingImage }: ProfileIma
             allowMultiple={false}
             maxFiles={1}
             acceptedFileTypes={["image/*"]}
-            onupdatefiles={(fileItems) => handleFileUpload(fileItems)}
+            onupdatefiles={(fileItems) => {
+              const files = fileItems.map((fileItem) => fileItem.file as File);
+              handleFileUpload(files);
+            }}
             className="border border-gray-300 rounded-lg p-4"
           />
         </DialogContent>
