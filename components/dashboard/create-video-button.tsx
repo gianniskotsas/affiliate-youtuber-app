@@ -7,7 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormField, FormItem, FormLabel, FormControl, FormMessage } from "@/components/ui/form";
-import { getSupabaseClient } from "@/lib/supabase";
+import { supabase } from "@/lib/supabase";
 
 const formSchema = z.object({
   videoTitle: z.string().min(3, "Title must be at least 3 characters"),
@@ -26,7 +26,6 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
   const router = useRouter();
-  const supabase = getSupabaseClient()
   const form = useForm({
     resolver: zodResolver(formSchema),
     defaultValues: { videoTitle: "", videoSlug: "", videoThumbnail: "" },
