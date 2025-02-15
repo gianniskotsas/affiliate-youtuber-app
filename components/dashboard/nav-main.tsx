@@ -8,6 +8,10 @@ import {
   Frame,
   PieChart,
   Map,
+  Package,
+  Video,
+  User,
+  ChartBar,
   type LucideIcon,
 } from "lucide-react"
 
@@ -27,6 +31,8 @@ import {
   SidebarMenuItem,
   useSidebar,
 } from "@/components/ui/sidebar"
+import Link from "next/link"
+import { usePathname } from "next/navigation"
 
 export function NavMain({
   projects,
@@ -38,6 +44,9 @@ export function NavMain({
   }[]
 }) {
   const { isMobile } = useSidebar()
+  const pathname = usePathname()
+
+  console.log("pathname is: ",pathname)
 
   // Helper function to get icon component
   const getIcon = (iconName: string) => {
@@ -45,32 +54,38 @@ export function NavMain({
       Frame,
       PieChart,
       Map,
+      User,
       Folder,
       Forward,
+      ChartBar,
       MoreHorizontal,
       Trash2,
+      Video,
+      Package,
     }
     return icons[iconName as keyof typeof icons]
   }
 
   return (
-    <SidebarGroup className="group-data-[collapsible=icon]:hidden">
+    <SidebarGroup className="group-data-[collapsible=icon]:hidden mt-4">
       <SidebarMenu>
         {projects.map((item) => {
           const IconComponent = getIcon(item.icon)
+          const isActive = pathname === "/dashboard" && item.url === "/dashboard" || pathname === `/dashboard/${item.name.toLowerCase()}`
           return (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
-                <a href={item.url}>
+                <Link 
+                  href={item.url} 
+                  className={isActive ? "bg-blue-100 text-blue-800 hover:bg-blue-200" : ""}
+                >
                   <IconComponent />
                   <span>{item.name}</span>
-                </a>
+                </Link>
               </SidebarMenuButton>
-   
             </SidebarMenuItem>
           )
         })}
-       
       </SidebarMenu>
     </SidebarGroup>
   )

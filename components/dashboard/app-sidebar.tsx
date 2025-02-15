@@ -1,6 +1,5 @@
 import * as React from "react"
 import { GalleryVerticalEnd } from "lucide-react"
-
 import { NavMain } from "@/components/dashboard/nav-main"
 import { SidebarOptInForm } from "@/components/dashboard/sidebar-opt-in-form"
 import {
@@ -18,18 +17,23 @@ const data = {
   projects: [
     {
       name: "Videos",
-      url: "#",
-      icon: "Frame"
+      url: "/dashboard",
+      icon: "Video"
     },
     {
       name: "Products",
       url: "#",
-      icon: "PieChart"
+      icon: "Package"
+    },
+    {
+      name: "Profile",
+      url: "/dashboard/profile",
+      icon: "User"
     },
     {
       name: "Analytics",
       url: "#",
-      icon: "Map"
+      icon: "ChartBar"
     },
   ]
 }
@@ -55,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain projects={data.projects} />
+        <NavMain projects={data.projects}/>
       </SidebarContent>
       <SidebarFooter>
         <div className="p-1">
