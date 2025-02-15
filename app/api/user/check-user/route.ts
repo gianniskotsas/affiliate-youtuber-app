@@ -25,5 +25,5 @@ export async function POST(request: Request) {
   }
 
   // Return an OK
-  return NextResponse.json({ status: "ok" });
+  return NextResponse.json(existingUser[0] || { status: "ok" });
 }

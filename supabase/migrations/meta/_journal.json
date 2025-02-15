@@ -36,6 +36,20 @@
       "when": 1739550234775,
       "tag": "0004_peaceful_xorn",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1739618445383,
+      "tag": "0005_short_iron_lad",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1739621261907,
+      "tag": "0006_optimal_silver_samurai",
+      "breakpoints": true
     }
   ]
 }

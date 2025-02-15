@@ -1,0 +1,1 @@
+ALTER TABLE "users" ALTER COLUMN "social_accounts" SET DEFAULT '[{"name":"X","url":""},{"name":"YouTube","url":""},{"name":"Instagram","url":""},{"name":"TikTok","url":""}]'::json;

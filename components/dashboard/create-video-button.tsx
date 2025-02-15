@@ -25,7 +25,7 @@ interface AddVideoModalProps {
 export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
   const [preview, setPreview] = useState<string | null>(null);
   const [isLoadingCreate, setIsLoadingCreate] = useState(false);
-  // const router = useRouter();
+  const router = useRouter();
   const supabase = getSupabaseClient()
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -51,10 +51,11 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
       },
       body: JSON.stringify(requestData)
     });
+    const data = await response.json();
 
     setIsLoadingCreate(false);
     onClose();
-    // router.push(`/video/${data.videoSlug}`);
+    router.push(`/dashboard/video/${data.videoId}`);
   };
 
   useEffect(() => {

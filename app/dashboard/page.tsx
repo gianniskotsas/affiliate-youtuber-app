@@ -7,11 +7,18 @@ import Image from "next/image";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import AddVideoModal from "@/components/dashboard/create-video-button";
 import { SelectVideo } from "@/db/schema";
+import { useRouter } from "next/navigation";
 
 export default function Page() {
+  const router = useRouter();
   const { isLoaded, userId } = useAuth();
   const { user } = useUser();
   const [videos, setVideos] = useState<SelectVideo[]>([]);
+
+  if (!userId) {
+    router.push("/sign-in");
+    return null;
+  }
 
   useEffect(() => {
     if (isLoaded && userId && user) {
@@ -42,10 +49,6 @@ export default function Page() {
     return <div>Loading...</div>;
   }
 
-  if (!userId) {
-    return <div>Sign in to view this page</div>;
-  }
-
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -53,14 +56,13 @@ export default function Page() {
         <div className="relative min-h-full bg-sidebar pt-px md:rounded-tl-2xl md:border md:border-b-0 md:border-r-0 md:border-neutral-200/80 md:bg-white">
           <div className="bg-sidebar md:bg-white">
             <div className="mx-auto w-full max-w-screen-xl px-3 lg:px-10 mt-3 md:mt-6 md:py-3">
+              <h1 className="text-xl font-semibold leading-7 text-neutral-900 md:text-2xl">
+                Videos
+              </h1>
               <div className="flex flex-row-reverse items-center justify-between  gap-4">
                 <AddVideoModal isOpen={false} onClose={() => {}} />
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h1 className="text-xl font-semibold leading-7 text-neutral-900 md:text-2xl">
-                      Videos
-                    </h1>
-                  </div>
+                  <div className="flex items-center gap-2"></div>
                 </div>
               </div>
 
