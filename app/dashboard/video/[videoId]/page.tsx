@@ -8,13 +8,8 @@ import Image from "next/image";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import AddVideoModal from "@/components/dashboard/create-video-button";
 import { SelectVideo } from "@/db/schema";
-import {
-    AndroidMockup,
-    AndroidTabMockup,
-    IPhoneMockup,
-    IPadMockup,
-  }
-  from "react-device-mockup"
+import MockupPage from "@/components/dashboard/iphone-mockup";
+
 
 export default function EditVideoPage() {
   const router = useRouter();
@@ -57,20 +52,11 @@ export default function EditVideoPage() {
               <h1 className="text-xl font-semibold leading-7 text-neutral-900 md:text-2xl">
                 Edit Video Page
               </h1>
-              <div className="flex flex-row items-center justify-between  gap-4">
-                <div className="bg-red-200 w-full">
+              <div className="flex flex-row gap-4 h-full mt-8">
+                <div className="w-full">
                   <div className="flex items-center gap-2">f</div>
                 </div>
-                <IPhoneMockup
-                  screenWidth={300}
-                  screenType={"notch"}
-                  frameColor={"#000000"}
-                  hideStatusBar
-                  transparentNavBar
-                  className="hidden sm:block"
-                  >
-
-                  </IPhoneMockup>
+                <MockupPage />
               </div>
             </div>
           </div>

@@ -13,6 +13,8 @@ import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useFieldArray, useForm } from "react-hook-form";
 import React from "react";
+import { social } from "@/lib/utils";
+import { IconType } from "react-icons/lib";
 
 import {
   Form,
@@ -34,9 +36,6 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
-import { FaXTwitter } from "react-icons/fa6";
-import { IconType } from "react-icons/lib";
 import ProfileImageUpload from "@/components/dashboard/ProfileImageUpload";
 
 const profileFormSchema = z.object({
@@ -57,33 +56,6 @@ const profileFormSchema = z.object({
 });
 
 type ProfileFormValues = z.infer<typeof profileFormSchema>;
-
-const iconMap = {
-  FaXTwitter: FaXTwitter,
-  FaYoutube: FaYoutube,
-  FaTiktok: FaTiktok,
-  FaInstagram: FaInstagram,
-};
-
-// Defining the icon type according to social selection
-const social: { name: string; icon: IconType }[] = [
-  {
-    name: "X",
-    icon: FaXTwitter,
-  },
-  {
-    name: "YouTube",
-    icon: FaYoutube,
-  },
-  {
-    name: "TikTok",
-    icon: FaTiktok,
-  },
-  {
-    name: "Instagram",
-    icon: FaInstagram,
-  },
-];
 
 export default function EditVideoPage() {
   const router = useRouter();

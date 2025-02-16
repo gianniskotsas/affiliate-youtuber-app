@@ -71,7 +71,7 @@ export function NavMain({
       <SidebarMenu>
         {projects.map((item) => {
           const IconComponent = getIcon(item.icon)
-          const isActive = pathname === "/dashboard" && item.url === "/dashboard" || pathname === `/dashboard/${item.name.toLowerCase()}`
+          const isActive = (pathname === "/dashboard" && item.url === "/dashboard") || pathname === `/dashboard/${item.name.toLowerCase()}` || (item.url === "/dashboard" && pathname.startsWith("/dashboard/video/"))
           return (
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>

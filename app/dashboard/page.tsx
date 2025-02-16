@@ -8,6 +8,7 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import AddVideoModal from "@/components/dashboard/create-video-button";
 import { SelectVideo } from "@/db/schema";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function Page() {
   const router = useRouter();
@@ -25,15 +26,11 @@ export default function Page() {
   });
 
   useEffect(() => {
-
     if (!userId) {
       router.push("/sign-in");
     }
-    
+
     if (isLoaded && userId && user) {
-
-  
-
       setLoading(true);
       fetch("/api/user/check-user", {
         method: "POST",
@@ -93,9 +90,10 @@ export default function Page() {
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mt-6">
                 {videos.length > 0 ? (
                   videos.map((video) => (
-                    <div
+                    <Link
+                      href={`/dashboard/video/${video.id}`}
                       key={video.id}
-                      className="rounded-lg border bg-card text-card-foreground shadow-sm relative overflow-hidden"
+                      className="group rounded-lg border bg-card text-card-foreground shadow-sm relative overflow-hidden border-opacity-10 border-primary"
                       style={{ aspectRatio: "16/9" }}
                     >
                       <Image
@@ -104,13 +102,28 @@ export default function Page() {
                         fill
                         className="object-cover"
                       />
-                      <div className="absolute inset-0 bg-black/40"></div>
-                      <div className="absolute bottom-0 p-6 w-full">
-                        <h3 className="text-lg font-semibold text-white">
-                          {video.videoTitle}
-                        </h3>
+                      <div className="absolute top-0 right-0 p-2 inset-0 group-hover:bg-black/40 transition-all duration-200"></div>
+                      <div className="absolute group-hover:block hidden top-0 right-0 bg-neutral-50 rounded-bl-xl border-neutral-50/60 border-l-4 border-b-4 z-50 p-1.5">
+                        {" "}
+                        <span className="text-neutral-60/90">
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2.5}
+                            stroke="currentColor"
+                            className="size-3"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
+                            />
+                          </svg>
+                        </span>
                       </div>
-                    </div>
+               
+                    </Link>
                   ))
                 ) : (
                   <p className="text-center text-gray-500">No videos found.</p>
