@@ -44,7 +44,8 @@ export const products = pgTable("products", {
     .notNull()
     .references(() => videos.id),
   productName: text("product_name").notNull(),
-  productLink: text("product_link").notNull(), // Affiliate link (can be shortened with Dub.co)
+  shortLink: text("short_link").notNull(), // Affiliate link (can be shortened with Dub.co)
+  originalLink: text("original_link").notNull(), // Original affiliate link
   imageUrl: text("image_url"), // URL to product image
   createdAt: timestamp("created_at").defaultNow(),
 });

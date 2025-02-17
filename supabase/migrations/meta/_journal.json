@@ -50,6 +50,13 @@
       "when": 1739621261907,
       "tag": "0006_optimal_silver_samurai",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1739818880668,
+      "tag": "0007_cuddly_robin_chapel",
+      "breakpoints": true
     }
   ]
 }
