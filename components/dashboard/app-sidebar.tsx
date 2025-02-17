@@ -1,7 +1,7 @@
-import * as React from "react"
-import { GalleryVerticalEnd } from "lucide-react"
-import { NavMain } from "@/components/dashboard/nav-main"
-import { SidebarOptInForm } from "@/components/dashboard/sidebar-opt-in-form"
+import * as React from "react";
+import { GalleryVerticalEnd } from "lucide-react";
+import { NavMain } from "@/components/dashboard/nav-main";
+import { SidebarOptInForm } from "@/components/dashboard/sidebar-opt-in-form";
 import {
   Sidebar,
   SidebarContent,
@@ -11,32 +11,33 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import { UserButton } from "@clerk/nextjs";
 
 const data = {
   projects: [
     {
       name: "Videos",
       url: "/dashboard",
-      icon: "Video"
+      icon: "Video",
     },
     {
       name: "Products",
       url: "#",
-      icon: "Package"
+      icon: "Package",
     },
     {
       name: "Profile",
       url: "/dashboard/profile",
-      icon: "User"
+      icon: "User",
     },
     {
       name: "Analytics",
       url: "#",
-      icon: "ChartBar"
+      icon: "ChartBar",
     },
-  ]
-}
+  ],
+};
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   return (
@@ -45,21 +46,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton size="lg" asChild>
-              <a>
+              <div className="flex justify-between items-center hover:bg-transparent focus:bg-transparent">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <GalleryVerticalEnd className="size-4" />
                 </div>
-                <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-semibold">Documentation</span>
-                  <span className="">v1.0.0</span>
+                <div className="flex border border-neutral-800 rounded-full justify-center items-center">
+                  <UserButton />
                 </div>
-              </a>
+              </div>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain projects={data.projects}/>
+        <NavMain projects={data.projects} />
       </SidebarContent>
       <SidebarFooter>
         <div className="p-1">
@@ -68,5 +68,5 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarFooter>
       <SidebarRail />
     </Sidebar>
-  )
+  );
 }
