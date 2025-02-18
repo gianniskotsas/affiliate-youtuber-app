@@ -3,12 +3,13 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { useUserDb } from "@/context/UserDbContext";
+import { auth } from "@clerk/nextjs/server";
 
 export async function POST(req: Request) {
   try {
     // Retrieve user authentication from context
-    const { userDb } = useUserDb();
-    if (!userDb || !userDb.id) {
+    const { userId } = await auth();
+    if (!userId) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
