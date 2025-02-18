@@ -19,8 +19,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-
+} from "@/components/ui/dropdown-menu";
+import { Pencil, QrCode, Trash2 } from "lucide-react";
 
 const products = [
   {
@@ -165,7 +165,7 @@ export default function EditVideoPage() {
                         products.map((product) => (
                           <div
                             key={product.id}
-                            className="border rounded-md shadow-sm p-4 relative flex flex-col sm:flex-row items-start sm:items-center gap-4"
+                            className="border rounded-2xl shadow-sm p-4 relative flex flex-col sm:flex-row items-start w-[400px] sm:w-[600px] sm:items-center gap-12"
                           >
                             {product.imageUrl && (
                               <div className="flex-shrink-0">
@@ -173,29 +173,28 @@ export default function EditVideoPage() {
                                   src={product.imageUrl}
                                   alt={product.productName}
                                   quality={40}
-                                  className="w-[160px] sm:w-[270px] rounded-md"
-                                  width={160}
-                                  height={90}
+                                  className="w-[80px] sm:w-[120px] rounded-md"
+                                  width={80}
+                                  height={120}
                                 />
                               </div>
                             )}
 
-
-                            <div className="flex flex-col justify-between h-[85px] sm:h-[140px]">
-                              
+                            <div className="flex flex-col justify-between max-h-[85px] sm:max-h-[140px]">
                               {/* Container for product name and description */}
-                              <div className="flex flex-col mb-2">
+                              {/* <div className="flex flex-col mb-2">
                                 <h3 className="text-md font-semibold">
                                   {product.productName}
                                 </h3>
                                 <p className="text-sm text-gray-500">
                                   {product.description}
                                 </p>
-                              </div>
+                              </div> */}
 
                               {/* Container for product link */}
                               <div className="flex flex-col items-start gap-2">
                                 <Button
+                                  variant="secondary"
                                   className="p-2 rounded-md flex items-center gap-2.5"
                                   onClick={() =>
                                     navigator.clipboard.writeText(
@@ -203,7 +202,7 @@ export default function EditVideoPage() {
                                     )
                                   }
                                 >
-                                  <p className="text-sm text-neutral-200">
+                                  <p className="text-sm text-neutral-700 font-semibold">
                                     {product.shortLink}
                                   </p>
                                   <svg
@@ -216,34 +215,67 @@ export default function EditVideoPage() {
                                     <path d="M15 5.25a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963A5.23 5.23 0 0 0 17.25 7.5h-1.875A.375.375 0 0 1 15 7.125V5.25ZM4.875 6H6v10.125A3.375 3.375 0 0 0 9.375 19.5H16.5v1.125c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625V7.875C3 6.839 3.84 6 4.875 6Z" />
                                   </svg>
                                 </Button>
-                                <Link className="ml-2 text-xs text-gray-600 underline flex flex-row items-center gap-1" href={product.originalLink}>
-                                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
-                                    <path strokeLinecap="round" strokeLinejoin="round" d="m16.49 12 3.75 3.75m0 0-3.75 3.75m3.75-3.75H3.74V4.499" />
+                                <Link
+                                  className="ml-2 text-xs text-gray-600 hover:underline flex flex-row items-center gap-1"
+                                  href={product.originalLink}
+                                >
+                                  <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill="none"
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={2}
+                                    stroke="currentColor"
+                                    className="size-4"
+                                  >
+                                    <path
+                                      strokeLinecap="round"
+                                      strokeLinejoin="round"
+                                      d="m16.49 12 3.75 3.75m0 0-3.75 3.75m3.75-3.75H3.74V4.499"
+                                    />
                                   </svg>
                                   <span>{product.originalLink}</span>
                                 </Link>
                               </div>
-
                             </div>
 
-                          <div className="absolute top-2 right-2">
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button className="p-2 rounded-md flex items-center gap-2.5">
-                                  Edit
-                                </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent>
-                                <DropdownMenuItem>
-                                  <Link href={`/edit/${product.id}`}>Edit Product</Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Link href={`/delete/${product.id}`}>Delete Product</Link>
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
-                          </div>
-
+                            <div className="absolute top-2 right-2">
+                              <DropdownMenu>
+                                <DropdownMenuTrigger asChild>
+                                  <Button
+                                    variant="ghost"
+                                    className="p-1 rounded-md flex items-center gap-2.5 hover:rounded-2xl"
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      strokeWidth={1.5}
+                                      stroke="currentColor"
+                                      className="size-6"
+                                    >
+                                      <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                                      />
+                                    </svg>
+                                  </Button>
+                                </DropdownMenuTrigger>
+                                <DropdownMenuContent>
+                                  <DropdownMenuItem>
+                                      <Pencil size={16} />
+                                      Edit
+                                  </DropdownMenuItem>
+                                  <DropdownMenuItem>
+                                      <QrCode size={16} /> Get QR
+                                    </DropdownMenuItem>
+                                  <DropdownMenuItem className="text-red-500 focus:bg-red-50 focus:text-red-600">
+                                      <Trash2 size={16} />
+                                      Delete
+                                  </DropdownMenuItem>
+                                </DropdownMenuContent>
+                              </DropdownMenu>
+                            </div>
                           </div>
                         ))
                       ) : (
