@@ -23,7 +23,8 @@ export async function POST(req: Request) {
     const newProduct = await db.insert(products).values({
       videoId,
       productName,
-      productLink: shortLink,
+			originalLink,
+      shortLink,
       imageUrl,
     }).execute();
 
