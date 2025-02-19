@@ -57,6 +57,20 @@
       "when": 1739818880668,
       "tag": "0007_cuddly_robin_chapel",
       "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1739973804906,
+      "tag": "0008_mushy_marten_broadcloak",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1739985653415,
+      "tag": "0009_first_mac_gargan",
+      "breakpoints": true
     }
   ]
 }

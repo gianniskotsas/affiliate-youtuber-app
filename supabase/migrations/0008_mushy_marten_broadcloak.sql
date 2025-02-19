@@ -1,0 +1,1 @@
+ALTER TABLE "videos" ADD COLUMN "video_qr_code_url" text;

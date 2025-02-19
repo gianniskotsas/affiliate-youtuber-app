@@ -77,7 +77,7 @@ export function NavMain({
               <SidebarMenuButton asChild>
                 <Link 
                   href={item.url} 
-                  className={isActive ? "bg-blue-100 text-blue-800 hover:bg-blue-200" : ""}
+                  className={isActive ? "bg-sky-100 text-sky-800 hover:bg-sky-200" : ""}
                 >
                   <IconComponent />
                   <span>{item.name}</span>

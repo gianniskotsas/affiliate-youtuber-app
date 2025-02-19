@@ -35,8 +35,8 @@ export default function MockupPage({
           </p>
         </div>
       ) : (
-        <ScrollArea className="h-full w-full">
-          <div className="flex flex-col items-center pt-12 pb-8 h-full w-full bg-neutral-100">
+        <ScrollArea className="h-full w-full bg-neutral-100">
+          <div className="flex flex-col items-center pt-12 pb-8 h-full w-full">
             <div className="relative h-20 w-20 border-2 border-neutral-700 rounded-full">
               <Image
                 src={userDb.profilePicture || "/path/to/placeholder.png"}
@@ -69,9 +69,8 @@ export default function MockupPage({
                     )}
                 </Link>
               ))}
-              
             </div>
-            
+
             <div className="mt-8 w-full px-4">
               {products.length > 0 ? (
                 products.map((product) => (

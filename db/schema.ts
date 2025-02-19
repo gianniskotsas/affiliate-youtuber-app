@@ -34,6 +34,7 @@ export const videos = pgTable("videos", {
   videoSlug: text("video_slug").unique().notNull(), // URL-friendly slug
   videoThumbnail: text("video_thumbnail").notNull(), // URL to thumbnail image
   videoShortLink: text("video_short_link").notNull(), // Dub.co shortened link
+  videoQrCodeUrl: text("video_qr_code_url"), // URL to QR code image
   createdAt: timestamp("created_at").defaultNow(),
 });
 
@@ -50,15 +51,7 @@ export const products = pgTable("products", {
   createdAt: timestamp("created_at").defaultNow(),
 });
 
-// Click Analytics table to track user interactions
-export const clickAnalytics = pgTable("click_analytics", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  productId: uuid("product_id")
-    .notNull()
-    .references(() => products.id),
-  clickCount: text("click_count").default("0"),
-  createdAt: timestamp("created_at").defaultNow(),
-});
+
 
 // Types for inserting and selecting records
 export type InsertUser = typeof users.$inferInsert;
@@ -67,5 +60,3 @@ export type InsertVideo = typeof videos.$inferInsert;
 export type SelectVideo = typeof videos.$inferSelect;
 export type InsertProduct = typeof products.$inferInsert;
 export type SelectProduct = typeof products.$inferSelect;
-export type InsertClickAnalytics = typeof clickAnalytics.$inferInsert;
-export type SelectClickAnalytics = typeof clickAnalytics.$inferSelect;

@@ -9,7 +9,7 @@ const dub = new Dub({
   token: process.env.DUB_API_KEY,
 });
 
-export async function DELETE(req: Request) {
+export async function POST(req: Request) {
   try {
     // Authenticate user
     const { userId } = await auth();
@@ -28,8 +28,11 @@ export async function DELETE(req: Request) {
       return NextResponse.json({ error: "Invalid shortLink format" }, { status: 400 });
     }
 
-    const domain = product.shortLink.substring(0, lastSlashIndex + 1);
+    const domain = product.shortLink.substring(8, lastSlashIndex);
     const key = product.shortLink.substring(lastSlashIndex + 1);
+
+    console.log("domain", domain);
+    console.log("key", key);
 
     // Fetch link info to retrieve link ID from Dub.co
     const linkInfoResponse = await dub.links.get({
