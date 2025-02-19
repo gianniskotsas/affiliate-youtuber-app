@@ -48,6 +48,7 @@ export const products = pgTable("products", {
   shortLink: text("short_link").notNull(), // Affiliate link (can be shortened with Dub.co)
   originalLink: text("original_link").notNull(), // Original affiliate link
   imageUrl: text("image_url"), // URL to product image
+  productDescription: text("product_description"), // Description of the product
   createdAt: timestamp("created_at").defaultNow(),
 });
 

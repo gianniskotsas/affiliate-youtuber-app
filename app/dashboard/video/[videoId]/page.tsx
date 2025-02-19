@@ -31,7 +31,7 @@ import {
 import { Pencil, QrCode, Trash2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import QrCodeModal from "@/components/dashboard/qr-code-modal";
-
+import CreateProductButton from "@/components/dashboard/create-product-button";
 export default function EditVideoPage() {
   const router = useRouter();
   const { videoId } = useParams();
@@ -55,8 +55,7 @@ export default function EditVideoPage() {
     }
   }, [videoId]);
 
-  // Fetch products for the video
-  useEffect(() => {
+  const fetchProducts = async () => {
     if (videoId) {
       fetch(`/api/products/get-products`, {
         method: "POST",
@@ -67,7 +66,12 @@ export default function EditVideoPage() {
         .then((data) => setProducts(data))
         .catch((error) => console.error("Failed to fetch products:", error));
     }
-  }, [videoId]);
+  };
+
+  // Fetch products for the video
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
   if (!video) return <div>Loading...</div>;
   if (!videoId) return <div>Invalid video ID</div>;
@@ -183,6 +187,7 @@ export default function EditVideoPage() {
                           Add, edit, and remove affiliate products from your
                           video.
                         </p>
+                        <CreateProductButton videoId={videoId as string} onProductAdded={fetchProducts} />
                       </div>
 
                       {/* Container for affiliate product cards */}

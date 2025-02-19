@@ -13,19 +13,21 @@ export async function POST(req: Request) {
     const { userId } = await auth();
     if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
-    const { videoId, productName, productLink, imageUrl } = await req.json();
+    const { videoId, productName, originalLink, productDescription, imageUrl } = await req.json();
 
+    console.log(videoId, productName, originalLink, productDescription, imageUrl);
     // Shorten URL using Dub.co
-    const shortLinkResult = await dub.links.create({ url: productLink });
-    const shortLink = shortLinkResult.url;
+    const shortLinkResult = await dub.links.create({ url: originalLink });
+    const shortLink = shortLinkResult.shortLink;
 
     // Insert new product record
     const newProduct = await db.insert(products).values({
       videoId,
       productName,
-      originalLink: productLink,
+      originalLink,
       shortLink,
       imageUrl,
+      productDescription,
     }).execute();
 
     return NextResponse.json(newProduct, { status: 201 });

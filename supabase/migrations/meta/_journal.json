@@ -71,6 +71,13 @@
       "when": 1739985653415,
       "tag": "0009_first_mac_gargan",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1739993720556,
+      "tag": "0010_bored_black_queen",
+      "breakpoints": true
     }
   ]
 }
