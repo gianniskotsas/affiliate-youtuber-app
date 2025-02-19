@@ -69,7 +69,7 @@ export default function EditVideoPage() {
     }
   }, [videoId]);
 
-  if (!video) return <div>Loading...</div>; 
+  if (!video) return <div>Loading...</div>;
   if (!videoId) return <div>Invalid video ID</div>;
   if (!userId) return null;
 
@@ -168,10 +168,7 @@ export default function EditVideoPage() {
                             Generate a QR code for your profile.
                           </p>
                         </div>
-                        <QrCodeModal
-                          url={video?.videoShortLink}
-                          videoId={videoId as string}
-                        />
+                        <QrCodeModal url={video?.videoShortLink} />
                       </div>
                     </section>
 
