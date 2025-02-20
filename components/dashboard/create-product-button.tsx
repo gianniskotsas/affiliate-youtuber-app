@@ -43,8 +43,14 @@ const productSchema = z.object({
 
 type ProductFormData = z.infer<typeof productSchema>;
 
-const CreateProductButton = ({ videoId, onProductAdded }: { videoId: string; onProductAdded: () => void }) => {
-    const { toast } = useToast();
+const CreateProductButton = ({
+  videoId,
+  onProductAdded,
+}: {
+  videoId: string;
+  onProductAdded: () => void;
+}) => {
+  const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
   const [imagePath, setImagePath] = useState<string | null>(null); // Store image path for deletion
@@ -87,8 +93,7 @@ const CreateProductButton = ({ videoId, onProductAdded }: { videoId: string; onP
       });
 
       setOpen(false);
-      onProductAdded(); 
-
+      onProductAdded();
     } catch (error) {
       console.error("Error creating product:", error);
 
@@ -124,11 +129,6 @@ const CreateProductButton = ({ videoId, onProductAdded }: { videoId: string; onP
         .getPublicUrl(fileName);
       setValue("imageUrl", publicUrlData.publicUrl);
       setImagePath(fileName); // Store file path for potential deletion
-
-      toast({
-        title: "Image Uploaded",
-        description: "Your product image has been successfully uploaded!",
-      });
     } catch (error) {
       console.error("Image upload error:", error);
       toast({
@@ -144,7 +144,9 @@ const CreateProductButton = ({ videoId, onProductAdded }: { videoId: string; onP
   // ✅ Delete Image from Supabase Storage
   const deleteImage = async (path: string) => {
     try {
-      const { error } = await supabase.storage.from("thumbnails").remove([path]);
+      const { error } = await supabase.storage
+        .from("thumbnails")
+        .remove([path]);
       if (error) throw error;
       console.log(`Deleted image: ${path}`);
     } catch (error) {
@@ -167,90 +169,93 @@ const CreateProductButton = ({ videoId, onProductAdded }: { videoId: string; onP
 
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* ✅ Product Name */}
-            <FormField
-              control={form.control}
-              name="productName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mb-1">Product Name</FormLabel>
-                  <FormControl>
-                    <Input placeholder="Enter product name" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <div className="flex flex-row gap-4 pb-8 pt-2">
+              <div className="flex flex-col gap-4 w-full sm:w-1/2">
+                {/* ✅ Product Name */}
+                <FormField
+                  control={form.control}
+                  name="productName"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-1">Product Name</FormLabel>
+                      <FormControl>
+                        <Input placeholder="Enter product name" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            {/* ✅ Product Description */}
-            <FormField
-              control={form.control}
-              name="productDescription"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mb-1">Description</FormLabel>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Enter product description (optional)"
-                      {...field}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
+                {/* ✅ Product Description */}
+                <FormField
+                  control={form.control}
+                  name="productDescription"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-1">Description</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter product description (optional)"
+                          {...field}
+                        />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
 
-            {/* ✅ Original Affiliate Link */}
-            <FormField
-              control={form.control}
-              name="originalLink"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel className="mb-1">Original Link</FormLabel>
-                  <FormControl>
-                    <Input placeholder="https://example.com" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                {/* ✅ Original Affiliate Link */}
+                <FormField
+                  control={form.control}
+                  name="originalLink"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="mb-1">Original Link</FormLabel>
+                      <FormControl>
+                        <Input placeholder="https://example.com" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
 
-            {/* ✅ Product Image Upload */}
-            <div>
-              <FormLabel className="mb-1">Product Image</FormLabel>
-              <FilePond
-                allowMultiple={false}
-                maxFiles={1}
-                credits={false}
-                acceptedFileTypes={["image/*"]}
-                onupdatefiles={(fileItems) => {
-                  const files = fileItems.map(
-                    (fileItem) => fileItem.file as File
-                  );
-                  handleFileUpload(files);
-                }}
-                onremovefile={() => {
-                  if (imagePath) {
-                    deleteImage(imagePath);
-                    setImagePath(null);
-                  }
-                }}
-                className="border border-gray-300 aspect-video rounded-lg p-4"
-              />
+              {/* ✅ Product Image Upload */}
+              <div className="w-full sm:w-1/2">
+                <FormLabel className="mb-1">Product Image</FormLabel>
+                <FilePond
+                  allowMultiple={false}
+                  maxFiles={1}
+                  credits={false}
+                  acceptedFileTypes={["image/*"]}
+                  onupdatefiles={(fileItems) => {
+                    const files = fileItems.map(
+                      (fileItem) => fileItem.file as File
+                    );
+                    handleFileUpload(files);
+                  }}
+                  onremovefile={() => {
+                    if (imagePath) {
+                      deleteImage(imagePath);
+                      setImagePath(null);
+                    }
+                  }}
+                  className="border border-gray-300 aspect-video rounded-lg p-4"
+                />
+
+                {/* ✅ Hidden Input Field for Image URL */}
+                <FormField
+                  control={form.control}
+                  name="imageUrl"
+                  render={({ field }) => (
+                    <FormItem className="hidden">
+                      <FormControl>
+                        <Input type="url" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+              </div>
             </div>
-
-            {/* ✅ Hidden Input Field for Image URL */}
-            <FormField
-              control={form.control}
-              name="imageUrl"
-              render={({ field }) => (
-                <FormItem className="hidden">
-                  <FormControl>
-                    <Input type="url" {...field} />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
-
             <DialogFooter>
               <Button type="submit" disabled={uploading}>
                 {uploading ? "Uploading..." : "Create Product"}
