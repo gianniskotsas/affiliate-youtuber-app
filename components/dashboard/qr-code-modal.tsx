@@ -60,17 +60,18 @@ const QrCodeModal = ({ url }: { url: string }) => {
   return (
     <Dialog>
       <DialogTrigger asChild>
+        <div className="flex flex-col items-center justify-center gap-2">
         <Button
           className={cn(
-            buttonVariants({ variant: "default" }),
-            "mt-2 sm:mt-0 px-4 py-2 rounded-md transition min-w-[150px]"
+            buttonVariants({ variant: "outline" }),
+            "mt-2 sm:mt-0 rounded-lg transition w-[100px] h-[100px] flex flex-col space-y-2"
           )}
         >
-          <div className="flex items-center gap-2">
-            <QrCode size={16} />
-            Get QR Code
-          </div>
+          <QrCode size={32} className="text-neutral-600 scale-[2.5]" />{" "}
+                          {/* Increased size from 48 to 64 */}
         </Button>
+        <p className="text-sm text-gray-600"> Get QR Code</p>
+        </div>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

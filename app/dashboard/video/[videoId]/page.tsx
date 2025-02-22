@@ -28,10 +28,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Pencil, QrCode, Trash2 } from "lucide-react";
+import { Pencil, QrCode, Trash2, User } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import QrCodeModal from "@/components/dashboard/qr-code-modal";
 import CreateProductButton from "@/components/dashboard/create-product-button";
+import UpdateProductButton from "@/components/dashboard/update-product-button";
 export default function EditVideoPage() {
   const router = useRouter();
   const { videoId } = useParams();
@@ -66,6 +67,15 @@ export default function EditVideoPage() {
         .then((data) => setProducts(data))
         .catch((error) => console.error("Failed to fetch products:", error));
     }
+  };
+
+  // Function to update the image URL of a specific product
+  const handleImageDelete = (productId: string) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === productId ? { ...product, imageUrl: null } : product
+      )
+    );
   };
 
   // Fetch products for the video
@@ -113,6 +123,15 @@ export default function EditVideoPage() {
     }
   };
 
+  // ✅ Function to update a specific product in the array
+  const updateProduct = (updatedProduct: SelectProduct) => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product.id === updatedProduct.id ? updatedProduct : product
+      )
+    );
+  };
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -126,68 +145,45 @@ export default function EditVideoPage() {
               <div className="flex flex-row gap-16 h-full mt-8">
                 <div className="w-full">
                   <div className="flex flex-col gap-8">
-                    {/* Profile Editing Section */}
-                    <section className="p-4 bg-white rounded-md shadow transition">
-                      <div className="flex flex-col sm:flex-row items-center justify-between">
-                        <div>
-                          <h2 className="text-lg font-bold">Edit Profile</h2>
-                          <p className="text-sm text-gray-600">
-                            Update your profile details and social media links.
-                          </p>
-                        </div>
+                    <div className="flex flex-row gap-4">
+                      <div className="flex flex-col items-center justify-center gap-2">
                         <Link
                           href="/dashboard/profile"
+                          target="_blank"
                           className={cn(
                             buttonVariants({
-                              variant: "default",
+                              variant: "outline",
                             }),
-                            "mt-2 sm:mt-0  px-4 py-2 rounded-md transition min-w-[150px]"
+                            "mt-2 sm:mt-0 rounded-lg transition w-[100px] h-[100px] flex flex-col space-y-2"
                           )}
                         >
-                          <div className="flex items-center gap-2 ">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              viewBox="0 0 24 24"
-                              fill="currentColor"
-                              className="size-6"
-                            >
-                              <path
-                                fillRule="evenodd"
-                                d="M18.685 19.097A9.723 9.723 0 0 0 21.75 12c0-5.385-4.365-9.75-9.75-9.75S2.25 6.615 2.25 12a9.723 9.723 0 0 0 3.065 7.097A9.716 9.716 0 0 0 12 21.75a9.716 9.716 0 0 0 6.685-2.653Zm-12.54-1.285A7.486 7.486 0 0 1 12 15a7.486 7.486 0 0 1 5.855 2.812A8.224 8.224 0 0 1 12 20.25a8.224 8.224 0 0 1-5.855-2.438ZM15.75 9a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0Z"
-                                clipRule="evenodd"
-                              />
-                            </svg>
-                            Go to Profile
-                          </div>
+                          <User className="text-neutral-600 w-32 h-32 scale-[2.5]" />{" "}
+                          {/* Increased size from 48 to 64 */}
                         </Link>
+                        <p className="text-sm text-gray-600"> Edit Profile</p>
                       </div>
-                    </section>
-
-                    {/* QR Code Section */}
-                    <section className="p-4 bg-white rounded-md shadow transition">
-                      <div className="flex flex-col sm:flex-row items-center justify-between">
-                        <div>
-                          <h2 className="text-lg font-bold">QR Code</h2>
-                          <p className="text-sm text-gray-600">
-                            Generate a QR code for your profile.
-                          </p>
-                        </div>
+                      <div className="flex flex-col items-center justify-center gap-2">
                         <QrCodeModal url={video?.videoShortLink} />
                       </div>
-                    </section>
+                    </div>
 
                     {/* Affiliate Products Section */}
-                    <section className="flex flex-col p-4 gap-4">
+                    <section className="flex flex-col gap-4">
                       {/* Container for managing affiliate products */}
                       <div className="flex flex-col">
-                        <h2 className="text-lg font-bold">
-                          Manage Affiliate Products
-                        </h2>
-                        <p className="text-sm text-gray-600">
-                          Add, edit, and remove affiliate products from your
-                          video.
-                        </p>
-                        <CreateProductButton videoId={videoId as string} onProductAdded={fetchProducts} />
+                        <div className="flex flex-col mb-6">
+                          <h2 className="text-lg font-bold">
+                            Manage Affiliate Products
+                          </h2>
+                          <p className="text-sm text-gray-600">
+                            Add, edit, and remove affiliate products from your
+                            video.
+                          </p>
+                        </div>
+                        <CreateProductButton
+                          videoId={videoId as string}
+                          onProductAdded={fetchProducts}
+                        />
                       </div>
 
                       {/* Container for affiliate product cards */}
@@ -195,7 +191,7 @@ export default function EditVideoPage() {
                         products.map((product) => (
                           <div
                             key={product.id}
-                            className="border rounded-2xl shadow-sm p-4 relative flex flex-col sm:flex-row items-start w-[400px] sm:w-[600px] sm:items-center gap-12"
+                            className="border rounded-2xl shadow-sm p-4 relative flex flex-row sm:flex-row items-center w-full sm:w-[600px] sm:items-center gap-4 sm:gap-12"
                           >
                             {product.imageUrl && (
                               <div className="flex-shrink-0">
@@ -203,7 +199,7 @@ export default function EditVideoPage() {
                                   src={product.imageUrl}
                                   alt={product.productName}
                                   quality={40}
-                                  className="w-[80px] sm:w-[120px] rounded-md"
+                                  className="w-[100px] sm:w-[120px] rounded-md"
                                   width={80}
                                   height={120}
                                 />
@@ -233,7 +229,7 @@ export default function EditVideoPage() {
                                     });
                                   }}
                                 >
-                                  <p className="text-sm text-neutral-700 font-semibold">
+                                  <p className="text-xs sm:text-sm text-neutral-700 font-semibold">
                                     {product.shortLink}
                                   </p>
 
@@ -285,7 +281,7 @@ export default function EditVideoPage() {
                               </div>
                             </div>
 
-                            <div className="absolute top-2 right-2">
+                            <div className="absolute top-2 right-2 group">
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
                                   <Button
@@ -309,16 +305,34 @@ export default function EditVideoPage() {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
-                                  <DropdownMenuItem>
-                                    <Pencil size={16} />
-                                    Edit
+                                  <DropdownMenuItem
+                                    className="hover:cursor-pointer"
+                                    onSelect={(e) => e.preventDefault()}
+                                  >
+                                    <UpdateProductButton
+                                      key={product.id}
+                                      videoId={product.videoId}
+                                      product={product}
+                                      setProduct={(updatedProduct) => {
+                                        setProducts((prev) =>
+                                          prev.map((p) =>
+                                            p.id === updatedProduct.id
+                                              ? updatedProduct
+                                              : p
+                                          )
+                                        );
+                                      }}
+                                      onProductAdded={() =>
+                                        console.log("Product updated!")
+                                      }
+                                    />
                                   </DropdownMenuItem>
-                                  <DropdownMenuItem>
+                                  <DropdownMenuItem className="hover:cursor-pointer">
                                     <QrCode size={16} /> Get QR
                                   </DropdownMenuItem>
 
                                   <DropdownMenuItem
-                                    className="text-red-500 focus:bg-red-50 focus:text-red-600"
+                                    className="text-red-500 focus:bg-red-50 focus:text-red-600 hover:cursor-pointer"
                                     onSelect={(e) => e.preventDefault()} // Prevents closing menu on click
                                     onClick={() => handleDelete(product)}
                                   >

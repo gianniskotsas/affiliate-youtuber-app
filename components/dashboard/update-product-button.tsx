@@ -9,16 +9,13 @@ import {
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { FilePond, registerPlugin } from "react-filepond";
-import FilePondPluginImagePreview from "filepond-plugin-image-preview";
-import "filepond/dist/filepond.min.css";
-import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import {
   Form,
   FormField,
@@ -28,9 +25,10 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { useToast } from "@/hooks/use-toast";
-import { supabase } from "@/lib/supabase";
+import { SelectProduct } from "@/db/schema";
+import { Pencil } from "lucide-react";
+import FilePondUploader from "./filepondUploader"; // Import the FilePondUploader component
 import { deleteImage } from "@/lib/utils";
-registerPlugin(FilePondPluginImagePreview);
 
 // ✅ Zod Schema for Validation
 const productSchema = z.object({
@@ -39,35 +37,37 @@ const productSchema = z.object({
   productDescription: z.string().optional(),
   originalLink: z.string().url("Invalid URL format"),
   imageUrl: z.string().url("Invalid URL format").optional(),
+  shortLink: z.string().url("Invalid URL format").optional(),
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
 
-const CreateProductButton = ({
+const UpdateProductButton = ({
   videoId,
   onProductAdded,
+  product,
+  setProduct,
 }: {
   videoId: string;
   onProductAdded: () => void;
+  product: SelectProduct;
+  setProduct: (product: SelectProduct) => void;
 }) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const [imagePath, setImagePath] = useState<string | null>(null); // Store image path for deletion
-
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       videoId: videoId,
-      productName: "",
-      productDescription: "",
-      originalLink: "",
-      imageUrl: "",
+      productName: product.productName,
+      productDescription: product.productDescription || "",
+      originalLink: product.originalLink,
+      imageUrl: product.imageUrl || "",
+      shortLink: product.shortLink,
     },
   });
 
   const {
-    setValue,
     handleSubmit,
     formState: { errors },
   } = form;
@@ -77,80 +77,43 @@ const CreateProductButton = ({
     console.log(data);
 
     try {
-      const response = await fetch("/api/products/create-product", {
+      const response = await fetch("/api/products/update-product", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create product");
+        throw new Error("Failed to update product");
       }
 
       toast({
-        title: "Product Created",
-        description: `Successfully added ${data.productName}!`,
+        title: "Product Updated",
+        description: `Successfully updated ${data.productName}!`,
       });
 
       setOpen(false);
       onProductAdded();
     } catch (error) {
-      console.error("Error creating product:", error);
-
-      // If submission fails, delete uploaded image
-      if (imagePath) {
-        await deleteImage(imagePath);
-      }
+      console.error("Error updating product:", error);
 
       toast({
         title: "Error",
-        description: "Failed to create product. Try again.",
+        description: "Failed to update product. Try again.",
         variant: "destructive",
       });
     }
   };
-
-  // ✅ Handle Image Upload to Supabase
-  const handleFileUpload = async (files: File[]) => {
-    if (files.length === 0) return;
-    setUploading(true);
-
-    try {
-      const fileName = `products/${Date.now()}_${files[0].name}`;
-      const { data, error } = await supabase.storage
-        .from("thumbnails")
-        .upload(fileName, files[0], { cacheControl: "3600", upsert: false });
-
-      if (error) throw error;
-
-      // ✅ Get Public URL
-      const { data: publicUrlData } = supabase.storage
-        .from("thumbnails")
-        .getPublicUrl(fileName);
-      setValue("imageUrl", publicUrlData.publicUrl);
-      setImagePath(fileName); // Store file path for potential deletion
-    } catch (error) {
-      console.error("Image upload error:", error);
-      toast({
-        title: "Upload Failed",
-        description: "Could not upload image. Try again.",
-        variant: "destructive",
-      });
-    } finally {
-      setUploading(false);
-    }
-  };
-
-
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default" className="w-full sm:w-[600px]">Add Product</Button>
+      <DialogTrigger className="flex flex-row items-center gap-2 w-full">
+        <Pencil size={16} />
+        Edit
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create a Product</DialogTitle>
+          <DialogTitle>Edit Product</DialogTitle>
           <p className="text-sm text-gray-500">
             Link this product to your video.
           </p>
@@ -166,7 +129,9 @@ const CreateProductButton = ({
                   name="productName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="mb-1 font-semibold text-neutral-700">Product Name</FormLabel>
+                      <FormLabel className="mb-1 font-semibold text-neutral-700">
+                        Product Name
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Enter product name" {...field} />
                       </FormControl>
@@ -181,7 +146,9 @@ const CreateProductButton = ({
                   name="productDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="mb-1 font-semibold text-neutral-700">Description</FormLabel>
+                      <FormLabel className="mb-1 font-semibold text-neutral-700">
+                        Description
+                      </FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Enter product description (optional)"
@@ -198,7 +165,9 @@ const CreateProductButton = ({
                   name="originalLink"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="mb-1 font-semibold text-neutral-700">Original Link</FormLabel>
+                      <FormLabel className="mb-1 font-semibold text-neutral-700">
+                        Original Link
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="https://example.com" {...field} />
                       </FormControl>
@@ -208,28 +177,47 @@ const CreateProductButton = ({
                 />
               </div>
 
-              {/* ✅ Product Image Upload */}
+              {/* ✅ Product Image Upload - Now Using FilePondUploader */}
               <div className="w-full sm:w-1/2">
-                <FormLabel className="mb-1 font-semibold text-neutral-700">Product Image</FormLabel>
-                <FilePond
-                  allowMultiple={false}
-                  maxFiles={1}
-                  credits={false}
-                  acceptedFileTypes={["image/*"]}
-                  onupdatefiles={(fileItems) => {
-                    const files = fileItems.map(
-                      (fileItem) => fileItem.file as File
-                    );
-                    handleFileUpload(files);
-                  }}
-                  onremovefile={() => {
-                    if (imagePath) {
-                      deleteImage(imagePath);
-                      setImagePath(null);
-                    }
-                  }}
-                  className="border border-gray-300 aspect-video rounded-lg p-4"
-                />
+                <FormLabel className="mb-1 font-semibold text-neutral-700">
+                  Product Image
+                </FormLabel>
+
+                {product.imageUrl ? (
+                  <div className="relative group w-full">
+                    {/* ✅ Image Preview */}
+                    <Image
+                      src={product.imageUrl}
+                      alt="Product"
+                      className="w-full h-auto rounded-md shadow-sm"
+                      width={600}
+                      height={337}
+                    />
+
+                    {/* ✅ Delete Button (X) */}
+                    <Button
+                    variant="secondary"
+                      className="absolute top-2 left-2 p-0.5 w-5 h-5 aspect-square rounded-full shadow-md"
+                      onClick={async () => {
+                        setProduct({ ...product, imageUrl: null });
+
+                        try {
+                          if (product.imageUrl) {
+                            await deleteImage(product.imageUrl);
+                            console.log("Image deleted from storage.");
+                          }
+                        } catch (error) {
+                          console.error("Error deleting image:", error);
+                        }
+                      }}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                ) : (
+                  // ✅ Show FilePondUploader when image is removed
+                  <FilePondUploader product={product} setProduct={setProduct} />
+                )}
 
                 {/* ✅ Hidden Input Field for Image URL */}
                 <FormField
@@ -246,9 +234,7 @@ const CreateProductButton = ({
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={uploading}>
-                {uploading ? "Uploading..." : "Create Product"}
-              </Button>
+              <Button type="submit">Update Product</Button>
               <Button variant="outline" onClick={() => setOpen(false)}>
                 Cancel
               </Button>
@@ -260,4 +246,4 @@ const CreateProductButton = ({
   );
 };
 
-export default CreateProductButton;
+export default UpdateProductButton;

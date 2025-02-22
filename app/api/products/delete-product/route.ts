@@ -4,6 +4,7 @@ import { products } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { eq } from "drizzle-orm";
 import { Dub } from "dub";
+import { deleteImage } from "@/lib/utils";
 
 const dub = new Dub({
   token: process.env.DUB_API_KEY,
@@ -51,6 +52,7 @@ export async function POST(req: Request) {
       console.error("Failed to delete Dub.co link:", error);
     }
 
+    deleteImage(`products/${product.imageUrl}`);
     // Delete the product from the database
     await db.delete(products).where(eq(products.id, product.id)).execute();
 
