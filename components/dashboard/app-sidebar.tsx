@@ -20,21 +20,25 @@ const data = {
       name: "Videos",
       url: "/dashboard",
       icon: "Video",
-    },
-    {
-      name: "Products",
-      url: "#",
-      icon: "Package",
+      active: true,
     },
     {
       name: "Profile",
       url: "/dashboard/profile",
       icon: "User",
+      active: true,
     },
+    {
+      name: "Sell merch",
+      url: "#",
+      icon: "Shirt",
+      active: false,
+    },    
     {
       name: "Analytics",
       url: "#",
       icon: "ChartBar",
+      active: false,
     },
   ],
 };

@@ -1,20 +1,22 @@
 import { IPhoneMockup } from "react-device-mockup";
 import { useUserDb } from "@/context/UserDbContext";
-import { social } from "@/lib/utils";
-import { Button, buttonVariants } from "../ui/button";
-import React from "react";
-import Link from "next/link";
-import { Loader2 } from "lucide-react";
 import { SelectProduct } from "@/db/schema";
-import Image from "next/image";
-import { ScrollArea } from "../ui/scroll-area";
 import VideoPage from "../video/videopage";
+import React, { createContext } from "react";
+
+// Create a context to simulate a mobile screen
+export const MobileContext = createContext<boolean>(false);
+
 export default function MockupPage({
   products,
 }: {
   products: SelectProduct[];
 }) {
-  const { userDb, loading } = useUserDb();
+  const { userDb } = useUserDb();
+
+  if (!userDb) {
+    return null;
+  }
 
   return (
     <IPhoneMockup
@@ -25,7 +27,10 @@ export default function MockupPage({
       transparentNavBar
       className="hidden sm:block"
     >
-      <VideoPage products={products} />
+      {/* Provide a mobile context to trick VideoPage into thinking it's on mobile */}
+      <MobileContext.Provider value={true}>
+        <VideoPage products={products} userDb={userDb} />
+      </MobileContext.Provider>
     </IPhoneMockup>
   );
 }
