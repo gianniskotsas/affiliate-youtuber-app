@@ -70,12 +70,7 @@ const UpdateProductButton = ({
     },
   });
 
-  const { control, setValue, getValues } = form;
-
-  const {
-    handleSubmit,
-    formState: { errors },
-  } = form;
+  const { control, setValue, getValues, handleSubmit, formState: { errors } } = form;
 
   // ✅ Handle Form Submission
   const onSubmit = async (data: ProductFormData) => {
@@ -122,7 +117,7 @@ const UpdateProductButton = ({
         <Pencil size={16} />
         Edit
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} onPointerMove={(e) => e.stopPropagation()}>
         <DialogHeader>
           <DialogTitle>Edit Product</DialogTitle>
           <p className="text-sm text-gray-500">
