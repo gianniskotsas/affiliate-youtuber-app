@@ -40,7 +40,7 @@ export default function VideoPage({
                 "flex flex-col items-center justify-start pt-12 pb-8 h-full w-full",
                 !isMobile && "lg:flex-row lg:items-start lg:justify-start"
               )}
-            >
+            >       
               {/* User Profile Section */}
               <div
                 className={clsx(

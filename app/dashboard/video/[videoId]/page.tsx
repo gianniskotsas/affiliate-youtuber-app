@@ -82,7 +82,7 @@ export default function EditVideoPage() {
   // Fetch products for the video
   useEffect(() => {
     fetchProducts();
-  }, []);
+  }, [videoId, router]);
 
   if (!video) return <div>Loading...</div>;
   if (!videoId) return <div>Invalid video ID</div>;

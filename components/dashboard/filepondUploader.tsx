@@ -18,7 +18,7 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
   setProduct,
   updateFormImageUrl,
 }) => {
-  const filePondRef = useRef<any>(null);
+  const filePondRef = useRef<FilePond | null>(null);
 
   return (
     <FilePond

@@ -59,7 +59,7 @@ export default function Page() {
         .catch((error) => console.error("Failed to fetch user:", error))
         .finally(() => setLoading(false));
     }
-  }, [isLoaded, userId, user]);
+  }, [isLoaded, userId, user, router]);
 
   useEffect(() => {
     if (userId) {
@@ -68,7 +68,7 @@ export default function Page() {
         .then((data) => setVideos(data))
         .catch((error) => console.error("Failed to fetch videos:", error));
     }
-  }, [userId]);
+  }, [userId, router]);
 
   return (
     <SidebarProvider>

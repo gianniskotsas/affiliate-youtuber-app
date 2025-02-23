@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,7 +31,7 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
     defaultValues: { videoTitle: "", videoSlug: "", videoThumbnail: "" },
   });
 
-  const handleSubmit = async (values: FormValues) => {
+  const handleSubmit = useCallback(async (values: FormValues) => {
     setIsLoadingCreate(true);
 
     const requestData = {
@@ -55,7 +55,7 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
     setIsLoadingCreate(false);
     onClose();
     router.push(`/dashboard/video/${data.videoId}`);
-  };
+  }, [preview, router, onClose]);
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
