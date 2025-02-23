@@ -53,22 +53,24 @@ const UpdateProductButton = ({
   product: SelectProduct;
   setProduct: (product: SelectProduct) => void;
 }) => {
-  console.log("hello");
-  console.log(product.imageUrl);
 
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState<SelectProduct>(product);
+
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
     defaultValues: {
       videoId: videoId,
-      productName: product.productName,
-      productDescription: product.productDescription || "",
-      originalLink: product.originalLink,
-      imageUrl: product.imageUrl || "",
-      shortLink: product.shortLink,
+      productName: selectedProduct.productName,
+      productDescription: selectedProduct.productDescription || "",
+      originalLink: selectedProduct.originalLink,
+      imageUrl: selectedProduct.imageUrl || "",
+      shortLink: selectedProduct.shortLink,
     },
   });
+
+  const { control, setValue, getValues } = form;
 
   const {
     handleSubmit,
@@ -106,6 +108,12 @@ const UpdateProductButton = ({
         variant: "destructive",
       });
     }
+  };
+
+  // Function to update the imageUrl form field and selectedProduct
+  const updateFormImageUrl = (url: string) => {
+    setValue("imageUrl", url);
+    setSelectedProduct((prev) => ({ ...prev, imageUrl: url }));
   };
 
   return (
@@ -186,11 +194,11 @@ const UpdateProductButton = ({
                   Product Image
                 </FormLabel>
 
-                {product.imageUrl ? (
+                {selectedProduct.imageUrl ? (
                   <div className="relative group w-full mt-2">
                     {/* ✅ Image Preview */}
                     <Image
-                      src={product.imageUrl}
+                      src={selectedProduct.imageUrl}
                       alt="Product"
                       className="w-full h-auto rounded-md shadow-sm"
                       width={600}
@@ -202,12 +210,13 @@ const UpdateProductButton = ({
                       variant="secondary"
                       className="absolute top-2 left-2 p-0.5 w-5 h-5 aspect-square rounded-full shadow-md"
                       onClick={async () => {
-                        setProduct({ ...product, imageUrl: null });
+                        setProduct({ ...product, imageUrl: "" });
+                        setSelectedProduct({ ...selectedProduct, imageUrl: "" });
+                        updateFormImageUrl(""); // Update form value to empty
 
                         try {
-                          if (product.imageUrl) {
-
-                            deleteImage(product.imageUrl);
+                          if (selectedProduct.imageUrl) {
+                            deleteImage(selectedProduct.imageUrl);
                             const response = await fetch(
                               "/api/products/update-product-image",
                               {
@@ -216,18 +225,25 @@ const UpdateProductButton = ({
                                   "Content-Type": "application/json",
                                 },
                                 body: JSON.stringify({
-                                  productId: product.id,
+                                  productId: selectedProduct.id,
                                   imageUrl: "",
                                 }),
                               }
                             );
 
                             if (!response.ok) {
+                              toast({
+                                title: "Error",
+                                description: "Failed to update product image",
+                                variant: "destructive",
+                              });
                               throw new Error("Failed to update product image");
                             }
 
-                            const data = await response.json();
-                            console.log(data.message);
+                            toast({
+                              title: "Product Image Updated",
+                              description: "New image added successfully",
+                            });
                           }
                         } catch (error) {
                           console.error("Error deleting image:", error);
@@ -239,7 +255,11 @@ const UpdateProductButton = ({
                   </div>
                 ) : (
                   // ✅ Show FilePondUploader when image is removed
-                  <FilePondUploader product={product} setProduct={setProduct} />
+                  <FilePondUploader
+                    product={product}
+                    setProduct={setProduct}
+                    updateFormImageUrl={updateFormImageUrl} // Pass the callback
+                  />
                 )}
 
                 {/* ✅ Hidden Input Field for Image URL */}

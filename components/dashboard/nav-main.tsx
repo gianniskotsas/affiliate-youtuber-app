@@ -46,8 +46,6 @@ export function NavMain({
   const { isMobile } = useSidebar()
   const pathname = usePathname()
 
-  console.log("pathname is: ",pathname)
-
   // Helper function to get icon component
   const getIcon = (iconName: string) => {
     const icons = {

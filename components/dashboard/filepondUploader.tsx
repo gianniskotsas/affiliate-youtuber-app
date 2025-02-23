@@ -11,11 +11,13 @@ registerPlugin(FilePondPluginImagePreview);
 interface FilePondUploaderProps {
   product: SelectProduct;
   setProduct: (updatedProduct: SelectProduct) => void;
+  updateFormImageUrl: (url: string) => void;
 }
 
 const FilePondUploader: React.FC<FilePondUploaderProps> = ({
   product,
   setProduct,
+  updateFormImageUrl,
 }) => {
   const filePondRef = useRef<any>(null);
 
@@ -77,6 +79,7 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
 
             // ✅ Update Parent State
             setProduct({ ...product, imageUrl: publicUrl });
+            updateFormImageUrl(publicUrl);
 
             load(publicUrl); // ✅ Marks upload as successful
           } catch (err) {
@@ -119,6 +122,7 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
 
             // ✅ Update Parent State
             setProduct({ ...product, imageUrl: null });
+            updateFormImageUrl("");
 
             load(); // ✅ Notify FilePond deletion was successful
           }
