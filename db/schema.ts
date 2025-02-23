@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, timestamp, json } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, json, boolean } from "drizzle-orm/pg-core";
 
 // Define a TypeScript type for social accounts
 export type SocialAccount = {
@@ -22,6 +22,7 @@ export const users = pgTable("users", {
       { name: "TikTok", url: "" },
     ]),
   createdAt: timestamp("created_at").defaultNow(),
+  domain: text("domain").default(""),
 });
 
 // Videos table to store YouTube video details
@@ -36,6 +37,7 @@ export const videos = pgTable("videos", {
   videoShortLink: text("video_short_link").notNull(), // Dub.co shortened link
   videoQrCodeUrl: text("video_qr_code_url"), // URL to QR code image
   createdAt: timestamp("created_at").defaultNow(),
+  active: boolean("active").default(false)
 });
 
 // Products table to store affiliate products
@@ -47,7 +49,7 @@ export const products = pgTable("products", {
   productName: text("product_name").notNull(),
   shortLink: text("short_link").notNull(), // Affiliate link (can be shortened with Dub.co)
   originalLink: text("original_link").notNull(), // Original affiliate link
-  imageUrl: text("image_url"), // URL to product image
+  imageUrl: text("image_url").default(""), // URL to product image
   productDescription: text("product_description"), // Description of the product
   createdAt: timestamp("created_at").defaultNow(),
 });

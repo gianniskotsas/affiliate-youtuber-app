@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import {
   Dialog,
   DialogTrigger,
@@ -30,6 +31,7 @@ import {
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { deleteImage } from "@/lib/utils";
+import FilePondUploader from "./filepondUploader";
 registerPlugin(FilePondPluginImagePreview);
 
 // ✅ Zod Schema for Validation
@@ -53,7 +55,7 @@ const CreateProductButton = ({
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
-  const [imagePath, setImagePath] = useState<string | null>(null); // Store image path for deletion
+  const [imagePath, setImagePath] = useState<string | null>(""); // Store image path for deletion
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -71,6 +73,12 @@ const CreateProductButton = ({
     handleSubmit,
     formState: { errors },
   } = form;
+
+  // Function to update the imageUrl in the form and parent state
+  const updateImageUrl = (url: string) => {
+    setValue("imageUrl", url);
+    setImagePath(url);
+  };
 
   // ✅ Handle Form Submission
   const onSubmit = async (data: ProductFormData) => {
@@ -127,6 +135,8 @@ const CreateProductButton = ({
       const { data: publicUrlData } = supabase.storage
         .from("thumbnails")
         .getPublicUrl(fileName);
+
+      console.log(publicUrlData.publicUrl);
       setValue("imageUrl", publicUrlData.publicUrl);
       setImagePath(fileName); // Store file path for potential deletion
     } catch (error) {
@@ -141,12 +151,12 @@ const CreateProductButton = ({
     }
   };
 
-
-
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="w-full sm:w-[600px]">Add Product</Button>
+        <Button variant="default" className="w-full sm:w-[600px]">
+          Add Product
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -166,7 +176,9 @@ const CreateProductButton = ({
                   name="productName"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="mb-1 font-semibold text-neutral-700">Product Name</FormLabel>
+                      <FormLabel className="mb-1 font-semibold text-neutral-700">
+                        Product Name
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="Enter product name" {...field} />
                       </FormControl>
@@ -181,7 +193,9 @@ const CreateProductButton = ({
                   name="productDescription"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="mb-1 font-semibold text-neutral-700">Description</FormLabel>
+                      <FormLabel className="mb-1 font-semibold text-neutral-700">
+                        Description
+                      </FormLabel>
                       <FormControl>
                         <Textarea
                           placeholder="Enter product description (optional)"
@@ -198,7 +212,9 @@ const CreateProductButton = ({
                   name="originalLink"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="mb-1 font-semibold text-neutral-700">Original Link</FormLabel>
+                      <FormLabel className="mb-1 font-semibold text-neutral-700">
+                        Original Link
+                      </FormLabel>
                       <FormControl>
                         <Input placeholder="https://example.com" {...field} />
                       </FormControl>
@@ -210,26 +226,39 @@ const CreateProductButton = ({
 
               {/* ✅ Product Image Upload */}
               <div className="w-full sm:w-1/2">
-                <FormLabel className="mb-1 font-semibold text-neutral-700">Product Image</FormLabel>
-                <FilePond
-                  allowMultiple={false}
-                  maxFiles={1}
-                  credits={false}
-                  acceptedFileTypes={["image/*"]}
-                  onupdatefiles={(fileItems) => {
-                    const files = fileItems.map(
-                      (fileItem) => fileItem.file as File
-                    );
-                    handleFileUpload(files);
-                  }}
-                  onremovefile={() => {
-                    if (imagePath) {
-                      deleteImage(imagePath);
-                      setImagePath(null);
-                    }
-                  }}
-                  className="border border-gray-300 aspect-video rounded-lg p-4"
-                />
+                <FormLabel className="mb-1 font-semibold text-neutral-700">
+                  Product Image
+                </FormLabel>
+
+                {imagePath ? (
+                  <div className="relative group w-full mt-2">
+                    {/* ✅ Image Preview */}
+                    <Image
+                      src={imagePath}
+                      alt="Product"
+                      className="w-full h-auto rounded-md shadow-sm"
+                      width={600}
+                      height={337}
+                    />
+
+                    {/* ✅ Delete Button (X) */}
+                    <Button
+                      variant="secondary"
+                      className="absolute top-2 left-2 p-0.5 w-5 h-5 aspect-square rounded-full shadow-md"
+                      onClick={async () => {
+                        setImagePath("");
+                        setValue("imageUrl", ""); // Update form value to empty
+                      }}
+                    >
+                      ✕
+                    </Button>
+                  </div>
+                ) : (
+                  // ✅ Show FilePondUploader when image is removed
+                  <FilePondUploader
+                    updateFormImageUrl={updateImageUrl}
+                  />
+                )}
 
                 {/* ✅ Hidden Input Field for Image URL */}
                 <FormField

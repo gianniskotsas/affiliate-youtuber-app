@@ -6,11 +6,10 @@ import "filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css";
 import { supabase } from "@/lib/supabase";
 import { SelectProduct } from "@/db/schema";
 
-registerPlugin(FilePondPluginImagePreview);
 
 interface FilePondUploaderProps {
-  product: SelectProduct;
-  setProduct: (updatedProduct: SelectProduct) => void;
+  product?: SelectProduct;
+  setProduct?: (updatedProduct: SelectProduct) => void;
   updateFormImageUrl: (url: string) => void;
 }
 
@@ -29,7 +28,7 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
       credits={false}
       acceptedFileTypes={["image/*"]}
       files={
-        product.imageUrl
+        product?.imageUrl
           ? [
               {
                 source: product.imageUrl,
@@ -50,8 +49,10 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
           progress,
           abort
         ) => {
+
           try {
-            const filePath = `products/${Date.now()}_${product.id}`;
+            const fileExtension = file.name.split('.').pop();
+            const filePath = `products/${Date.now()}_${product?.id ? product.id : "new"}.${fileExtension}`;
 
             // ✅ Upload to Supabase Storage
             const { data, error: uploadError } = await supabase.storage
@@ -64,21 +65,27 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
             const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/thumbnails/${filePath}`;
 
             // ✅ Update the product's image URL in the database via Drizzle API route
-            const updateResponse = await fetch("/api/products/update-product-image", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                productId: product.id,
-                imageUrl: publicUrl,
-              }),
-            });
+            if (product) {
+              const updateResponse = await fetch("/api/products/update-product-image", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                  productId: product.id,
+                  imageUrl: publicUrl,
+                }),
+              });
 
-            if (!updateResponse.ok) {
-              throw new Error("Failed to update product image in database.");
+              if (!updateResponse.ok) {
+                throw new Error("Failed to update product image in database.");
+              }
+
+              if (setProduct) {
+                setProduct({ ...product, imageUrl: publicUrl });
+              }
+
             }
-
+          
             // ✅ Update Parent State
-            setProduct({ ...product, imageUrl: publicUrl });
             updateFormImageUrl(publicUrl);
 
             load(publicUrl); // ✅ Marks upload as successful
@@ -89,43 +96,47 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
         },
 
         revert: async (uniqueFileId, load, error) => {
-          if (product.imageUrl) {
-            const filePath = product.imageUrl.split("/thumbnails/")[1]; // Extract file path
-            console.log("Deleting:", filePath);
-
-            // ✅ Delete from Supabase Storage
-            const { error: deleteError } = await supabase.storage
-              .from("thumbnails")
-              .remove([filePath]);
-
-            if (deleteError) {
-              console.error("Delete Error:", deleteError);
-              error("Failed to delete file");
-              return;
-            }
-
-            // ✅ Update the database to remove the image URL
-            const updateResponse = await fetch("/api/products/update-product", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                productId: product.id,
-                imageUrl: null, // Remove the image URL in DB
-              }),
-            });
-
-            if (!updateResponse.ok) {
-              console.error("Failed to remove image URL from database.");
-              error("Failed to update database.");
-              return;
-            }
-
-            // ✅ Update Parent State
-            setProduct({ ...product, imageUrl: null });
-            updateFormImageUrl("");
-
-            load(); // ✅ Notify FilePond deletion was successful
+          if (!product || !product.imageUrl) {
+            error("No product or image URL available");
+            return;
           }
+          const filePath = product.imageUrl.split("/thumbnails/")[1]; // Extract file path
+          console.log("Deleting:", filePath);
+
+          // ✅ Delete from Supabase Storage
+          const { error: deleteError } = await supabase.storage
+            .from("thumbnails")
+            .remove([filePath]);
+
+          if (deleteError) {
+            console.error("Delete Error:", deleteError);
+            error("Failed to delete file");
+            return;
+          }
+
+          // ✅ Update the database to remove the image URL
+          const updateResponse = await fetch("/api/products/update-product", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              productId: product.id,
+              imageUrl: null, // Remove the image URL in DB
+            }),
+          });
+
+          if (!updateResponse.ok) {
+            console.error("Failed to remove image URL from database.");
+            error("Failed to update database.");
+            return;
+          }
+
+          // ✅ Update Parent State
+          if (setProduct) {
+            setProduct({ ...product, imageUrl: null });
+          }
+          updateFormImageUrl("");
+
+          load(); // ✅ Notify FilePond deletion was successful
         },
       }}
       className="border border-gray-300 aspect-video rounded-lg p-4 mt-2"

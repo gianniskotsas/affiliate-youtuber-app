@@ -3,7 +3,7 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { Dub } from "dub";
-
+import { eq } from "drizzle-orm";
 const dub = new Dub({
   token: process.env.DUB_API_KEY,
 });
@@ -15,12 +15,10 @@ export async function POST(req: Request) {
 
     const { videoId, productName, shortLink, originalLink, productDescription, imageUrl } = await req.json();
 
-    const domain = shortLink.slice(0, shortLink.indexOf('/', shortLink.indexOf('/', shortLink.indexOf('/') + 1) + 1))
-    const path = shortLink.slice(shortLink.indexOf('/', shortLink.indexOf('/', shortLink.indexOf('/') + 1) + 1))
-
-    console.log(domain, path);
-
-    const link = await dub.links.get({ domain, key: path });
+    const domain = new URL(shortLink).hostname; // Extracts the domain from the shortLink
+    const key = shortLink.split('/').pop(); // Extracts the key from the shortLink
+    console.log(domain, key);
+    const link = await dub.links.get({ domain, key });
     // Shorten URL using Dub.co
     
     if (link.url !== originalLink) {
@@ -29,14 +27,14 @@ export async function POST(req: Request) {
     }
 
     // Insert new product record
-    const newProduct = await db.insert(products).values({
+    const newProduct = await db.update(products).set({
       videoId,
       productName,
       originalLink,
       shortLink,
       imageUrl,
       productDescription,
-    }).execute();
+    }).where(eq(products.id, videoId)).execute();
 
     return NextResponse.json(newProduct, { status: 201 });
   } catch (error) {

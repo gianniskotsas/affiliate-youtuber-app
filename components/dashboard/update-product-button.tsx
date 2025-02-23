@@ -36,7 +36,7 @@ const productSchema = z.object({
   productName: z.string().min(3, "Product name must be at least 3 characters"),
   productDescription: z.string().optional(),
   originalLink: z.string().url("Invalid URL format"),
-  imageUrl: z.string().url("Invalid URL format").optional(),
+  imageUrl: z.union([z.string().url("Invalid URL format"), z.literal("")]).optional(),
   shortLink: z.string().url("Invalid URL format").optional(),
 });
 
@@ -53,10 +53,10 @@ const UpdateProductButton = ({
   product: SelectProduct;
   setProduct: (product: SelectProduct) => void;
 }) => {
-
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
-  const [selectedProduct, setSelectedProduct] = useState<SelectProduct>(product);
+  const [selectedProduct, setSelectedProduct] =
+    useState<SelectProduct>(product);
 
   const form = useForm<ProductFormData>({
     resolver: zodResolver(productSchema),
@@ -70,7 +70,13 @@ const UpdateProductButton = ({
     },
   });
 
-  const { control, setValue, getValues, handleSubmit, formState: { errors } } = form;
+  const {
+    control,
+    setValue,
+    getValues,
+    handleSubmit,
+    formState: { errors },
+  } = form;
 
   // ✅ Handle Form Submission
   const onSubmit = async (data: ProductFormData) => {
@@ -117,7 +123,11 @@ const UpdateProductButton = ({
         <Pencil size={16} />
         Edit
       </DialogTrigger>
-      <DialogContent onClick={(e) => e.stopPropagation()} onKeyDown={(e) => e.stopPropagation()} onPointerMove={(e) => e.stopPropagation()}>
+      <DialogContent
+        onClick={(e) => e.stopPropagation()}
+        onKeyDown={(e) => e.stopPropagation()}
+        onPointerMove={(e) => e.stopPropagation()}
+      >
         <DialogHeader>
           <DialogTitle>Edit Product</DialogTitle>
           <p className="text-sm text-gray-500">
@@ -206,7 +216,10 @@ const UpdateProductButton = ({
                       className="absolute top-2 left-2 p-0.5 w-5 h-5 aspect-square rounded-full shadow-md"
                       onClick={async () => {
                         setProduct({ ...product, imageUrl: "" });
-                        setSelectedProduct({ ...selectedProduct, imageUrl: "" });
+                        setSelectedProduct({
+                          ...selectedProduct,
+                          imageUrl: "",
+                        });
                         updateFormImageUrl(""); // Update form value to empty
 
                         try {
@@ -259,12 +272,17 @@ const UpdateProductButton = ({
 
                 {/* ✅ Hidden Input Field for Image URL */}
                 <FormField
+                  disabled
                   control={form.control}
                   name="imageUrl"
                   render={({ field }) => (
                     <FormItem className="hidden">
                       <FormControl>
-                        <Input type="url" {...field} />
+                        <Input
+                          type="url"
+                          {...field}
+                          value={field.value || ""}
+                        />
                       </FormControl>
                     </FormItem>
                   )}

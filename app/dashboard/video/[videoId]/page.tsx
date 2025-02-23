@@ -33,6 +33,7 @@ import { useToast } from "@/hooks/use-toast";
 import QrCodeModal from "@/components/dashboard/qr-code-modal";
 import CreateProductButton from "@/components/dashboard/create-product-button";
 import UpdateProductButton from "@/components/dashboard/update-product-button";
+import { DialogDescription } from "@radix-ui/react-dialog";
 export default function EditVideoPage() {
   const router = useRouter();
   const { videoId } = useParams();
@@ -41,7 +42,7 @@ export default function EditVideoPage() {
   const [video, setVideo] = useState<SelectVideo | null>(null);
   const [products, setProducts] = useState<SelectProduct[]>([]);
   const { toast } = useToast();
-
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   // Fetch video details
   useEffect(() => {
     if (videoId) {
@@ -132,6 +133,16 @@ export default function EditVideoPage() {
     );
   };
 
+  const qrModalText = [
+    {
+      name: "video",
+      text: "Place this QR code in your video so your viewers can scan it to access your video affiliate page.",
+    },
+    {
+      name: "product",
+      text: "Scan the QR code to visit the affiliate product link.",
+    },
+  ];
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -163,7 +174,30 @@ export default function EditVideoPage() {
                         <p className="text-sm text-gray-600"> Edit Profile</p>
                       </div>
                       <div className="flex flex-col items-center justify-center gap-2">
-                        <QrCodeModal url={video?.videoShortLink} />
+
+                        <Dialog>
+                          <DialogTrigger asChild>
+                            <div className="flex flex-col items-center justify-center gap-2">
+                              <Button
+                                className={cn(
+                                  buttonVariants({ variant: "outline" }),
+                                  "mt-2 sm:mt-0 rounded-lg transition w-[100px] h-[100px] flex flex-col space-y-2"
+                                )}
+                              >
+                                <QrCode
+                                  size={32}
+                                  className="text-neutral-600 scale-[2.5]"
+                                />{" "}
+                                {/* Increased size from 48 to 64 */}
+                              </Button>
+                              <p className="text-sm text-gray-600">
+                                {" "}
+                                Get QR Code
+                              </p>
+                            </div>
+                          </DialogTrigger>
+                          <QrCodeModal url={video?.videoShortLink} text={qrModalText[0].text} />
+                        </Dialog>
                       </div>
                     </div>
 
@@ -206,9 +240,10 @@ export default function EditVideoPage() {
                               </div>
                             ) : (
                               <div className="flex-shrink-0 ">
-                                <div className="w-[100px] sm:w-[120px] rounded-md bg-neutral-200 sm:h-[67px] h-[56px] flex items-center justify-center text-xs italic">Add an image</div>
+                                <div className="w-[100px] sm:w-[120px] rounded-md bg-neutral-200 sm:h-[67px] h-[56px] flex items-center justify-center text-xs italic">
+                                  Add an image
+                                </div>
                               </div>
-
                             )}
 
                             <div className="flex flex-col justify-between max-h-[85px] sm:max-h-[140px]">
@@ -310,6 +345,8 @@ export default function EditVideoPage() {
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent>
+                                  
+                                  {/* Edit Product */}
                                   <DropdownMenuItem
                                     className="hover:cursor-pointer"
                                     onSelect={(e) => e.preventDefault()}
@@ -330,19 +367,47 @@ export default function EditVideoPage() {
                                       onProductAdded={() =>
                                         console.log("Product updated!")
                                       }
-                                    />
-                                  </DropdownMenuItem>
-                                  <DropdownMenuItem className="hover:cursor-pointer">
-                                    <QrCode size={16} /> Get QR
+                                      />
+                                    </DropdownMenuItem>
+                                  
+                                  {/* Get QR Code */}
+                                  <DropdownMenuItem className="hover:cursor-pointer" onSelect={(e) => e.preventDefault()}>
+                                    <Dialog>
+                                      <DialogTrigger asChild>
+                                        <Button variant="ghost" className="p-0 h-fit">
+                                          <QrCode size={16} /> Get QR
+                                        </Button>
+                                      </DialogTrigger>
+                                      <QrCodeModal url={product.shortLink} text={qrModalText[1].text} />
+                                    </Dialog>
                                   </DropdownMenuItem>
 
                                   <DropdownMenuItem
                                     className="text-red-500 focus:bg-red-50 focus:text-red-600 hover:cursor-pointer"
                                     onSelect={(e) => e.preventDefault()} // Prevents closing menu on click
-                                    onClick={() => handleDelete(product)}
                                   >
-                                    <Trash2 size={16} />
-                                    Delete
+                                    <Dialog open={openDeleteDialog} onOpenChange={setOpenDeleteDialog}>
+                                      <DialogTrigger asChild>
+                                          <Button variant="ghost" className="w-full h-fit p-0 justify-start text-red-500 hover:bg-red-50 hover:text-red-600 hover:cursor-pointer">
+                                            <Trash2 size={16} />
+                                            Delete
+                                          </Button>
+                                      </DialogTrigger>
+                                      <DialogContent className="w-[350px]">
+                                        <DialogHeader>
+                                          <DialogTitle>Delete Product</DialogTitle>
+                                        </DialogHeader>
+                                        <DialogDescription className="text-sm -mt-2 text-center sm:text-left">Are you sure you want to delete this product? This action is irreversible.</DialogDescription>
+                                        <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-1">
+                                          <Button variant="outline" onClick={() => setOpenDeleteDialog(false)}>
+                                            No
+                                          </Button>
+                                          <Button variant="default" onClick={() => handleDelete(product)}>
+                                            Yes
+                                          </Button>
+                                        </DialogFooter>
+                                      </DialogContent>
+                                    </Dialog>
                                   </DropdownMenuItem>
                                 </DropdownMenuContent>
                               </DropdownMenu>

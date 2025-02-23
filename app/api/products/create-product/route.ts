@@ -17,7 +17,7 @@ export async function POST(req: Request) {
 
     console.log(videoId, productName, originalLink, productDescription, imageUrl);
     // Shorten URL using Dub.co
-    const shortLinkResult = await dub.links.create({ url: originalLink });
+    const shortLinkResult = await dub.links.create({ url: originalLink, tenantId: userId, externalId: videoId });
     const shortLink = shortLinkResult.shortLink;
 
     // Insert new product record

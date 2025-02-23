@@ -12,7 +12,7 @@ import { QrCode } from "lucide-react";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 
-const QrCodeModal = ({ url }: { url: string }) => {
+const QrCodeModal = ({ url, text }: { url: string, text: string }) => {
   const baseUrl = `https://api.dub.co/qr?url=${url}`;
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(baseUrl);
 
@@ -58,29 +58,12 @@ const QrCodeModal = ({ url }: { url: string }) => {
   };
 
   return (
-    <Dialog>
-      <DialogTrigger asChild>
-        <div className="flex flex-col items-center justify-center gap-2">
-        <Button
-          className={cn(
-            buttonVariants({ variant: "outline" }),
-            "mt-2 sm:mt-0 rounded-lg transition w-[100px] h-[100px] flex flex-col space-y-2"
-          )}
-        >
-          <QrCode size={32} className="text-neutral-600 scale-[2.5]" />{" "}
-                          {/* Increased size from 48 to 64 */}
-        </Button>
-        <p className="text-sm text-gray-600"> Get QR Code</p>
-        </div>
-      </DialogTrigger>
+    
       <DialogContent>
         <DialogHeader>
           <DialogTitle>QR Code</DialogTitle>
-          <p className="text-sm text-gray-500">
-            Place this QR code in your video so your viewers can scan it to
-            access your video affiliate page.
-          </p>
-        </DialogHeader>
+        <p className="text-sm text-gray-500">{text}</p>
+      </DialogHeader>
 
         <div className="w-full justify-center items-center flex bg-neutral-100 p-6 rounded-xl">
           <Image
@@ -135,7 +118,6 @@ const QrCodeModal = ({ url }: { url: string }) => {
           </Button>
         </div>
       </DialogContent>
-    </Dialog>
   );
 };
 
