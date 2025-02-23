@@ -17,10 +17,21 @@ export const iconMap = {
 };
 
 // ✅ Delete Image from Supabase Storage
-export const deleteImage = async (path: string) => {
+export const deleteImage = async (fullPath: string) => {
+  console.log("deleteImage");
+  console.log("fullPath", fullPath);
+
   try {
    
-    
+    const bucketUrl = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET_URL + "thumbnails/";
+
+    if (!bucketUrl) {
+      throw new Error("Bucket URL is not defined");
+    }
+
+    const path = fullPath.replace(bucketUrl, "");
+    console.log(path);
+
     const { error } = await supabase.storage
       .from("thumbnails")
       .remove([path]);

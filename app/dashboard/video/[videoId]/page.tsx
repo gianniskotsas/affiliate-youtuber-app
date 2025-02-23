@@ -193,7 +193,7 @@ export default function EditVideoPage() {
                             key={product.id}
                             className="border rounded-2xl shadow-sm p-4 relative flex flex-row sm:flex-row items-center w-full sm:w-[600px] sm:items-center gap-4 sm:gap-12"
                           >
-                            {product.imageUrl && (
+                            {product.imageUrl ? (
                               <div className="flex-shrink-0">
                                 <Image
                                   src={product.imageUrl}
@@ -204,6 +204,11 @@ export default function EditVideoPage() {
                                   height={120}
                                 />
                               </div>
+                            ) : (
+                              <div className="flex-shrink-0 ">
+                                <div className="w-[100px] sm:w-[120px] rounded-md bg-neutral-200 sm:h-[67px] h-[56px] flex items-center justify-center text-xs italic">Add an image</div>
+                              </div>
+
                             )}
 
                             <div className="flex flex-col justify-between max-h-[85px] sm:max-h-[140px]">

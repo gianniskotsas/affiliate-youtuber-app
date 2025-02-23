@@ -49,9 +49,9 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
           abort
         ) => {
           try {
-            const filePath = `products/${Date.now()}_${file.name}`;
+            const filePath = `products/${Date.now()}_${product.id}`;
 
-            // Upload directly to Supabase Storage
+            // ✅ Upload to Supabase Storage
             const { data, error: uploadError } = await supabase.storage
               .from("thumbnails")
               .upload(filePath, file, { cacheControl: "3600", upsert: false });
@@ -61,7 +61,21 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
             // ✅ Construct the correct public URL manually
             const publicUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/thumbnails/${filePath}`;
 
-            // Update Parent State
+            // ✅ Update the product's image URL in the database via Drizzle API route
+            const updateResponse = await fetch("/api/products/update-product-image", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                productId: product.id,
+                imageUrl: publicUrl,
+              }),
+            });
+
+            if (!updateResponse.ok) {
+              throw new Error("Failed to update product image in database.");
+            }
+
+            // ✅ Update Parent State
             setProduct({ ...product, imageUrl: publicUrl });
 
             load(publicUrl); // ✅ Marks upload as successful
@@ -76,7 +90,7 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
             const filePath = product.imageUrl.split("/thumbnails/")[1]; // Extract file path
             console.log("Deleting:", filePath);
 
-            // Delete from Supabase Storage
+            // ✅ Delete from Supabase Storage
             const { error: deleteError } = await supabase.storage
               .from("thumbnails")
               .remove([filePath]);
@@ -87,14 +101,30 @@ const FilePondUploader: React.FC<FilePondUploaderProps> = ({
               return;
             }
 
-            // Update Parent State
+            // ✅ Update the database to remove the image URL
+            const updateResponse = await fetch("/api/products/update-product", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                productId: product.id,
+                imageUrl: null, // Remove the image URL in DB
+              }),
+            });
+
+            if (!updateResponse.ok) {
+              console.error("Failed to remove image URL from database.");
+              error("Failed to update database.");
+              return;
+            }
+
+            // ✅ Update Parent State
             setProduct({ ...product, imageUrl: null });
 
-            load(); // Notify FilePond deletion was successful
+            load(); // ✅ Notify FilePond deletion was successful
           }
         },
       }}
-      className="border border-gray-300 aspect-video rounded-lg p-4"
+      className="border border-gray-300 aspect-video rounded-lg p-4 mt-2"
     />
   );
 };

@@ -53,6 +53,9 @@ const UpdateProductButton = ({
   product: SelectProduct;
   setProduct: (product: SelectProduct) => void;
 }) => {
+  console.log("hello");
+  console.log(product.imageUrl);
+
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const form = useForm<ProductFormData>({
@@ -184,7 +187,7 @@ const UpdateProductButton = ({
                 </FormLabel>
 
                 {product.imageUrl ? (
-                  <div className="relative group w-full">
+                  <div className="relative group w-full mt-2">
                     {/* ✅ Image Preview */}
                     <Image
                       src={product.imageUrl}
@@ -196,15 +199,35 @@ const UpdateProductButton = ({
 
                     {/* ✅ Delete Button (X) */}
                     <Button
-                    variant="secondary"
+                      variant="secondary"
                       className="absolute top-2 left-2 p-0.5 w-5 h-5 aspect-square rounded-full shadow-md"
                       onClick={async () => {
                         setProduct({ ...product, imageUrl: null });
 
                         try {
                           if (product.imageUrl) {
-                            await deleteImage(product.imageUrl);
-                            console.log("Image deleted from storage.");
+
+                            deleteImage(product.imageUrl);
+                            const response = await fetch(
+                              "/api/products/update-product-image",
+                              {
+                                method: "POST",
+                                headers: {
+                                  "Content-Type": "application/json",
+                                },
+                                body: JSON.stringify({
+                                  productId: product.id,
+                                  imageUrl: "",
+                                }),
+                              }
+                            );
+
+                            if (!response.ok) {
+                              throw new Error("Failed to update product image");
+                            }
+
+                            const data = await response.json();
+                            console.log(data.message);
                           }
                         } catch (error) {
                           console.error("Error deleting image:", error);
