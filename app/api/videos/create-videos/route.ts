@@ -18,7 +18,11 @@ export async function POST(req: Request) {
     }
 
     // Retrieve username based on userId
-    const user = await db.select({ username: users.username }).from(users).where(eq(users.id, userId)).execute();
+    const user = await db
+      .select({ username: users.username })
+      .from(users)
+      .where(eq(users.id, userId))
+      .execute();
     const username = user[0]?.username;
 
     if (!username) {
@@ -43,9 +47,17 @@ export async function POST(req: Request) {
       if (!userIdTag) {
         userIdTag = await dub.tags.create({ name: userId });
       }
-      const url = `https://${process.env.APP_URL}/${username}/${videoSlug}`
+      const url = `${process.env.APP_URL}/${username}/${videoSlug}`;
 
-      const shortLinkResult = await dub.links.create({ url: url, domain: process.env.DUB_DOMAIN, tenantId: userId, tagIds: [userIdTag.id], title: videoTitle, image: videoThumbnail, proxy: true });
+      const shortLinkResult = await dub.links.create({
+        url: url,
+        domain: process.env.DUB_DOMAIN,
+        tenantId: userId,
+        tagIds: [userIdTag.id],
+        title: videoTitle,
+        image: videoThumbnail,
+        proxy: true,
+      });
       shortLink = shortLinkResult?.shortLink;
 
       if (!shortLink) {
@@ -65,7 +77,7 @@ export async function POST(req: Request) {
       videoSlug,
       videoThumbnail,
       videoShortLink: shortLink,
-    })
+    });
 
     // Insert new video record into database
     const newVideo = await db
@@ -79,7 +91,11 @@ export async function POST(req: Request) {
       })
       .execute();
 
-    const videoId = await db.select({ id: videos.id }).from(videos).where(eq(videos.videoShortLink, shortLink)).execute();
+    const videoId = await db
+      .select({ id: videos.id })
+      .from(videos)
+      .where(eq(videos.videoShortLink, shortLink))
+      .execute();
 
     return NextResponse.json({ id: videoId[0].id }, { status: 201 });
   } catch (error) {
