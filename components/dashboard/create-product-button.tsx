@@ -154,7 +154,7 @@ const CreateProductButton = ({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="default" className="w-full sm:w-[600px]">
+        <Button variant="default" className="w-full rounded-lg max-w-screen-sm">
           Add Product
         </Button>
       </DialogTrigger>
