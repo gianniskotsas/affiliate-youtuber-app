@@ -40,9 +40,6 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
       videoThumbnail: preview
     };
 
-    console.log("Creating video...");
-    console.log(requestData);
-
     const response = await fetch("/api/videos/create-videos", {
       method: "POST",
       headers: {
@@ -55,7 +52,10 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
 
     setIsLoadingCreate(false);
     onClose();
+
     router.push(`/dashboard/video/${data.id}`);
+
+
   }, [preview, router, onClose]);
 
   useEffect(() => {

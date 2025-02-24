@@ -79,7 +79,9 @@ export async function POST(req: Request) {
       })
       .execute();
 
-    return NextResponse.json(newVideo, { status: 201 });
+    const videoId = await db.select({ id: videos.id }).from(videos).where(eq(videos.videoShortLink, shortLink)).execute();
+
+    return NextResponse.json({ id: videoId[0].id }, { status: 201 });
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
