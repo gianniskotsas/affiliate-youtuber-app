@@ -51,13 +51,13 @@ export default function VideoPage({
                     className="rounded-full"
                   />
                 </div>
-                <div className="text-sm font-semibold text-neutral-900 mt-4">
+                <div className="text-sm lg:text-lg font-semibold text-neutral-900 mt-4">
                   {userDb.username}
                 </div>
-                <div className="text-xs text-neutral-500 mt-1">
+                <div className="text-xs lg:text-sm text-neutral-500 mt-1">
                   {userDb.bio}
                 </div>
-                <div className="text-sm text-neutral-500 mt-4 flex flex-row gap-2">
+                <div className="text-sm text-neutral-500 mt-4 flex flex-row gap-2 lg:gap-4">
                   {userDb.socialAccounts?.map(
                     (item) =>
                       item.url && (
@@ -65,7 +65,7 @@ export default function VideoPage({
                           href={item.url}
                           key={item.name}
                           className={buttonVariants({
-                            variant: "secondary",
+                            variant: "outline",
                             size: "icon",
                           })}
                         >
@@ -83,7 +83,7 @@ export default function VideoPage({
               </div>
 
               {/* Products Section */}
-              <div className={clsx("mt-8 w-full px-4")}>
+              <div className={clsx("mt-12 w-full px-4")}>
                 {products.length > 0 ? (
                   <div
                     className={clsx(
@@ -130,7 +130,7 @@ export default function VideoPage({
                             viewBox="0 0 24 24"
                             strokeWidth={2}
                             stroke="currentColor"
-                            className="size-4"
+                            className="size-4 group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform duration-300"
                           >
                             <path
                               strokeLinecap="round"
