@@ -50,11 +50,12 @@ export default function AddVideoModal({ isOpen, onClose }: AddVideoModalProps) {
       },
       body: JSON.stringify(requestData)
     });
+    
     const data = await response.json();
 
     setIsLoadingCreate(false);
     onClose();
-    router.push(`/dashboard/video/${data.videoId}`);
+    router.push(`/dashboard/video/${data.id}`);
   }, [preview, router, onClose]);
 
   useEffect(() => {
