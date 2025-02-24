@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import { social } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
@@ -21,7 +21,7 @@ export default function VideoPage({
   const isMobile = useContext(MobileContext);
 
   return (
-    <section className="h-full w-full bg-neutral-100 flex flex-col overflow-hidden">
+    <section className="h-full w-full flex flex-col overflow-hidden">
       {!userDb ? (
         <div className="flex flex-col items-center justify-center h-full w-full">
           <p className="flex flex-row items-center gap-2">
@@ -33,21 +33,15 @@ export default function VideoPage({
         </div>
       ) : (
         // ✅ Ensure `ScrollArea` is inside a flex container and has overflow-auto
-        <div className="flex-1 overflow-hidden">
-          <ScrollArea className="h-full w-full overflow-auto">
+        <div className="flex overflow-hidden items-center justify-center ">
+          <ScrollArea className="h-full w-full overflow-auto  max-w-screen-md">
             <div
               className={clsx(
-                "flex flex-col items-center justify-start pt-12 pb-8 h-full w-full",
-                !isMobile && "lg:flex-row lg:items-start lg:justify-start"
+                "flex flex-col items-center justify-start pt-12 pb-8 h-full w-full"
               )}
-            >       
+            >
               {/* User Profile Section */}
-              <div
-                className={clsx(
-                  "flex flex-col items-center px-4 w-full",
-                  !isMobile && "lg:items-start lg:w-1/3"
-                )}
-              >
+              <div className={clsx("flex flex-col items-center px-4 w-full ")}>
                 <div className="relative h-20 w-20 border-2 border-neutral-700 rounded-full">
                   <Image
                     src={userDb.profilePicture || "/path/to/placeholder.png"}
@@ -89,12 +83,7 @@ export default function VideoPage({
               </div>
 
               {/* Products Section */}
-              <div
-                className={clsx(
-                  "mt-8 w-full px-4",
-                  !isMobile && "lg:mt-0 lg:w-2/3"
-                )}
-              >
+              <div className={clsx("mt-8 w-full px-4")}>
                 {products.length > 0 ? (
                   <div
                     className={clsx(
@@ -105,30 +94,50 @@ export default function VideoPage({
                     {products.map((product) => (
                       <Link
                         key={product.id}
-                        className="border rounded-2xl shadow-sm mb-4 flex flex-col items-start w-full"
+                        className="group border rounded-2xl shadow-sm mb-4 flex flex-col items-start w-full p-2.5 bg-neutral-50"
                         href={product.shortLink}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
                         {product.imageUrl && (
                           <div className="w-full flex justify-center">
-                            <Image
-                              src={product.imageUrl}
-                              alt={product.productName}
-                              quality={40}
-                              className="w-full rounded-t-md"
-                              width={150}
-                              height={150}
-                            />
+                            <div
+                              className="group-hover:shadow-md transition-all duration-300 relative w-full border rounded-xl"
+                              style={{ paddingTop: "56.25%" }}
+                            >
+                              <Image
+                                src={product.imageUrl}
+                                alt={product.productName}
+                                quality={40}
+                                className="absolute top-0 left-0 w-full h-full object-cover rounded-xl"
+                                layout="fill"
+                              />
+                            </div>
                           </div>
                         )}
-                        <div className="flex flex-col items-left w-full p-4">
-                          <h3 className="text-sm font-semibold">
-                            {product.productName}
-                          </h3>
-                          <p className="text-xs text-gray-500 w-full">
-                            {product.productDescription}
-                          </p>
+                        <div className="flex justify-between items-center w-full p-2.5">
+                          <div className="flex flex-col items-left w-full">
+                            <h3 className="text-sm font-semibold">
+                              {product.productName}
+                            </h3>
+                            <p className="text-xs text-gray-500 w-full">
+                              {product.productDescription}
+                            </p>
+                          </div>
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            strokeWidth={2}
+                            stroke="currentColor"
+                            className="size-4"
+                          >
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
+                            />
+                          </svg>
                         </div>
                       </Link>
                     ))}
