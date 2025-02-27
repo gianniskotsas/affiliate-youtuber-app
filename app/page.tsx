@@ -56,10 +56,11 @@ export default function WaitlistPage() {
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen px-2.5 h-screen bg-neutral-900 overflow-hidden pt-24">
+    <div className="relative flex flex-col items-center justify-between min-h-screen px-2.5 h-screen bg-neutral-900 overflow-hidden pt-4">
       <div className="flex flex-col items-center">
         <SpotlightNew />
-        <h1 className="text-3xl sm:text-6xl text-neutral-100 font-bold mb-4 max-w-screen-lg text-center">
+        <div className="flex flex-row items-center justify-between text-neutral-100 max-w-screen-lg w-full text-lg font-semibold">  Veevo</div>
+        <h1 className="text-3xl sm:text-6xl text-neutral-100 font-bold mb-4 max-w-screen-lg text-center pt-14">
           Showcase your affiliate products with a dedicated video page
         </h1>
         <p className="text-lg text-neutral-400 mb-8 text-center max-w-screen-sm">
@@ -97,7 +98,7 @@ export default function WaitlistPage() {
       </div>
 
       <div className="w-full relative max-w-screen-lg h-1/3 sm:h-1/2 p-3 bg-neutral-100/80 rounded-t-xl">
-        <div className="absolute -top-16 left-12 flex flex-row gap-2 items-center animate-bounce rotate-45">
+        <div className="absolute -top-16 left-12 sm:-left-24 flex flex-row gap-2 items-center animate-bounce rotate-45">
           <Link
             href="https://veevo.app/kotsas/brand-tools"
             className="bg-neutral-100 flex flex-row gap-2 items-center rounded-xl px-2 py-1"

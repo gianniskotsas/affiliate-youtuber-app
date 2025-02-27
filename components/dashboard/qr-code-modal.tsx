@@ -67,7 +67,7 @@ const QrCodeModal = ({ url, text }: { url: string, text: string }) => {
 
         <div className="w-full justify-center items-center flex bg-neutral-100 p-6 rounded-xl">
           <Image
-            src={`https://api.dub.co/qr?url=${url}`}
+            src={`https://api.dub.co/qr?url=${url}&logo=https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/veevo_logo_dark.jpg`}
             alt="QR Code"
             width={200}
             height={200}
