@@ -18,7 +18,9 @@ import { SpotlightNew } from "@/components/ui/spotlight-new";
 import Link from "next/link";
 import { CornerRightDown, CornerLeftDown } from "lucide-react";
 import { toast, useToast } from "@/hooks/use-toast";
-
+import { BackgroundGradient } from "@/components/ui/background-gradient";
+import { LinkPreview } from "@/components/ui/link-preview";
+import { MovingButton } from "@/components/ui/moving-border";
 const formSchema = z.object({
   email: z.string().email(),
 });
@@ -36,35 +38,46 @@ export default function WaitlistPage() {
   const handleSubmit = (values: FormValues) => {
     console.log("Email submitted:", values.email);
 
-    fetch('/api/waitlist/join-waitlist', {
-      method: 'POST',
+    fetch("/api/waitlist/join-waitlist", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
       body: JSON.stringify({ email: values.email }),
     })
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         toast({
           title: "Email Submitted",
           description: `You have entered: ${values.email}`,
         });
       })
       .catch((error) => {
-        console.error('Error:', error);
+        console.error("Error:", error);
       });
   };
 
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen px-2.5 h-screen bg-neutral-900 overflow-hidden pt-4">
+    <div className="relative flex flex-col items-center justify-between min-h-screen px-4 h-screen bg-neutral-900 overflow-hidden pt-4">
       <div className="flex flex-col items-center">
         <SpotlightNew />
-        <div className="flex flex-row items-center justify-between text-neutral-100 max-w-screen-lg w-full text-lg font-semibold">  Veevo</div>
-        <h1 className="text-3xl sm:text-6xl text-neutral-100 font-bold mb-4 max-w-screen-lg text-center pt-14">
+
+        <div className="pt-20 sm:pt-14 flex flex-col items-center gap-2">
+        <MovingButton className="bg-neutral-200 px-4 py-0.5 flex flex-row items-center gap-2 text-neutral-700 cursor-default">
+          <Image
+            src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/veevo_logo.png"
+            alt="Veevo"
+            width={20}
+            height={20}
+          />
+          <span className="text-sm font-semibold">Veevo</span>
+        </MovingButton>
+        <h1 className="text-3xl md:text-4xl lg:text-6xl text-neutral-100 font-bold mb-4 max-w-screen-lg text-center ">
           Showcase your affiliate products with a dedicated video page
         </h1>
         <p className="text-lg text-neutral-400 mb-8 text-center max-w-screen-sm">
-          Create a platform to showcase all your products and redirect your users there either via QR code or via a shortlink.
+          Create a platform to showcase all your products and redirect your
+          users there either via QR code or via a shortlink.
         </p>
         <Form {...form}>
           <form
@@ -95,12 +108,13 @@ export default function WaitlistPage() {
             </Button>
           </form>
         </Form>
+        </div>
       </div>
 
-      <div className="w-full relative max-w-screen-lg h-1/3 sm:h-1/2 p-3 bg-neutral-100/80 rounded-t-xl">
-        <div className="absolute -top-16 left-12 sm:-left-24 flex flex-row gap-2 items-center animate-bounce rotate-45">
-          <Link
-            href="https://veevo.app/kotsas/brand-tools"
+      <div className="w-full relative max-w-screen-lg h-1/4 sm:h-1/2 p-3 bg-neutral-100/80 rounded-t-xl">
+        <div className="absolute -top-16 left-4 lg:-left-24 flex flex-row gap-2 items-center animate-bounce rotate-45">
+          <LinkPreview
+            url="https://veevo.app/gianniskotsas/brand-tools"
             className="bg-neutral-100 flex flex-row gap-2 items-center rounded-xl px-2 py-1"
           >
             <svg
@@ -121,14 +135,14 @@ export default function WaitlistPage() {
               <span className="text-neutral-600">veevo.link/</span>
               <span className="text-neutral-600 font-semibold">kotsas</span>
             </p>
-          </Link>
+          </LinkPreview>
           <CornerRightDown className="size-6 mt-4 text-neutral-100" />
         </div>
-        <div className="absolute -top-24 right-16 flex flex-row gap-2 items-center animate-bounce rotate-45">
-        <CornerLeftDown className="size-6 mt-4 text-neutral-100" />
+        <div className="absolute -top-24 right-8 lg:-right-24 flex flex-row gap-2 items-center animate-bounce rotate-45">
+          <CornerLeftDown className="size-6 mt-4 text-neutral-100" />
 
-          <Link
-            href="https://veevo.app/kotsas/brand-tools"
+          <LinkPreview
+            url="https://veevo.app/gianniskotsas/brand-tools"
             className="bg-neutral-100 flex flex-row gap-2 items-center rounded-full"
           >
             <Image
@@ -138,7 +152,7 @@ export default function WaitlistPage() {
               height={60}
               className=""
             />
-          </Link>
+          </LinkPreview>
         </div>
         <Image
           src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/Screenshot%202025-02-26%20at%2019.38.00.png"
