@@ -51,19 +51,6 @@ export default function EditVideoPage() {
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [isExploding, setIsExploding] = useState(false); // State for confetti
 
-  // Fetch video details
-  useEffect(() => {
-    if (videoId) {
-      fetch(`/api/videos/fetch-video`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ videoId }),
-      })
-        .then((res) => res.json())
-        .then((data) => setVideo(data))
-        .catch((error) => console.error("Failed to fetch video:", error));
-    }
-  }, [videoId]);
 
   const fetchProducts = async () => {
     if (videoId) {
@@ -78,6 +65,21 @@ export default function EditVideoPage() {
     }
   };
 
+  // Fetch video details
+  useEffect(() => {
+    if (videoId) {
+      fetch(`/api/videos/fetch-video`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ videoId }),
+      })
+        .then((res) => res.json())
+        .then((data) => setVideo(data))
+        .catch((error) => console.error("Failed to fetch video:", error));
+    }
+  }, [videoId, fetchProducts]);
+
+  
   // Function to update the image URL of a specific product
   const handleImageDelete = (productId: string) => {
     setProducts((prevProducts) =>
@@ -90,7 +92,7 @@ export default function EditVideoPage() {
   // Fetch products for the video
   useEffect(() => {
     fetchProducts();
-  }, [videoId, router]);
+  }, [videoId, router, fetchProducts]);
 
   if (!video) return <div>Loading...</div>;
   if (!videoId) return <div>Invalid video ID</div>;
