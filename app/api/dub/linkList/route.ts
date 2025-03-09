@@ -6,32 +6,31 @@ const dub = new Dub({
 });
 
 export async function POST(req: Request) {
-  const { userId, interval, device, linkId } = await req.json();
+  const { userId } = await req.json();
 
   if (!userId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
   }
 
   try {
-    // Fetch the click analytics
-    const result = await dub.analytics.retrieve({
-      groupBy: "timeseries",
-      interval: interval || "24h",
-      device: device || "",
+
+    // Fetch the links
+    const linksList = await dub.links.list({
       tenantId: userId,
-      linkId: linkId || "",
+      page: 1,
     });
 
-    const resultCount = await dub.analytics.retrieve({
-      groupBy: "count",
-      interval: interval || "24h",
-      device: device || "",
-      tenantId: userId,
-      linkId: linkId || "",
-    });
+    
+    // Filter the JSON
+    const resultLinks = linksList.result.map((link: any) => ({
+      id: link.id,
+      shortLink: link.shortLink,
+      orginalLink: link.url,
+    }));
+
 
     // Handle the result
-    return NextResponse.json({ result, resultCount }, { status: 200 });
+    return NextResponse.json({ resultLinks }, { status: 200 });
   } catch (error) {
     console.error("Error fetching click analytics:", error);
     return NextResponse.json(

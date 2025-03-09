@@ -48,7 +48,7 @@ const AnalyticsPage = () => {
               </h1>
               <div className="mt-6">
                 <ClicksGraph userId={userDb?.id || ""} />
-                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="mt-6 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
                   <Card className="bg-white shadow rounded-lg p-6">
                     <CardHeader>
                       <CardTitle>Top 10 Performing Products</CardTitle>
