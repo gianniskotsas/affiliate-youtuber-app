@@ -112,7 +112,7 @@ export default function EditVideoPage() {
         .catch((error) => console.error("Failed to fetch user:", error))
         .finally(() => setLoading(false));
     }
-  }, [isLoaded, userId, user, router]);
+  }, [isLoaded, userId, user, router, form]);
 
   // Sync state when `userDb.profilePicture` updates (e.g., after re-fetch)
   useEffect(() => {
@@ -120,7 +120,7 @@ export default function EditVideoPage() {
       setProfileImage(userDb.profilePicture);
     }
     console.log(userDb?.profilePicture);
-  }, [userDb?.profilePicture, router]);
+  }, [userDb?.profilePicture, router, form]);
 
   if (!isLoaded) return <div>Loading...</div>;
 

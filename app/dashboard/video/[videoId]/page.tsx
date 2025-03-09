@@ -77,7 +77,7 @@ export default function EditVideoPage() {
         .then((data) => setVideo(data))
         .catch((error) => console.error("Failed to fetch video:", error));
     }
-  }, [videoId, fetchProducts]);
+  }, [videoId, router]);
 
   
   // Function to update the image URL of a specific product
@@ -92,7 +92,7 @@ export default function EditVideoPage() {
   // Fetch products for the video
   useEffect(() => {
     fetchProducts();
-  }, [videoId, router, fetchProducts]);
+  }, [videoId, router]);
 
   if (!video) return <div>Loading...</div>;
   if (!videoId) return <div>Invalid video ID</div>;

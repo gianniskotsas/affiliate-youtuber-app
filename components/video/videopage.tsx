@@ -54,7 +54,7 @@ export default function VideoPage({
                 <div className="text-sm lg:text-lg font-semibold text-neutral-900 mt-4">
                   {userDb.username}
                 </div>
-                <div className="text-xs lg:text-sm text-neutral-500 mt-1 text-center">
+                <div className="text-xs text-center lg:text-sm text-neutral-500 mt-1">
                   {userDb.bio}
                 </div>
                 <div className="text-sm text-neutral-500 mt-4 flex flex-row gap-2 lg:gap-4">
