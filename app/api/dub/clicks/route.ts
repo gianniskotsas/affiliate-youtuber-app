@@ -13,22 +13,26 @@ export async function POST(req: Request) {
   }
 
   try {
-    // Fetch the click analytics
-    const result = await dub.analytics.retrieve({
-      groupBy: "timeseries",
-      interval: interval || "24h",
-      device: device || "",
-      tenantId: userId,
-      linkId: linkId || "",
-    });
+    // Run both analytics requests simultaneously
+    const [result, resultCount] = await Promise.all([
+      dub.analytics.retrieve({
+        groupBy: "timeseries",
+        interval: interval || "24h",
+        device: device || "",
+        tenantId: userId,
+        linkId: linkId || "",
+      }),
+      dub.analytics.retrieve({
+        groupBy: "count",
+        interval: interval || "24h",
+        device: device || "",
+        tenantId: userId,
+        linkId: linkId || "",
+      }),
+     
+    ]);
 
-    const resultCount = await dub.analytics.retrieve({
-      groupBy: "count",
-      interval: interval || "24h",
-      device: device || "",
-      tenantId: userId,
-      linkId: linkId || "",
-    });
+   
 
     // Handle the result
     return NextResponse.json({ result, resultCount }, { status: 200 });
