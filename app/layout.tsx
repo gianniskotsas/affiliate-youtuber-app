@@ -32,7 +32,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+    <ClerkProvider appearance={{
+      layout: {
+        socialButtonsPlacement: 'top',
+        socialButtonsVariant: 'auto',
+      }
+    }}>
       <html lang="en">
         <body>
           {children}

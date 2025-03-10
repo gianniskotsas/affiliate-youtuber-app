@@ -6,7 +6,7 @@ const dub = new Dub({
 });
 
 export async function POST(req: Request) {
-  const { userId, interval } = await req.json();
+  const { userId, interval, linkId } = await req.json();
 
   if (!userId) {
     return NextResponse.json({ error: "User ID is required" }, { status: 400 });
@@ -18,6 +18,7 @@ export async function POST(req: Request) {
       groupBy: "devices",
       interval: interval || "24h",
       tenantId: userId,
+      linkId: linkId
     });
 
     console.log(devices);

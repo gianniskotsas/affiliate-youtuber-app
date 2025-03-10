@@ -36,9 +36,9 @@ const data = {
     },    
     {
       name: "Analytics",
-      url: "#",
+      url: "/dashboard/analytics",
       icon: "ChartBar",
-      active: false,
+      active: true,
     },
   ],
 };

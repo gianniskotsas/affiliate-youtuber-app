@@ -52,15 +52,8 @@ const DevicesGraph = ({ devicesData, timeRange }: { devicesData: DeviceData[], t
             }}
             className="h-fit"
           >
-
-            <YAxis
-              dataKey="clicks"
-              type="category"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-            />
             <XAxis dataKey="clicks" type="number" hide />    
+            <YAxis dataKey="device" type="category" hide />
             <Bar
               dataKey="clicks"
               layout="vertical"
@@ -72,6 +65,13 @@ const DevicesGraph = ({ devicesData, timeRange }: { devicesData: DeviceData[], t
               <LabelList
                 dataKey="device"
                 position="insideLeft"
+                offset={8}
+                className="fill-[#000000]"
+                fontSize={14}
+              />
+              <LabelList
+                dataKey="clicks"
+                position="right"
                 offset={8}
                 className="fill-[#000000]"
                 fontSize={14}

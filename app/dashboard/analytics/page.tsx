@@ -105,7 +105,7 @@ const AnalyticsPage = () => {
             headers: {
               "Content-Type": "application/json",
             },
-            body: JSON.stringify({ userId, interval: timeRange }),
+            body: JSON.stringify({ userId, interval: timeRange, linkId: selectedLink?.id }),
           }),
         ]);
 
