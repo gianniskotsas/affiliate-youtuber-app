@@ -61,7 +61,7 @@ const TopLinksGraph = ({ userId, timeRange }: { userId: string, timeRange: strin
         setTopLinksData(
           data.topLinks.map((item: any) => ({
             shortlink: item.shortlink,
-            originalLink: item.url.replace("https://", ""),
+            originalLink: item.url.replace("https://", "").slice(0, 30) + (item.url.length > 30 ? "..." : ""),
             clicks: item.clicks,
           }))
         );

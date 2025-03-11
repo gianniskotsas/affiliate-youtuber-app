@@ -16,10 +16,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-} from "@/components/ui/chart";
+import { ChartConfig, ChartContainer } from "@/components/ui/chart";
 import { DeviceData } from "@/app/dashboard/analytics/page";
 
 const chartConfig = {
@@ -32,7 +29,13 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const DevicesGraph = ({ devicesData, timeRange }: { devicesData: DeviceData[], timeRange: string }) => {
+const DevicesGraph = ({
+  devicesData,
+  timeRange,
+}: {
+  devicesData: DeviceData[];
+  timeRange: string;
+}) => {
   return (
     <Card>
       <CardHeader>
@@ -48,11 +51,14 @@ const DevicesGraph = ({ devicesData, timeRange }: { devicesData: DeviceData[], t
             data={devicesData}
             layout="vertical"
             margin={{
-              left: -40,
+              left: 5,
+              right: 45,
             }}
-            className="h-fit"
+            className="h-fit justify-start"
+            barGap={0}
+            compact={true}
           >
-            <XAxis dataKey="clicks" type="number" hide />    
+            <XAxis dataKey="clicks" type="number" hide />
             <YAxis dataKey="device" type="category" hide />
             <Bar
               dataKey="clicks"
@@ -85,4 +91,3 @@ const DevicesGraph = ({ devicesData, timeRange }: { devicesData: DeviceData[], t
 };
 
 export default DevicesGraph;
-

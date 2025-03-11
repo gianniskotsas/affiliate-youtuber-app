@@ -14,36 +14,42 @@ import {
 } from "@/components/ui/sidebar";
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
-const data = {
-  projects: [
-    {
-      name: "Videos",
-      url: "/dashboard",
-      icon: "Video",
-      active: true,
-    },
-    {
-      name: "Profile",
-      url: "/dashboard/profile",
-      icon: "User",
-      active: true,
-    },
-    {
-      name: "Sell merch",
-      url: "#",
-      icon: "Shirt",
-      active: false,
-    },    
-    {
-      name: "Analytics",
-      url: "/dashboard/analytics",
-      icon: "ChartBar",
-      active: true,
-    },
-  ],
-};
+import { useUserDb } from "@/context/UserDbContext";
+
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+  
+  const { userDb } = useUserDb();
+
+  const data = {
+    projects: [
+      {
+        name: "Videos",
+        url: "/dashboard",
+        icon: "Video",
+        active: true,
+      },
+      {
+        name: "Profile",
+        url: "/dashboard/profile",
+        icon: "User",
+        active: true,
+      },
+      {
+        name: "Sell merch",
+        url: "#",
+        icon: "Shirt",
+        active: false,
+      },    
+      {
+        name: "Analytics",
+        url: "/dashboard/analytics",
+        icon: "ChartBar",
+        active: userDb?.stripeSubscriptionStatus ? true : false,
+      },
+    ],
+  };
+
   return (
     <Sidebar {...props}>
       <SidebarHeader>

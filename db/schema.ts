@@ -25,6 +25,7 @@ export const users = pgTable("users", {
   domain: text("domain").default(""),
   stripeCustomerId: text("stripe_customer_id").default(""), // Stripe customer ID
   stripeSubscriptionId: text("stripe_subscription_id").default(""), // Stripe subscription ID
+  stripeSubscriptionStatus: boolean("stripe_subscription_status").default(false), // Stripe subscription status
 });
 
 // Videos table to store YouTube video details

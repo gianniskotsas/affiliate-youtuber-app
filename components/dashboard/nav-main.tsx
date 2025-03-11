@@ -95,11 +95,13 @@ export function NavMain({
                   </div>
                   {!item.active && (
                     <Badge
-                      variant={"outline"}
-                      className="text-neutral-500 font-medium bg-neutral-100"
-                    >
-                      Coming soon
-                    </Badge>
+                    variant={item.name === "Analytics" ? "default" : "outline"}
+                    className={cn({
+                      "text-neutral-500 font-norm bg-neutral-100": item.name !== "Analytics",
+                    })}
+                  >
+                    {item.name === "Analytics" ? "Pro" : "Coming soon"}
+                  </Badge>
                   )}
                 </Link>
               </SidebarMenuButton>

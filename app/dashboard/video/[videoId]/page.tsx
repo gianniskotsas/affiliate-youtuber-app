@@ -39,8 +39,11 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-
+import { useUserDb } from "@/context/UserDbContext";
+import UpgradeModal from "@/components/dashboard/upgradeModal";
 export default function EditVideoPage() {
+  const { userDb } = useUserDb();
+
   const router = useRouter();
   const { videoId } = useParams();
   const { isLoaded, userId } = useAuth();
@@ -50,7 +53,7 @@ export default function EditVideoPage() {
   const { toast } = useToast();
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const [isExploding, setIsExploding] = useState(false); // State for confetti
-
+  const [openUpgradeModal, setOpenUpgradeModal] = useState(false);
 
   const fetchProducts = async () => {
     if (videoId) {
@@ -79,7 +82,6 @@ export default function EditVideoPage() {
     }
   }, [videoId, router]);
 
-  
   // Function to update the image URL of a specific product
   const handleImageDelete = (productId: string) => {
     setProducts((prevProducts) =>
@@ -175,6 +177,7 @@ export default function EditVideoPage() {
       text: "Scan the QR code to visit the affiliate product link.",
     },
   ];
+
   return (
     <SidebarProvider>
       <AppSidebar />
@@ -187,46 +190,57 @@ export default function EditVideoPage() {
                   <h1 className="text-xl font-semibold leading-7 text-neutral-900 md:text-2xl">
                     Edit Video Page
                   </h1>
-                <TooltipProvider>
-                  <Tooltip>
-                    <TooltipTrigger className="text-neutral-500">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        strokeWidth={1.5}
-                        stroke="currentColor"
-                        className="size-5"
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
-                        />
-                      </svg>
-                    </TooltipTrigger>
-                    <TooltipContent
-                      side="right"
-                      className="bg-white text-neutral-700 max-w-xs border border-neutral-200"
-                    >
-                      <p>
-                        Here you can edit the video page. Need to change your
-                        profile?{" "}
-                        <Link
-                          href="/dashboard/profile"
-                          onClick={() => router.push("/dashboard/profile")}
-                          className="underline"
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger className="text-neutral-500">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          strokeWidth={1.5}
+                          stroke="currentColor"
+                          className="size-5"
                         >
-                          Learn more
-                        </Link>
-                      </p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-              </div>
-              <Button
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Zm-9 5.25h.008v.008H12v-.008Z"
+                          />
+                        </svg>
+                      </TooltipTrigger>
+                      <TooltipContent
+                        side="right"
+                        className="bg-white text-neutral-700 max-w-xs border border-neutral-200"
+                      >
+                        <p>
+                          Here you can edit the video page. Need to change your
+                          profile?{" "}
+                          <Link
+                            href="/dashboard/profile"
+                            onClick={() => router.push("/dashboard/profile")}
+                            className="underline"
+                          >
+                            Learn more
+                          </Link>
+                        </p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                <UpgradeModal
+                  open={openUpgradeModal}
+                  setOpen={setOpenUpgradeModal}
+                  userId={userId}
+                />
+                <Button
                   variant={video.active ? "secondary" : "default"}
                   onClick={() => {
+
+                    if (!userDb?.stripeSubscriptionStatus) {
+                      setOpenUpgradeModal(true);
+                      return;
+                    }
+
                     const updatedVideo = { ...video, active: !video.active };
                     setVideo(updatedVideo);
 
@@ -493,7 +507,7 @@ export default function EditVideoPage() {
                                   </svg>
                                 </Button>
                                 <Link
-                                  className="ml-2 text-xs text-gray-600 hover:underline flex flex-row items-center gap-1"
+                                  className="ml-2 text-xs text-gray-600 hover:underline flex flex-row items-center gap-1 truncate "
                                   href={product.originalLink}
                                 >
                                   <svg
@@ -510,7 +524,12 @@ export default function EditVideoPage() {
                                       d="m16.49 12 3.75 3.75m0 0-3.75 3.75m3.75-3.75H3.74V4.499"
                                     />
                                   </svg>
-                                  <span>{product.originalLink}</span>
+                                  <span>
+                                    {product.originalLink.slice(0, 40)}
+                                    {product.originalLink.length > 40
+                                      ? "..."
+                                      : ""}
+                                  </span>
                                 </Link>
                               </div>
                             </div>
@@ -649,9 +668,7 @@ export default function EditVideoPage() {
               </div>
             </div>
           </div>
-
         </div>
-
       </SidebarInset>
     </SidebarProvider>
   );
