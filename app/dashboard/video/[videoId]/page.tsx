@@ -232,66 +232,81 @@ export default function EditVideoPage() {
                   setOpen={setOpenUpgradeModal}
                   userId={userId}
                 />
-                <Button
-                  variant={video.active ? "secondary" : "default"}
-                  onClick={() => {
+                <div className="flex flex-row gap-4 items-center">
+                  {video.active && (
+                    <div className="flex flex-row gap-1 items-center">
+                      <p className="text-sm text-neutral-700 font-medium">
+                        Active
+                      </p>
+                      <div className="w-2 h-2 bg-green-600 rounded-full"></div>
+                    </div>
+                  )}
+                  <Button
+                    variant={video.active ? "secondary" : "default"}
+                    onClick={() => {
+                      if (!userDb?.stripeSubscriptionStatus) {
+                        setOpenUpgradeModal(true);
+                        return;
+                      }
 
-                    if (!userDb?.stripeSubscriptionStatus) {
-                      setOpenUpgradeModal(true);
-                      return;
-                    }
+                      const updatedVideo = { ...video, active: !video.active };
+                      setVideo(updatedVideo);
 
-                    const updatedVideo = { ...video, active: !video.active };
-                    setVideo(updatedVideo);
-
-                    fetch(`/api/videos/video-publish`, {
-                      method: "POST",
-                      headers: { "Content-Type": "application/json" },
-                      body: JSON.stringify({
-                        videoId: video.id,
-                        active: updatedVideo.active,
-                      }),
-                    })
-                      .then((res) =>
-                        res
-                          .json()
-                          .then((data) => ({ status: res.status, body: data }))
-                      )
-                      .then(({ status, body }) => {
-                        if (status === 200) {
-                          toast({
-                            title: "Success",
-                            description: `The video has been ${
-                              updatedVideo.active ? "published" : "disabled"
-                            } successfully.`,
-                          });
-                          if (updatedVideo.active) {
-                            setIsExploding(true); // Trigger confetti
-                            setTimeout(() => setIsExploding(false), 3000); // Stop confetti after 3 seconds
+                      fetch(`/api/videos/video-publish`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                          videoId: video.id,
+                          active: updatedVideo.active,
+                        }),
+                      })
+                        .then((res) =>
+                          res
+                            .json()
+                            .then((data) => ({
+                              status: res.status,
+                              body: data,
+                            }))
+                        )
+                        .then(({ status, body }) => {
+                          if (status === 200) {
+                            toast({
+                              title: "Success",
+                              description: `The video has been ${
+                                updatedVideo.active ? "published" : "disabled"
+                              } successfully.`,
+                            });
+                            if (updatedVideo.active) {
+                              setIsExploding(true); // Trigger confetti
+                              setTimeout(() => setIsExploding(false), 3000); // Stop confetti after 3 seconds
+                            }
+                          } else {
+                            toast({
+                              title: "Error",
+                              description:
+                                body.error ||
+                                "There was an issue updating the video status. Please try again later.",
+                              variant: "destructive",
+                            });
                           }
-                        } else {
+                        })
+                        .catch((error) => {
+                          console.error(
+                            "Failed to update video status:",
+                            error
+                          );
                           toast({
                             title: "Error",
                             description:
-                              body.error ||
-                              "There was an issue updating the video status. Please try again later.",
+                              "An unexpected error occurred while updating the video status. Please try again later.",
                             variant: "destructive",
                           });
-                        }
-                      })
-                      .catch((error) => {
-                        console.error("Failed to update video status:", error);
-                        toast({
-                          title: "Error",
-                          description:
-                            "An unexpected error occurred while updating the video status. Please try again later.",
-                          variant: "destructive",
                         });
-                      });
-                  }}
-                >
-                  {video.active ? "Disable" : "Publish"}
-                </Button>
+                    }}
+                  >
+                    {video.active ? "Disable" : "Publish"}
+                  </Button>
+                </div>
               </div>
               <div className="flex flex-row gap-16 h-full mt-8">
                 <div className="w-full">
