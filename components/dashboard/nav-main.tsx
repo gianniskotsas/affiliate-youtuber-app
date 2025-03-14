@@ -13,6 +13,7 @@ import {
   User,
   Shirt,
   ChartBar,
+  CreditCard,
   type LucideIcon,
 } from "lucide-react";
 
@@ -64,6 +65,7 @@ export function NavMain({
       Video,
       Package,
       Shirt,
+      CreditCard,
     };
     return icons[iconName as keyof typeof icons];
   };
