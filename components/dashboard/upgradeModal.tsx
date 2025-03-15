@@ -21,10 +21,14 @@ export default function UpgradeModal({
 
   const handleUpgrade = async (priceId: string) => {
     setLoading(true);
+
+    console.log('[USER_ID]', userId);
+
+    const callbackUrl = window.location.href;
     const response = await fetch("/api/stripe/checkout", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ priceId, userId }),
+      body: JSON.stringify({ priceId, userId, callbackUrl }),
     });
 
     const data = await response.json();
