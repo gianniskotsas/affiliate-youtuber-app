@@ -14,7 +14,7 @@ import {
   Shirt,
   ChartBar,
   CreditCard,
-  type LucideIcon,
+  Globe,
 } from "lucide-react";
 
 import {
@@ -66,6 +66,7 @@ export function NavMain({
       Package,
       Shirt,
       CreditCard,
+      Globe,
     };
     return icons[iconName as keyof typeof icons];
   };

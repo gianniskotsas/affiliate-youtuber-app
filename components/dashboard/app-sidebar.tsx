@@ -53,6 +53,12 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         icon: "CreditCard",
         active: userDb?.stripeSubscriptionStatus ? true : false,
       },
+      {
+        name: "Domains",
+        url: "/dashboard/domains",
+        icon: "Globe",
+        active: true,
+      },
     ],
   };
 

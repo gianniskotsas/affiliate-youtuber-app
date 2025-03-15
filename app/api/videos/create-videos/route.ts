@@ -41,19 +41,13 @@ export async function POST(req: Request) {
     // Generate Dub.co short link with error handling
     let shortLink;
     try {
-      let userIdTag;
-      const tags = await dub.tags.list({ search: userId });
-      userIdTag = tags.find((tag) => tag.name === userId);
-      if (!userIdTag) {
-        userIdTag = await dub.tags.create({ name: userId });
-      }
+   
       const url = `${process.env.APP_URL}/${username}/${videoSlug}`;
 
       const shortLinkResult = await dub.links.create({
         url: url,
         domain: process.env.DUB_DOMAIN,
         tenantId: userId,
-        tagIds: [userIdTag.id],
         title: videoTitle,
         image: videoThumbnail,
         proxy: true,

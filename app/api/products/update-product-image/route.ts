@@ -17,14 +17,21 @@ export async function POST(request: Request) {
     }
 
     // ✅ Update the product in the database
-    await db.update(products)
+    await db
+      .update(products)
       .set({ imageUrl })
       .where(eq(products.id, productId))
       .execute();
 
-    return NextResponse.json({ message: "Product image updated successfully" }, { status: 200 });
+    return NextResponse.json(
+      { message: "Product image updated successfully" },
+      { status: 200 }
+    );
   } catch (error) {
     console.error("Error updating product image:", error);
-    return NextResponse.json({ error: "Failed to update product" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Failed to update product" },
+      { status: 500 }
+    );
   }
 }

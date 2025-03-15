@@ -1,53 +1,49 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { eq } from "drizzle-orm";
-import { NextResponse } from "next/server";
-import { users } from "./db/schema";
-import { db } from "./db";
+import { NextRequest, NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
+  // 🔹 Protect dashboard routes
   if (isProtectedRoute(req)) await auth.protect();
+
+  const host = req.headers.get("host") || "";
+
+  // 🔹 If request is for the main domain, continue normally
+  if (host.endsWith("veevo.app")) {
+    return NextResponse.next();
+  }
+
+  try {
+    // 🔹 Fetch user details for the custom domain
+    const res = await fetch(`${req.nextUrl.origin}/api/domains/custom-domains?host=${host}`);
+
+    // 🔹 If the API response is not OK or domain is not found, continue normally
+    if (!res.ok) {
+      console.warn(`Custom domain not found or API error: ${host}`);
+      return NextResponse.next();
+    }
+
+    const data = await res.json();
+
+    // 🔹 Ensure the domain is verified before rewriting
+    if (data.username && data.verified) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/${data.username}${req.nextUrl.pathname}`;
+      return NextResponse.rewrite(url);
+    }
+  } catch (error) {
+    console.error("Middleware error:", error);
+  }
+
+  return NextResponse.next(); // Default behavior
 });
 
 export const config = {
   matcher: [
-    // Skip Next.js internals and all static files, unless found in search params
+    // 🔹 Skip Next.js internals and static files
     "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always run for API routes
+    // 🔹 Always run for API routes
     "/(api|trpc)(.*)",
   ],
 };
-
-// export async function middleware(req: NextRequest) {
-//   const host = req.headers.get("host") || "";
-
-//   // 🔹 If request is for the main domain, continue normally
-//   if (host.endsWith("veevo.app")) {
-//     return NextResponse.next();
-//   }
-
-//   try {
-//     // 🔹 Select only the necessary fields from the database
-//     const user = await db
-//       .select({
-//         username: users.username,
-//         domain: users.domain,
-//       })
-//       .from(users)
-//       .where(eq(users.domain, host))
-//       .limit(1);
-
-//     if (user.length > 0) {
-//       // 🔹 Rewrite request to match [username]/[video-slug]
-//       const url = req.nextUrl.clone();
-//       url.pathname = `/${user[0].username}${req.nextUrl.pathname}`;
-
-//       return NextResponse.rewrite(url);
-//     }
-//   } catch (error) {
-//     console.error("Middleware error:", error);
-//   }
-
-//   return NextResponse.next(); // Default behavior
-// }
