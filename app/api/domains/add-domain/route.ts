@@ -8,33 +8,42 @@ const VERCEL_API_KEY = process.env.VERCEL_API_KEY;
 
 export async function POST(req: NextRequest) {
   try {
-    const { user_id, custom_domain } = await req.json(); // Using `custom_domain` for clarity
+    const { userId, customDomain } = await req.json();
 
-    if (!user_id || !custom_domain) {   
-      return NextResponse.json({ error: "Missing parameters" }, { status: 400 });
+    if (!userId || !customDomain) {
+      return NextResponse.json(
+        { error: "Missing parameters" },
+        { status: 400 }
+      );
     }
 
-    // 🔹 Register domain in Vercel
-    const response = await fetch(`https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}/domains`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${VERCEL_API_KEY}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ name: custom_domain }),
-    });
+    // 🔹 Register domain in Vercel and update database in parallel
+    const [response] = await Promise.all([
+      fetch(
+        `https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}/domains`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${VERCEL_API_KEY}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ name: customDomain }),
+        }
+      ),
+      db
+        .update(users)
+        .set({ domain: customDomain })
+        .where(eq(users.id, userId))
+    ]);
 
     const result = await response.json();
 
     if (result.error) {
-      return NextResponse.json({ error: result.error.message }, { status: 400 });
+      return NextResponse.json(
+        { error: result.error.message },
+        { status: 400 }
+      );
     }
-
-    // 🔹 Store domain in `users` table
-    await db
-      .update(users)
-      .set({ domain: custom_domain })
-      .where(eq(users.id, user_id));
 
     return NextResponse.json({
       success: true,
@@ -42,6 +51,9 @@ export async function POST(req: NextRequest) {
     });
   } catch (error) {
     console.error("Error adding domain:", error);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }

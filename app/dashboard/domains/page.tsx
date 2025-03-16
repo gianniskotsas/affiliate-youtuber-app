@@ -23,10 +23,20 @@ import {
   DropdownMenuTrigger,
   DropdownMenuContent,
 } from "@/components/ui/dropdown-menu";
-import { ChevronsUpDown, Plus } from "lucide-react";
+import {
+  ChevronsUpDown,
+  Globe,
+  Pencil,
+  Loader2,
+  CheckCircle,
+} from "lucide-react";
 import { Copy } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import AddDomainDialog from "@/components/dashboard/AddDomainDialog";
+import { cn } from "@/lib/utils";
+import { toast } from "@/hooks/use-toast";
+import { users } from "@/db/schema";
 
 interface DNSConfigurationGuideProps {
   aRecord: {
@@ -49,9 +59,44 @@ export default function DomainsPage({
 
   const [activeTab, setActiveTab] = useState("a-record");
   const [isOpen, setIsOpen] = useState(false);
+  const [verifyDomain, setVerifyDomain] = useState(userDb?.domainVerified ? "verified" : "not-verified");
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
+  };
+
+  const handleVerifyDomain = async () => {
+    if (
+      verifyDomain === "not-verified" &&
+      userDb?.domain &&
+      userDb?.domainVerified === false
+    ) {
+      setVerifyDomain("verifying");
+
+      try {
+        const res = await fetch("/api/domains/verify-domain", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            userId: userDb?.id,
+            customDomain: userDb?.domain,
+          }),
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+          setVerifyDomain("verified");
+
+          toast({
+            title: "Domain verified",
+            description: "Your domain has been verified successfully",
+          });   
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
   };
 
   return (
@@ -65,26 +110,26 @@ export default function DomainsPage({
                 <h1 className="text-xl font-semibold leading-7 text-neutral-900 md:text-2xl">
                   Domains
                 </h1>
-                <Button variant={"outline"}>
-                  <div className="flex flex-row items-center gap-2">
-                    <Plus className="w-4 h-4" />
-                    Add Domain
-                  </div>
-                </Button>
+
+                <AddDomainDialog
+                  onDomainAdded={() => {}}
+                  userId={userDb?.id || ""}
+                />
               </div>
 
               <div className="flex flex-col mt-12 items-center gap-4">
+                {/* DNS Configuration Card */}
                 <Card className="mb-6 w-full">
                   <Collapsible
                     open={isOpen}
                     onOpenChange={setIsOpen}
-                    className="pr-2 sm:pr-8"
+                    className="pr-4 sm:pr-6"
                   >
                     <div className="flex flex-row w-full justify-between items-center">
                       <CardHeader>
                         <CardTitle>Configure DNS</CardTitle>
                         <CardDescription>
-                          To configure your domain, set the following
+                          Instructions for configuring your DNS records.
                         </CardDescription>
                       </CardHeader>
                       <CollapsibleTrigger asChild>
@@ -186,41 +231,82 @@ export default function DomainsPage({
                   </Collapsible>
                 </Card>
 
-                <div className="flex items-center justify-between gap-2 border border-gray-200 rounded-xl py-4 px-6 w-full">
-                  <p className="font-semibold">veevo.link</p>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
+                {/* Domain List Card */}
+                {userDb?.domain && (
+                  <div className="flex items-center justify-between gap-2 border border-gray-200 rounded-xl py-4 px-6 w-full">
+                    <div className="flex flex-row items-center gap-2">
+                      <Globe className="w-4 h-4" />
+                      <p className="font-semibold">veevo.link</p>
+                    </div>
+                    <div className="flex flex-row items-center gap-2">
                       <Button
-                        variant="ghost"
-                        className="p-1 rounded-md flex items-center gap-2.5 hover:rounded-2xl"
+                        onClick={() => {
+                          handleVerifyDomain();
+                        }}
+                        disabled={
+                          verifyDomain === "verifying" ||
+                          verifyDomain === "verified"
+                        }
+                        variant="default"
+                        className={cn(
+                          "px-2 py-1 h-fit rounded-full text-sm flex items-center gap-2.5 min-w-[120px]",
+                          verifyDomain === "not-verified" &&
+                            "bg-sky-700 hover:bg-sky-800",
+                          verifyDomain === "verified" &&
+                            "bg-green-100 text-green-700 hover:bg-green-200",
+                          verifyDomain === "verifying" &&
+                            "bg-sky-700 hover:bg-sky-800"
+                        )}
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          strokeWidth={1.5}
-                          stroke="currentColor"
-                          className="size-6"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
-                          />
-                        </svg>
+                        {verifyDomain === "not-verified" && "Verify domain"}
+                        {verifyDomain === "verified" && (
+                          <div className="flex flex-row items-center gap-2">
+                            <CheckCircle className="w-4 h-4" />
+                            <p>Verified</p>
+                          </div>
+                        )}
+                        {verifyDomain === "verifying" && (
+                          <div className="flex flex-row items-center gap-2">
+                            <Loader2 className="w-4 h-4 animate-spin" />
+                            <p>Verifying</p>
+                          </div>
+                        )}
                       </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {/* Edit Product */}
-                      <DropdownMenuItem
-                        className="hover:cursor-pointer"
-                        onSelect={(e) => e.preventDefault()}
-                      >
-                        Edit
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
-                </div>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button
+                            variant="ghost"
+                            className="p-1 rounded-md flex items-center gap-2.5 hover:rounded-2xl"
+                          >
+                            <svg
+                              xmlns="http://www.w3.org/2000/svg"
+                              fill="none"
+                              viewBox="0 0 24 24"
+                              strokeWidth={1.5}
+                              stroke="currentColor"
+                              className="size-6"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                d="M12 6.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 12.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5ZM12 18.75a.75.75 0 1 1 0-1.5.75.75 0 0 1 0 1.5Z"
+                              />
+                            </svg>
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent>
+                          {/* Edit Product */}
+                          <DropdownMenuItem
+                            className="hover:cursor-pointer"
+                            onSelect={(e) => e.preventDefault()}
+                          >
+                            Edit
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -1,0 +1,1 @@
+ALTER TABLE "users" ADD COLUMN "domain_verified" boolean DEFAULT false;

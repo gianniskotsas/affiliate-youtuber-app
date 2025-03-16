@@ -8,14 +8,14 @@ const VERCEL_API_KEY = process.env.VERCEL_API_KEY;
 
 export async function POST(req: NextRequest) {
   try {
-    const { custom_domain } = await req.json();
+    const { customDomain, userId } = await req.json();
 
-    if (!custom_domain) {
+    if (!customDomain) {
       return NextResponse.json({ error: "Missing domain parameter" }, { status: 400 });
     }
 
     // 🔹 Check verification status in Vercel
-    const response = await fetch(`https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}/domains/${custom_domain}/verify`, {
+    const response = await fetch(`https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}/domains/${customDomain}/verify`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${VERCEL_API_KEY}`,
@@ -23,9 +23,20 @@ export async function POST(req: NextRequest) {
       },
     });
 
+
     const result = await response.json();
 
+    console.log(result);
+
+
     if (result.verified) {
+
+      // 🔹 Update database to mark domain as verified
+      await db
+        .update(users)
+        .set({ domainVerified: true })
+        .where(eq(users.id, userId));
+
       // 🔹 Mark domain as verified (optional)
       return NextResponse.json({ success: true, message: "Domain verified successfully!" });
     } else {

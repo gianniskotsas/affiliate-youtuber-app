@@ -106,6 +106,13 @@
       "when": 1741729136033,
       "tag": "0014_equal_agent_zero",
       "breakpoints": true
+    },
+    {
+      "idx": 15,
+      "version": "7",
+      "when": 1742112465300,
+      "tag": "0015_goofy_puff_adder",
+      "breakpoints": true
     }
   ]
 }

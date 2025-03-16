@@ -23,6 +23,7 @@ export const users = pgTable("users", {
     ]),
   createdAt: timestamp("created_at").defaultNow(),
   domain: text("domain").default(""),
+  domainVerified: boolean("domain_verified").default(false),
   stripeCustomerId: text("stripe_customer_id").default(""), // Stripe customer ID
   stripeSubscriptionId: text("stripe_subscription_id").default(""), // Stripe subscription ID
   stripeSubscriptionStatus: boolean("stripe_subscription_status").default(false), // Stripe subscription status
