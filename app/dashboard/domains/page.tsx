@@ -236,7 +236,7 @@ export default function DomainsPage({
                   <div className="flex items-center justify-between gap-2 border border-gray-200 rounded-xl py-4 px-6 w-full">
                     <div className="flex flex-row items-center gap-2">
                       <Globe className="w-4 h-4" />
-                      <p className="font-semibold">veevo.link</p>
+                      <p className="font-semibold">{userDb?.domain}</p>
                     </div>
                     <div className="flex flex-row items-center gap-2">
                       <Button

@@ -15,8 +15,8 @@ export async function POST(req: NextRequest) {
     }
 
     // 🔹 Check verification status in Vercel
-    const response = await fetch(`https://api.vercel.com/v9/projects/${VERCEL_PROJECT_ID}/domains/${customDomain}/verify`, {
-      method: "POST",
+    const response = await fetch(`https://api.vercel.com/v6/domains/${customDomain}/config`, {
+      method: "GET",
       headers: {
         Authorization: `Bearer ${VERCEL_API_KEY}`,
         "Content-Type": "application/json",
@@ -26,10 +26,10 @@ export async function POST(req: NextRequest) {
 
     const result = await response.json();
 
+    console.log("Result:")
     console.log(result);
 
-
-    if (result.verified) {
+    if (result.misconfigured === false) {
 
       // 🔹 Update database to mark domain as verified
       await db
