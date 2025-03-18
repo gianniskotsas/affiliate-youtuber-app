@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { Button } from "@/components/ui/button";
@@ -29,6 +29,7 @@ import {
   Pencil,
   Loader2,
   CheckCircle,
+  Trash2,
 } from "lucide-react";
 import { Copy } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -37,6 +38,16 @@ import AddDomainDialog from "@/components/dashboard/AddDomainDialog";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
 import { users } from "@/db/schema";
+import { getServerSideProps } from "next/dist/build/templates/pages";
+import {
+  Dialog,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogContent,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface DNSConfigurationGuideProps {
   aRecord: {
@@ -57,13 +68,23 @@ export default function DomainsPage({
 }: DNSConfigurationGuideProps) {
   const { userDb } = useUserDb();
 
-  const [activeTab, setActiveTab] = useState("a-record");
-  const [isOpen, setIsOpen] = useState(false);
-  const [verifyDomain, setVerifyDomain] = useState(userDb?.domainVerified ? "verified" : "not-verified");
+  console.log(userDb?.domainVerified);
 
+  const [activeTab, setActiveTab] = useState("a-record");
+  const [isOpen, setIsOpen] = useState(true);
+  const [verifyDomain, setVerifyDomain] = useState(
+    userDb?.domainVerified ? "verified" : "not-verified"
+  );
+  const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
+
+  useEffect(() => {
+    if (userDb?.domainVerified) {
+      setVerifyDomain("verified");
+    }
+  }, [userDb?.domainVerified]);
 
   const handleVerifyDomain = async () => {
     if (
@@ -91,11 +112,28 @@ export default function DomainsPage({
           toast({
             title: "Domain verified",
             description: "Your domain has been verified successfully",
-          });   
+          });
         }
       } catch (error) {
         console.error(error);
       }
+    }
+  };
+
+  const handleDelete = async () => {
+    const res = await fetch("/api/domains/delete-domain", {
+      method: "POST",
+      body: JSON.stringify({
+        userId: userDb?.id,
+        customDomain: userDb?.domain,
+      }),
+    });
+
+    if (res.ok) {
+      toast({
+        title: "Domain deleted",
+        description: "Your domain has been deleted successfully",
+      });
     }
   };
 
@@ -114,6 +152,7 @@ export default function DomainsPage({
                 <AddDomainDialog
                   onDomainAdded={() => {}}
                   userId={userDb?.id || ""}
+                  domainVerified={userDb?.domainVerified || false}
                 />
               </div>
 
@@ -238,7 +277,7 @@ export default function DomainsPage({
                       <Globe className="w-4 h-4" />
                       <p className="font-semibold">{userDb?.domain}</p>
                     </div>
-                    <div className="flex flex-row items-center gap-2">
+                    <div className="flex flex-row items-center gap-8">
                       <Button
                         onClick={() => {
                           handleVerifyDomain();
@@ -301,6 +340,49 @@ export default function DomainsPage({
                             onSelect={(e) => e.preventDefault()}
                           >
                             Edit
+                          </DropdownMenuItem>
+
+                          <DropdownMenuItem
+                            className="text-red-500 focus:bg-red-50 focus:text-red-600 hover:cursor-pointer"
+                            onSelect={(e) => e.preventDefault()} // Prevents closing menu on click
+                          >
+                            <Dialog
+                              open={openDeleteDialog}
+                              onOpenChange={setOpenDeleteDialog}
+                            >
+                              <DialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  className="w-full h-fit p-0 justify-start text-red-500 hover:bg-red-50 hover:text-red-600 hover:cursor-pointer"
+                                >
+                                  <Trash2 size={16} />
+                                  Delete
+                                </Button>
+                              </DialogTrigger>
+                              <DialogContent className="w-[350px]">
+                                <DialogHeader>
+                                  <DialogTitle>Delete Domain</DialogTitle>
+                                </DialogHeader>
+                                <DialogDescription className="text-sm -mt-2 text-center sm:text-left">
+                                  Are you sure you want to delete this domain?
+                                  This action is irreversible.
+                                </DialogDescription>
+                                <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-1">
+                                  <Button
+                                    variant="outline"
+                                    onClick={() => setOpenDeleteDialog(false)}
+                                  >
+                                    No
+                                  </Button>
+                                  <Button
+                                    variant="default"
+                                    onClick={() => handleDelete()}
+                                  >
+                                    Yes
+                                  </Button>
+                                </DialogFooter>
+                              </DialogContent>
+                            </Dialog>
                           </DropdownMenuItem>
                         </DropdownMenuContent>
                       </DropdownMenu>

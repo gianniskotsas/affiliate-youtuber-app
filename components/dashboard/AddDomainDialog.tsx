@@ -17,11 +17,13 @@ import { Plus, Loader2 } from "lucide-react";
 export default function AddDomainDialog({
   onDomainAdded,
   userId,
+  domainVerified,
 }: {
   onDomainAdded: () => void;
   userId: string;
+  domainVerified: boolean;
 }) {
-    
+
   const [domain, setDomain] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
@@ -80,7 +82,7 @@ export default function AddDomainDialog({
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button variant="outline" className="flex flex-row items-center gap-1">
+        <Button disabled={domainVerified} variant="outline" className="flex flex-row items-center gap-1">
           <Plus className="w-4 h-4" />
           Add Domain
         </Button>
