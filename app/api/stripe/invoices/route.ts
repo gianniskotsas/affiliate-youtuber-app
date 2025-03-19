@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { mapStripeInvoice } from "@/lib/utils";
+import { Invoice } from "@/lib/utils";
 
 export async function POST(request: NextRequest) {
   try {
