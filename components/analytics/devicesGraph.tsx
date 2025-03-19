@@ -17,7 +17,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartConfig, ChartContainer } from "@/components/ui/chart";
-import { DeviceData } from "@/app/dashboard/analytics/page";
+import { DeviceData } from "@/components/dashboard/AnalyticsClient";
 
 const chartConfig = {
   clicks: {
