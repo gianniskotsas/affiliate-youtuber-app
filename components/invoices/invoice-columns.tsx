@@ -7,8 +7,7 @@ import { format } from "date-fns"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
-import { Invoice } from "@/app/api/stripe/invoices/route"
-
+import { Invoice } from "@/lib/utils";
 export const columns: ColumnDef<Invoice>[] = [
   {
     accessorKey: "invoiceNumber",
