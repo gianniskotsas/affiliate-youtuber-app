@@ -9,6 +9,7 @@ import {
   SignedOut,
   // UserButton
 } from '@clerk/nextjs'
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -42,6 +43,7 @@ export default function RootLayout({
         <body>
           {children}
           <Toaster />
+          <SpeedInsights/>
         </body>
       </html>
     </ClerkProvider>

@@ -15,8 +15,7 @@ import {
 } from "@/components/ui/chart";
 import Image from "next/image";
 import { MousePointerClick } from "lucide-react";
-import { ClickData } from "@/app/dashboard/analytics/page";
-
+import { ClickData } from "@/components/dashboard/AnalyticsClient";
 const chartConfig = {
   clicks: {
     label: "Clicks",
