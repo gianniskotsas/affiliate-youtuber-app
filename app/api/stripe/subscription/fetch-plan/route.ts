@@ -5,6 +5,8 @@ export async function POST(request: NextRequest) {
   try {
     const { subscriptionId } = await request.json();
 
+    console.log("[STRIPE_FETCH_PLAN_REQUEST]", subscriptionId);
+
     if (!subscriptionId) {
       return new NextResponse(JSON.stringify({ error: "Missing subscriptionId" }), { status: 400 });
     }

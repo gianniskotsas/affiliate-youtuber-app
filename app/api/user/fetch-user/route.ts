@@ -13,6 +13,7 @@ export async function POST(req: Request) {
     }
 
     const { requestedUserId } = await req.json();
+    
     if (!requestedUserId) {
       return NextResponse.json({ error: "User ID is required" }, { status: 400 });
     }

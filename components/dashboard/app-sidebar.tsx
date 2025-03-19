@@ -1,3 +1,5 @@
+'use client'
+
 import * as React from "react";
 import { GalleryVerticalEnd } from "lucide-react";
 import { NavMain } from "@/components/dashboard/nav-main";
@@ -14,13 +16,14 @@ import {
 } from "@/components/ui/sidebar";
 import { UserButton } from "@clerk/nextjs";
 import Image from "next/image";
+import { SelectUser } from "@/db/schema";
 import { useUserDb } from "@/context/UserDbContext";
+import { getUserById } from "@/db/queries";
+import { auth } from "@clerk/nextjs/server";
 
 
-export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function AppSidebar({ userDb, ...props }: React.ComponentProps<typeof Sidebar> & { userDb: SelectUser }) {
   
-  const { userDb } = useUserDb();
-
   const data = {
     projects: [
       {

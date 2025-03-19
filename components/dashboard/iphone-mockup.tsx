@@ -1,6 +1,5 @@
 import { IPhoneMockup } from "react-device-mockup";
-import { useUserDb } from "@/context/UserDbContext";
-import { SelectProduct } from "@/db/schema";
+import { SelectProduct, SelectUser } from "@/db/schema";
 import VideoPage from "../video/videopage";
 import React, { createContext } from "react";
 
@@ -9,14 +8,12 @@ export const MobileContext = createContext<boolean>(false);
 
 export default function MockupPage({
   products,
+  userDb,
 }: {
   products: SelectProduct[];
+  userDb: SelectUser;
 }) {
-  const { userDb } = useUserDb();
 
-  if (!userDb) {
-    return null;
-  }
 
   return (
     <IPhoneMockup
