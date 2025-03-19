@@ -9,6 +9,28 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
+// Define Invoice Type
+export type Invoice = {
+  id: string;
+  invoiceNumber: string | null;
+  date: Date;
+  paid: boolean;
+  amount_paid: number;
+  url: string;
+};
+
+// Function to map Stripe invoice to our Invoice type
+export function mapStripeInvoice(stripeInvoice: any): Invoice {
+  return {
+    id: stripeInvoice.id,
+    invoiceNumber: stripeInvoice.number ?? null, // Can be null
+    date: new Date(stripeInvoice.created * 1000), // Convert Unix timestamp
+    paid: stripeInvoice.paid,
+    amount_paid: stripeInvoice.amount_paid / 100, // Convert cents to dollars
+    url: stripeInvoice.invoice_pdf,
+  };
+}
+
 export const iconMap = {
   FaXTwitter: FaXTwitter,
   FaYoutube: FaYoutube,
