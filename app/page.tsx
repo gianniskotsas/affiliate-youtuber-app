@@ -1,166 +1,99 @@
-"use client";
-
-import { z } from "zod";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormControl,
-  FormMessage,
-} from "@/components/ui/form";
-import Image from "next/image";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { IPhoneMockup } from "react-device-mockup";
-import { SpotlightNew } from "@/components/ui/spotlight-new";
 import Link from "next/link";
-import { CornerRightDown, CornerLeftDown } from "lucide-react";
-import { toast, useToast } from "@/hooks/use-toast";
-import { BackgroundGradient } from "@/components/ui/background-gradient";
-import { LinkPreview } from "@/components/ui/link-preview";
-import { MovingButton } from "@/components/ui/moving-border";
-const formSchema = z.object({
-  email: z.string().email(),
-});
+import Image from "next/image";
 
-type FormValues = z.infer<typeof formSchema>;
+import {
+  Search,
+  Users,
+  Settings,
+  Bell,
+  ChevronDown,
+  Mic,
+  Video,
+  ExternalLink,
+  MoreVertical,
+  Plus,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-export default function WaitlistPage() {
-  const form = useForm<FormValues>({
-    resolver: zodResolver(formSchema),
-    defaultValues: { email: "" },
-  });
-
-  const { toast } = useToast();
-
-  const handleSubmit = (values: FormValues) => {
-    console.log("Email submitted:", values.email);
-
-    fetch("/api/waitlist/join-waitlist", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email: values.email }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        toast({
-          title: "Email Submitted",
-          description: `You have entered: ${values.email}`,
-        });
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  };
-
+export default function Home() {
   return (
-    <div className="relative flex flex-col items-center justify-between min-h-screen px-4 h-screen bg-neutral-900 overflow-hidden pt-4">
-      <div className="flex flex-col items-center">
-        <SpotlightNew />
-
-        <div className="pt-20 sm:pt-14 flex flex-col items-center gap-2">
-        <MovingButton className="bg-neutral-200 px-4 py-0.5 flex flex-row items-center gap-2 text-neutral-700 cursor-default">
-          <Image
-            src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/veevo_logo.png"
-            alt="Veevo"
-            width={20}
-            height={20}
-          />
-          <span className="text-sm font-semibold">Veevo</span>
-        </MovingButton>
-        <h1 className="text-3xl md:text-4xl lg:text-6xl text-neutral-100 font-bold mb-4 max-w-screen-lg text-center ">
-          Showcase your affiliate products with a dedicated video page
-        </h1>
-        <p className="text-lg text-neutral-400 mb-8 text-center max-w-screen-sm">
-          Create a platform to showcase all your products and redirect your
-          users there either via QR code or via a shortlink.
-        </p>
-        <Form {...form}>
-          <form
-            onSubmit={form.handleSubmit(handleSubmit)}
-            className="bg-neutral-800 text-neutral-100 py-1 px-1.5 border border-neutral-200/40 rounded-lg shadow-md sm:w-[400px] w-full flex gap-4"
-          >
-            <FormField
-              name="email"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem className="flex-1">
-                  <FormControl>
-                    <Input
-                      placeholder="Enter your email"
-                      {...field}
-                      className="border-none focus:ring-0 shadow-none focus:border-none"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button
-              type="submit"
-              className="rounded-lg bg-neutral-100 text-neutral-900 hover:bg-neutral-200"
-            >
-              Join waitlist
-            </Button>
-          </form>
-        </Form>
-        </div>
-      </div>
-
-      <div className="w-full relative max-w-screen-lg h-1/4 sm:h-1/2 p-3 bg-neutral-100/80 rounded-t-xl">
-        <div className="absolute -top-16 left-4 lg:-left-24 flex flex-row gap-2 items-center animate-bounce rotate-45">
-          <LinkPreview
-            url="https://veevo.app/gianniskotsas/brand-tools"
-            className="bg-neutral-100 flex flex-row gap-2 items-center rounded-xl px-2 py-1"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={2}
-              stroke="currentColor"
-              className="size-4"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M13.19 8.688a4.5 4.5 0 0 1 1.242 7.244l-4.5 4.5a4.5 4.5 0 0 1-6.364-6.364l1.757-1.757m13.35-.622 1.757-1.757a4.5 4.5 0 0 0-6.364-6.364l-4.5 4.5a4.5 4.5 0 0 0 1.242 7.244"
-              />
-            </svg>{" "}
-            <p>
-              <span className="text-neutral-600">veevo.link/</span>
-              <span className="text-neutral-600 font-semibold">kotsas</span>
-            </p>
-          </LinkPreview>
-          <CornerRightDown className="size-6 mt-4 text-neutral-100" />
-        </div>
-        <div className="absolute -top-24 right-8 lg:-right-24 flex flex-row gap-2 items-center animate-bounce rotate-45">
-          <CornerLeftDown className="size-6 mt-4 text-neutral-100" />
-
-          <LinkPreview
-            url="https://veevo.app/gianniskotsas/brand-tools"
-            className="bg-neutral-100 flex flex-row gap-2 items-center rounded-full"
-          >
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-50 to-sky-200">
+      {/* Navigation */}
+      <header className="container mx-auto px-4 py-4">
+        <nav className="flex items-center justify-between">
+          <div className="flex flex-row items-center gap-2">
             <Image
-              src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/kotsas_qr.png"
-              alt="Affilify"
-              width={60}
-              height={60}
-              className=""
+              src="/veevo_logo_circle.png"
+              alt="logo"
+              width={32}
+              height={32}
             />
-          </LinkPreview>
+            <span className="text-xl font-semibold">Veevo</span>
+          </div>
+
+          <div className="hidden md:flex items-center gap-6">
+            <Link href="#" className="text-gray-800 hover:text-black">
+              Home
+            </Link>
+            <Link href="#" className="text-gray-800 hover:text-black">
+              About
+            </Link>
+            <Link href="#" className="text-gray-800 hover:text-black">
+              Support
+            </Link>
+            <Link href="#" className="text-gray-800 hover:text-black">
+              Download
+            </Link>
+          </div>
+
+          <Link
+            href="#"
+            className="bg-white rounded-full px-6 py-2 font-medium shadow-sm hover:shadow-md transition-shadow"
+          >
+            Login
+          </Link>
+        </nav>
+      </header>
+
+      {/* Hero Section */}
+      <main className="container mx-auto px-4 py-12 text-center">
+        <div className="bg-white rounded-full px-6 py-2 inline-block mb-8 font-medium">
+          Boost your affiliate business
         </div>
-        <Image
-          src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/Screenshot%202025-02-26%20at%2019.38.00.png"
-          alt="Affilify"
-          width={1920}
-          height={1080}
-          className="rounded-t-xl"
-        />
+
+        <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold max-w-5xl mx-auto leading-tight">
+          Create a landing page to showcase and track your affiliate products
+        </h1>
+
+        <p className="text-gray-700 mt-8 max-w-2xl mx-auto text-lg">
+          Increase your affiliate sales by showing all your products in one
+          place and understanding which ones are the top performers
+        </p>
+
+        <Button variant="default" className="mt-10 rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow">
+          Get Started
+        </Button>
+
+        {/* Dashboard Preview */}
+        <div className="w-full mt-12 h-1/4 sm:h-1/2 p-3 bg-neutral-500/20 rounded-2xl">
+          <Image
+            src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/Screenshot%202025-02-26%20at%2019.38.00.png"
+            alt="Affilify"
+            width={1920}
+            height={1080}
+            className="rounded-2xl"
+          />
+        </div>
+      </main>
+
+      {/* Logos */}
+      <div className="container mx-auto px-4 py-16 flex flex-wrap justify-center items-center gap-8 md:gap-16">
+        <div className="text-gray-500 font-bold text-xl">amazon</div>
+        <div className="text-gray-500 font-bold text-xl">ATLASSIAN</div>
+        <div className="text-gray-500 font-bold text-xl">GitHub</div>
+        <div className="text-gray-500 font-bold text-xl">LaunchDarkly</div>
+        <div className="text-gray-500 font-bold text-xl">NETFLIX</div>
+        <div className="text-gray-500 font-bold text-xl">Medium</div>
       </div>
     </div>
   );

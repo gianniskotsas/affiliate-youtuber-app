@@ -24,7 +24,7 @@ export default clerkMiddleware(async (auth, req) => {
     // 🔹 Ensure the domain is verified before rewriting
     if (data.username && data.verified) {
       const url = req.nextUrl.clone();
-      if (host.endsWith("veevo.app")) {
+      if (host.endsWith("veevo.app") || host.endsWith("localhost:3000")) {
         url.pathname = `/${data.username}${req.nextUrl.pathname}`;
       } else {
         url.hostname = host;
