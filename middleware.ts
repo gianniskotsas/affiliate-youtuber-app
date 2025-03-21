@@ -4,55 +4,49 @@ import { NextRequest, NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
-  // 🔒 Protect /dashboard routes
   if (isProtectedRoute(req)) await auth.protect();
 
-
   const host = req.headers.get("host") || "";
-  const isCustomDomain =
-    !host.endsWith("veevo.app") && !host.includes("localhost");
+  const protocol = req.headers.get("x-forwarded-proto") || "https";
+  const isCustomDomain = !host.endsWith("veevo.app") && !host.includes("localhost");
 
-
-  console.log("Middleware triggered for host:", host);
-  console.log("Original pathname:", req.nextUrl.pathname);
+  console.log("🌐 Middleware triggered for host:", host);
+  console.log("🛣️ Original pathname:", req.nextUrl.pathname);
 
   if (!isCustomDomain) {
-    return NextResponse.next(); // Not a custom domain — skip rewrite
+    return NextResponse.next(); // skip for veevo.app
   }
 
   try {
-    // 🔍 Resolve custom domain to username
-    const res = await fetch(
-      `${process.env.APP_URL}/api/domains/custom-domains?host=${host}`
-    );
+    const domainLookupUrl = `${protocol}://${host}/api/domains/custom-domains?host=${host}`;
+    console.log("🔍 Fetching domain info from:", domainLookupUrl);
+
+    const res = await fetch(domainLookupUrl);
 
     if (!res.ok) {
-      console.warn(`Custom domain not found or API error: ${host}`);
+      console.warn(`⚠️ Custom domain not found or API error: ${host}`);
       return NextResponse.next();
     }
 
     const data = await res.json();
+    console.log("✅ API returned:", data);
 
     if (data?.username && data?.verified) {
       const url = req.nextUrl.clone();
-
-      // 🔁 Rewrite to /vv/[username]/...
       url.pathname = `/vv/${data.username}${req.nextUrl.pathname}`;
-      
-      console.log("Rewriting to:", `/vv/${data.username}${req.nextUrl.pathname}`);
-
+      console.log("🔁 Rewriting to:", url.pathname);
       return NextResponse.rewrite(url);
     }
   } catch (error) {
-    console.error("Middleware error:", error);
+    console.error("🔥 Middleware error:", error);
   }
 
-  return NextResponse.next(); // Fallback: continue as normal
+  return NextResponse.next(); // fallback
 });
 
 export const config = {
   matcher: [
-    // Match everything except static files and Next.js internals.
+    // Match all routes except static files and Next.js internals
     "/((?!_next|.*\\..*|favicon.ico).*)",
     "/(api|trpc)(.*)",
   ],
