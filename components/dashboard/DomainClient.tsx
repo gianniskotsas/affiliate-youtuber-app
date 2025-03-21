@@ -48,12 +48,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 
-export default function DomainsPage({
-  userDb,
-}: {
-  userDb: SelectUser;
-}) {
-
+export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
   console.log(userDb?.domainVerified);
 
   const [activeTab, setActiveTab] = useState("a-record");
@@ -125,7 +120,7 @@ export default function DomainsPage({
 
   return (
     <SidebarProvider>
-      <AppSidebar userDb={userDb}/>
+      <AppSidebar userDb={userDb} />
       <SidebarInset className="bg-sidebar md:pt-1.5">
         <div className="relative min-h-full bg-sidebar pt-px md:rounded-tl-2xl md:border md:border-b-0 md:border-r-0 md:border-neutral-200/80 md:bg-white">
           <div className="bg-sidebar md:bg-white">
@@ -208,9 +203,9 @@ export default function DomainsPage({
                             </div>
                             <Alert className="mt-4">
                               <AlertDescription>
-                                If a TTL value of 86400 is not
-                                available, choose the highest available value.
-                                Domain propagation may take up to 12 hours.
+                                If a TTL value of 86400 is not available, choose
+                                the highest available value. Domain propagation
+                                may take up to 12 hours.
                               </AlertDescription>
                             </Alert>
                           </TabsContent>
@@ -321,13 +316,6 @@ export default function DomainsPage({
                         </DropdownMenuTrigger>
                         <DropdownMenuContent>
                           {/* Edit Product */}
-                          <DropdownMenuItem
-                            className="hover:cursor-pointer"
-                            onSelect={(e) => e.preventDefault()}
-                          >
-                            Edit
-                          </DropdownMenuItem>
-
                           <DropdownMenuItem
                             className="text-red-500 focus:bg-red-50 focus:text-red-600 hover:cursor-pointer"
                             onSelect={(e) => e.preventDefault()} // Prevents closing menu on click
