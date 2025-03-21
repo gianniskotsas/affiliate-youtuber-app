@@ -8,14 +8,16 @@ import VideoPage from "@/components/video/videopage";
 export default async function Page({ params }: { params: { slug?: string[] } }) {
   const slugParts = params.slug || [];
 
-  const host = headers().get("host") || "";
+  // Normalize host (remove potential port numbers)
+  const hostHeader = headers().get("host") || "";
+  const host = hostHeader.split(":")[0]; 
   const isCustomDomain = !host.endsWith("veevo.app") && !host.includes("localhost");
 
   let username: string | null = null;
   let videoSlug: string | null = null;
 
   if (isCustomDomain) {
-    // 🔍 First get the user from the custom domain
+    // For custom domains, lookup the user based on the host.
     const [user] = await db
       .select()
       .from(users)
@@ -24,12 +26,16 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
 
     if (!user || !user.stripeSubscriptionId) return notFound();
 
+    // Use the user record from the custom domain
     username = user.username;
-    videoSlug = slugParts[1]; // Because middleware rewrote it to /vv/[username]/[videoSlug]
+    // Because the middleware rewrote to `/vv/${username}${req.nextUrl.pathname}`,
+    // the resulting params.slug should be [username, videoSlug].
+    // However, since we already know the username, we take the video slug from index 1.
+    videoSlug = slugParts[1];
 
     if (!videoSlug) return notFound();
 
-    // 🔍 Now fetch the video for this user
+    // Fetch the video for this user.
     const [video] = await db
       .select()
       .from(videos)
@@ -49,7 +55,7 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
       </section>
     );
   } else {
-    // ✅ veevo.app/[username]/[videoSlug]
+    // For the default domain (veevo.app), use URL params directly.
     username = slugParts[0];
     videoSlug = slugParts[1];
 
