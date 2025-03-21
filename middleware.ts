@@ -7,8 +7,14 @@ export default clerkMiddleware(async (auth, req) => {
   // 🔒 Protect /dashboard routes
   if (isProtectedRoute(req)) await auth.protect();
 
+
   const host = req.headers.get("host") || "";
-  const isCustomDomain = !host.endsWith("veevo.app") && !host.includes("localhost");
+  const isCustomDomain =
+    !host.endsWith("veevo.app") && !host.includes("localhost");
+
+
+  console.log("Middleware triggered for host:", host);
+  console.log("Original pathname:", req.nextUrl.pathname);
 
   if (!isCustomDomain) {
     return NextResponse.next(); // Not a custom domain — skip rewrite
@@ -16,7 +22,9 @@ export default clerkMiddleware(async (auth, req) => {
 
   try {
     // 🔍 Resolve custom domain to username
-    const res = await fetch(`${process.env.APP_URL}/api/domains/custom-domains?host=${host}`);
+    const res = await fetch(
+      `${process.env.APP_URL}/api/domains/custom-domains?host=${host}`
+    );
 
     if (!res.ok) {
       console.warn(`Custom domain not found or API error: ${host}`);
@@ -30,6 +38,8 @@ export default clerkMiddleware(async (auth, req) => {
 
       // 🔁 Rewrite to /vv/[username]/...
       url.pathname = `/vv/${data.username}${req.nextUrl.pathname}`;
+      
+      console.log("Rewriting to:", `/vv/${data.username}${req.nextUrl.pathname}`);
 
       return NextResponse.rewrite(url);
     }
@@ -42,9 +52,8 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    // Match all routes except static files and Next.js internals
-    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
-    // Always match API routes
+    // Match everything except static files and Next.js internals.
+    "/((?!_next|.*\\..*|favicon.ico).*)",
     "/(api|trpc)(.*)",
   ],
 };
