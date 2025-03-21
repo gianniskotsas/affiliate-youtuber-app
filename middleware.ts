@@ -42,12 +42,9 @@ export default clerkMiddleware(async (auth, req) => {
 
 export const config = {
   matcher: [
-    /**
-     * Match all paths except static files and Next.js internals
-     * This ensures even root-level paths like `/brand-tools` are processed
-     */
-    "/((?!_next|.*\\..*|favicon.ico).*)",
+    // Match all routes except static files and Next.js internals
+    "/((?!_next|[^?]*\\.(?:html?|css|js(?!on)|jpe?g|webp|png|gif|svg|ttf|woff2?|ico|csv|docx?|xlsx?|zip|webmanifest)).*)",
+    // Always match API routes
     "/(api|trpc)(.*)",
   ],
 };
-
