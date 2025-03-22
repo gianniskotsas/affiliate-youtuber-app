@@ -7,8 +7,10 @@ export default clerkMiddleware(async (auth, req) => {
   if (isProtectedRoute(req)) await auth.protect();
 
   const host = req.headers.get("host") || "";
+  if (host.includes("localhost")) return NextResponse.next();
+
   const protocol = req.headers.get("x-forwarded-proto") || "https";
-  const isCustomDomain = !host.endsWith("veevo.app") && !host.includes("localhost");
+  const isCustomDomain = !host.endsWith("veevo.app");
 
   console.log("🌐 Middleware triggered for host:", host);
   console.log("🛣️ Original pathname:", req.nextUrl.pathname);

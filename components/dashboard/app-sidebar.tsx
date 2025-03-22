@@ -3,7 +3,7 @@
 import * as React from "react";
 import { GalleryVerticalEnd } from "lucide-react";
 import { NavMain } from "@/components/dashboard/nav-main";
-import { SidebarOptInForm } from "@/components/dashboard/sidebar-opt-in-form";
+
 import {
   Sidebar,
   SidebarContent,
@@ -20,6 +20,7 @@ import { SelectUser } from "@/db/schema";
 import { useUserDb } from "@/context/UserDbContext";
 import { getUserById } from "@/db/queries";
 import { auth } from "@clerk/nextjs/server";
+import SidebarFeatureRequestForm from "./sidebar-feature-request";
 
 
 export function AppSidebar({ userDb, ...props }: React.ComponentProps<typeof Sidebar> & { userDb: SelectUser }) {
@@ -38,12 +39,6 @@ export function AppSidebar({ userDb, ...props }: React.ComponentProps<typeof Sid
         icon: "User",
         active: true,
       },
-      {
-        name: "Sell merch",
-        url: "#",
-        icon: "Shirt",
-        active: false,
-      },    
       {
         name: "Analytics",
         url: "/dashboard/analytics",
@@ -88,7 +83,7 @@ export function AppSidebar({ userDb, ...props }: React.ComponentProps<typeof Sid
       </SidebarContent>
       <SidebarFooter>
         <div className="p-1">
-          <SidebarOptInForm />
+          <SidebarFeatureRequestForm email={userDb?.email} />
         </div>
       </SidebarFooter>
       <SidebarRail />

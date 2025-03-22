@@ -1,14 +1,13 @@
 "use client";
 
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
-import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import React, { useEffect, useState, useMemo } from "react";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+  SidebarProvider,
+  SidebarInset,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
+import React, { useEffect, useState, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import TopLinksGraph from "@/components/analytics/topLinksGraph";
 import { Select } from "@/components/ui/select";
 import { SelectValue } from "@/components/ui/select";
@@ -23,7 +22,7 @@ import { SelectContent } from "@/components/ui/select";
 import { Popover } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { ChevronsUpDown } from "lucide-react";
+import { ChevronsUpDown, Menu } from "lucide-react";
 import Image from "next/image";
 import ClicksGraph from "@/components/analytics/clicksGraph";
 import DevicesGraph from "@/components/analytics/devicesGraph";
@@ -36,15 +35,15 @@ export interface DeviceData {
 }
 
 export interface ClickData {
-    start: string;
-    clicks: number;
-  }
-  
-  export interface LinkData {
-    id: string;
-    shortLink: string;
-    orginalLink: string;
-  }
+  start: string;
+  clicks: number;
+}
+
+export interface LinkData {
+  id: string;
+  shortLink: string;
+  orginalLink: string;
+}
 
 const FaviconImage = ({ siteUrl }: { siteUrl: string }) => {
   const [src, setSrc] = useState(
@@ -89,34 +88,39 @@ const AnalyticsPage = ({ userDb }: { userDb: SelectUser }) => {
 
     const fetchData = async () => {
       try {
-        const [clicksResponse, linksResponse, devicesResponse] = await Promise.all([
-          fetch("/api/dub/clicks", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              userId,
-              interval: timeRange,
-              device: "",
-              linkId: selectedLink?.id,
+        const [clicksResponse, linksResponse, devicesResponse] =
+          await Promise.all([
+            fetch("/api/dub/clicks", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId,
+                interval: timeRange,
+                device: "",
+                linkId: selectedLink?.id,
+              }),
             }),
-          }),
-          fetch("/api/dub/linkList", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId }),
-          }),
-          fetch("/api/dub/devices", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({ userId, interval: timeRange, linkId: selectedLink?.id }),
-          }),
-        ]);
+            fetch("/api/dub/linkList", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ userId }),
+            }),
+            fetch("/api/dub/devices", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({
+                userId,
+                interval: timeRange,
+                linkId: selectedLink?.id,
+              }),
+            }),
+          ]);
 
         if (!clicksResponse.ok || !linksResponse.ok || !devicesResponse.ok) {
           throw new Error(
@@ -152,8 +156,10 @@ const AnalyticsPage = ({ userDb }: { userDb: SelectUser }) => {
 
   if (userDb.stripeSubscriptionStatus) {
     return (
-        <SidebarProvider>
-          <AppSidebar userDb={userDb} />
+      <SidebarProvider>
+        <AppSidebar userDb={userDb} />
+        <div className="flex flex-col w-full bg-sidebar">
+          <SidebarTrigger className="sm:hidden p-6"/>
           <SidebarInset className="bg-sidebar md:pt-1.5">
             <div className="relative min-h-full bg-sidebar pt-px md:rounded-tl-2xl md:border md:border-b-0 md:border-r-0 md:border-neutral-200/80 md:bg-white">
               <div className="bg-sidebar md:bg-white">
@@ -162,7 +168,6 @@ const AnalyticsPage = ({ userDb }: { userDb: SelectUser }) => {
                     Analytics
                   </h1>
                   <div className="mt-6 flex flex-col gap-4">
-                    
                     {/* filters */}
                     <div className="flex flex-row gap-2 w-fit">
                       {/* Link selector */}
@@ -175,8 +180,13 @@ const AnalyticsPage = ({ userDb }: { userDb: SelectUser }) => {
                           >
                             {selectedLink ? (
                               <div className="flex flex-row gap-2 items-center">
-                                <FaviconImage siteUrl={selectedLink.orginalLink} />
-                                {selectedLink.shortLink.replace(/^https:\/\//, "")}
+                                <FaviconImage
+                                  siteUrl={selectedLink.orginalLink}
+                                />
+                                {selectedLink.shortLink.replace(
+                                  /^https:\/\//,
+                                  ""
+                                )}
                               </div>
                             ) : (
                               "Links"
@@ -206,14 +216,20 @@ const AnalyticsPage = ({ userDb }: { userDb: SelectUser }) => {
                                     className="flex flex-row gap-2 items-center justify-between"
                                   >
                                     <div className="flex flex-row gap-2 items-center">
-                                      <FaviconImage siteUrl={link.orginalLink} />
-                                      {link.shortLink.replace(/^https:\/\//, "")}
+                                      <FaviconImage
+                                        siteUrl={link.orginalLink}
+                                      />
+                                      {link.shortLink.replace(
+                                        /^https:\/\//,
+                                        ""
+                                      )}
                                     </div>
-    
+
                                     <Check
                                       className={cn(
                                         "mr-2 h-4 w-4",
-                                        link.shortLink === selectedLink?.shortLink
+                                        link.shortLink ===
+                                          selectedLink?.shortLink
                                           ? "opacity-100"
                                           : "opacity-0"
                                       )}
@@ -225,7 +241,7 @@ const AnalyticsPage = ({ userDb }: { userDb: SelectUser }) => {
                           </Command>
                         </PopoverContent>
                       </Popover>
-    
+
                       {/* Time range selector */}
                       <Select value={timeRange} onValueChange={setTimeRange}>
                         <SelectTrigger
@@ -250,24 +266,28 @@ const AnalyticsPage = ({ userDb }: { userDb: SelectUser }) => {
                         </SelectContent>
                       </Select>
                     </div>
-    
+
                     <ClicksGraph
                       clicksData={clicksData}
                       clicksCount={clicksCount}
                       timeRange={timeRange}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                      <TopLinksGraph userId={userId} timeRange={timeRange}/>
-    
-                      <DevicesGraph devicesData={devices} timeRange={timeRange}/>
+                      <TopLinksGraph userId={userId} timeRange={timeRange} />
+
+                      <DevicesGraph
+                        devicesData={devices}
+                        timeRange={timeRange}
+                      />
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           </SidebarInset>
-        </SidebarProvider>
-      );
+        </div>
+      </SidebarProvider>
+    );
   }
 };
 
