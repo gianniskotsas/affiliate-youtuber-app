@@ -278,7 +278,7 @@ const SidebarTrigger = React.forwardRef<
       }}
       {...props}
     >
-      <CircleChevronRight className="w-12 h-12"  />
+      <Menu className="w-12 h-12"  />
       <span className="sr-only">Toggle Sidebar</span>
     </Button>
   )

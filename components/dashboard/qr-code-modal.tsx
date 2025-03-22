@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 import Image from "next/image";
 
 const QrCodeModal = ({ url, text }: { url: string, text: string }) => {
-  const baseUrl = `https://api.dub.co/qr?url=${url}`;
+  const baseUrl = `https://api.dub.co/qr?logo=https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/veevo_logo_circle.png&url=${url}`;
   const [qrCodeUrl, setQrCodeUrl] = useState<string | null>(baseUrl);
 
   // ✅ Cleanup: Revoke object URL if we ever use `createObjectURL()`
@@ -67,7 +67,7 @@ const QrCodeModal = ({ url, text }: { url: string, text: string }) => {
 
         <div className="w-full justify-center items-center flex bg-neutral-100 p-6 rounded-xl">
           <Image
-            src={`https://api.dub.co/qr?url=${url}&logo=https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/veevo_logo_dark.jpg`}
+            src={`https://api.dub.co/qr?logo=https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/veevo_logo_circle.png&url=${url}`}
             alt="QR Code"
             width={200}
             height={200}

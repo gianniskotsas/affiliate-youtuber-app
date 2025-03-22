@@ -264,8 +264,8 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
                   {/* Domain List Card */}
                   {userDb?.domain && (
                     
-                   <div className="flex flex-col gap-4 p-4 w-full">
-                      <div className="flex items-center justify-between gap-2 border border-gray-200 rounded-xl py-4 px-6 w-full">
+                   <div className="flex flex-col gap-4 w-full">
+                      <div className="flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl py-4 px-6 w-full">
                       <div className="flex flex-row items-center gap-2">
                         <Globe className="w-4 h-4" />
                         <p className="font-semibold">{userDb?.domain}</p>
