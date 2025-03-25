@@ -4,7 +4,7 @@ import { users, videos } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { Dub } from "dub";
 import { eq } from "drizzle-orm";
-
+import { dubTagMap } from "@/lib/utils";
 const dub = new Dub({
   token: process.env.DUB_API_KEY,
 });
@@ -19,11 +19,12 @@ export async function POST(req: Request) {
 
     // Retrieve username based on userId
     const user = await db
-      .select({ username: users.username })
+      .select({ username: users.username, domain: users.domain })
       .from(users)
       .where(eq(users.id, userId))
       .execute();
     const username = user[0]?.username;
+    const domain = user[0]?.domain;
 
     if (!username) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
@@ -39,10 +40,15 @@ export async function POST(req: Request) {
     }
 
     // Generate Dub.co short link with error handling
-    let shortLink;
+      let shortLink;
+    let url;
     try {
-   
-      const url = `${process.env.APP_URL}/${username}/${videoSlug}`;
+
+      if (domain) {
+        url = `${domain}/${videoSlug}`;
+      } else {
+        url = `${process.env.APP_URL}/vv/${username}/${videoSlug}`;
+      }
 
       const shortLinkResult = await dub.links.create({
         url: url,
@@ -51,7 +57,9 @@ export async function POST(req: Request) {
         title: videoTitle,
         image: videoThumbnail,
         proxy: true,
+        tagIds: [dubTagMap.find((tag) => tag.name === "videopage")?.id ?? ""],
       });
+
       shortLink = shortLinkResult?.shortLink;
 
       if (!shortLink) {

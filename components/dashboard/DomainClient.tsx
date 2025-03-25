@@ -122,6 +122,25 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
     }
   };
 
+
+
+  const handleBulkUpdate = async () => {
+    const res = await fetch("/api/dub/links/bulk-update-url", {
+      method: "POST",
+      body: JSON.stringify({
+        tenantId: userDb?.id,
+        domain: userDb?.domain,
+      }),
+    });
+
+    if (res.ok) {
+      toast({ 
+        title: "Bulk update",
+        description: "Your domain has been bulk updated successfully",
+      });
+    }
+  };  
+
   return (
     <SidebarProvider>
       <AppSidebar userDb={userDb} />
@@ -265,6 +284,9 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
                   {userDb?.domain && (
                     
                    <div className="flex flex-col gap-4 w-full">
+                    <Button variant="outline" onClick={() => {
+                      handleBulkUpdate();
+                    }}>Bulk update</Button>
                       <div className="flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl py-4 px-6 w-full">
                       <div className="flex flex-row items-center gap-2">
                         <Globe className="w-4 h-4" />

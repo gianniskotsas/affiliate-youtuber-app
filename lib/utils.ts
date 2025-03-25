@@ -44,8 +44,8 @@ export const deleteImage = async (fullPath: string) => {
   console.log("fullPath", fullPath);
 
   try {
-   
-    const bucketUrl = process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET_URL + "thumbnails/";
+    const bucketUrl =
+      process.env.NEXT_PUBLIC_SUPABASE_STORAGE_BUCKET_URL + "thumbnails/";
 
     if (!bucketUrl) {
       throw new Error("Bucket URL is not defined");
@@ -54,9 +54,7 @@ export const deleteImage = async (fullPath: string) => {
     const path = fullPath.replace(bucketUrl, "");
     console.log(path);
 
-    const { error } = await supabase.storage
-      .from("thumbnails")
-      .remove([path]);
+    const { error } = await supabase.storage.from("thumbnails").remove([path]);
     if (error) throw error;
     console.log(`Deleted image: ${path}`);
   } catch (error) {
@@ -81,5 +79,16 @@ export const social: { name: string; icon: IconType }[] = [
   {
     name: "Instagram",
     icon: FaInstagram,
+  },
+];
+
+export const dubTagMap = [
+  {
+    id: "tag_1JQ6217QE4X5HPMYRX6X8QY4C",
+    name: "productpage",
+  },
+  {
+    id: "tag_1JQ620V89HC0FPR0N42JBYWNN",
+    name: "videopage",
   },
 ];

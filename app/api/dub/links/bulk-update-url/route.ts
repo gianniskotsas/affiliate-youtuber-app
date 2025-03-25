@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from 'next/server';
-
+import { dubTagMap } from '@/lib/utils';
 export async function POST(request: NextRequest) {
     try {
-        const { tenantId, username } = await request.json();
+        const { tenantId, domain } = await request.json();
 
-        // Retrieve the list of links based on tenantId
-        const linksResponse = await fetch(`https://api.dub.co/links?tenantId=${tenantId}`, {
+        const tagId = dubTagMap.find((tag) => tag.name === "videopage")?.id ?? "";
+        
+        // Retrieve the list of links based on tenantId and tagId
+        const linksResponse = await fetch(`https://api.dub.co/links?tenantId=${tenantId}&tagId=${tagId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -19,15 +21,19 @@ export async function POST(request: NextRequest) {
 
         const links = await linksResponse.json();
 
+        console.log(links);
+
         // Prepare the bulk update payload
         const updatePayload = links.map((link: any) => ({
-            id: link.id,
-            url: `https://veevo.app/${username}`
+            ...link,
+            url: `https://${domain}/${link.url.split('/').slice(3).join('/')}`
         }));
+
+        console.log(updatePayload);
 
         // Bulk update the links
         const updateResponse = await fetch('https://api.dub.co/links/bulk-update', {
-            method: 'POST',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${process.env.DUB_API_KEY}`

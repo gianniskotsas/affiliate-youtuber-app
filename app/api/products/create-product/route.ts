@@ -3,6 +3,7 @@ import { db } from "@/db";
 import { products } from "@/db/schema";
 import { auth } from "@clerk/nextjs/server";
 import { Dub } from "dub";
+import { dubTagMap } from "@/lib/utils";
 
 const dub = new Dub({
   token: process.env.DUB_API_KEY,
@@ -34,7 +35,9 @@ export async function POST(req: Request) {
       description: productDescription,
       image: imageUrl,
       proxy: true,
+      tagIds: [dubTagMap.find((tag) => tag.name === "productpage")?.id ?? ""],
     });
+    
     const shortLink = shortLinkResult.shortLink;
 
     // Insert new product record
