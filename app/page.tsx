@@ -13,7 +13,8 @@ import {
   MoreVertical,
   Plus,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -57,8 +58,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-12 sm:py-24 text-center">
-
-        <div className="flex flex-col gap-4 items-center justify-center min-h-[500px]">
+        <div className="flex flex-col gap-4 items-center justify-center min-h-[300px] sm:min-h-[500px]">
           <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold max-w-5xl mx-auto leading-tight font-kavivanar">
             Elevate your affiliate revenue with short links
           </h1>
@@ -68,12 +68,15 @@ export default function Home() {
             place and understanding which ones are the top performers
           </p>
 
-          <Button
-            variant="default"
-            className="mt-10 rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow"
+          <Link
+            href="sign-up"
+            className={cn(
+              buttonVariants({ variant: "default" }),
+              "mt-10 rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow"
+            )}
           >
             Get Started
-          </Button>
+          </Link>
         </div>
 
         {/* Dashboard Preview */}
