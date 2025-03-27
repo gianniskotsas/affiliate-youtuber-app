@@ -33,6 +33,7 @@ import {
   Loader2,
   CheckCircle,
   Trash2,
+  HelpCircle,
 } from "lucide-react";
 import { Copy } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -40,8 +41,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import AddDomainDialog from "@/components/dashboard/AddDomainDialog";
 import { cn } from "@/lib/utils";
 import { toast } from "@/hooks/use-toast";
-import { SelectUser, users } from "@/db/schema";
-import { getServerSideProps } from "next/dist/build/templates/pages";
+import { SelectUser } from "@/db/schema";
 import {
   Dialog,
   DialogDescription,
@@ -51,31 +51,63 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+// Define Domain type
+type Domain = {
+  name: string;
+  verified: boolean;
+};
 
 export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
-  console.log(userDb?.domainVerified);
+  // Create domain state from userDb
+  const [domain, setDomain] = useState<Domain | null>(
+    userDb?.domain ? { name: userDb.domain, verified: !!userDb.domainVerified } : null
+  );
 
   const [activeTab, setActiveTab] = useState("a-record");
   const [isOpen, setIsOpen] = useState(true);
   const [verifyDomain, setVerifyDomain] = useState(
-    userDb?.domainVerified ? "verified" : "not-verified"
+    domain?.verified ? "verified" : "not-verified"
   );
   const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [isMigrating, setIsMigrating] = useState(false);
+  
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
   };
 
+  // Update domain state when userDb changes
   useEffect(() => {
-    if (userDb?.domainVerified) {
-      setVerifyDomain("verified");
+    if (userDb?.domain) {
+      setDomain({
+        name: userDb.domain,
+        verified: !!userDb.domainVerified
+      });
+    } else {
+      setDomain(null);
     }
-  }, [userDb?.domainVerified]);
+  }, [userDb?.domain, userDb?.domainVerified]);
+
+  // Update verifyDomain state when domain changes
+  useEffect(() => {
+    if (domain?.verified) {
+      setVerifyDomain("verified");
+    } else {
+      setVerifyDomain("not-verified");
+    }
+  }, [domain?.verified]);
 
   const handleVerifyDomain = async () => {
     if (
       verifyDomain === "not-verified" &&
-      userDb?.domain &&
-      userDb?.domainVerified === false
+      domain?.name &&
+      !domain.verified
     ) {
       setVerifyDomain("verifying");
 
@@ -85,7 +117,7 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             userId: userDb?.id,
-            customDomain: userDb?.domain,
+            customDomain: domain.name,
           }),
         });
 
@@ -93,6 +125,8 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
 
         if (data.success) {
           setVerifyDomain("verified");
+          // Update domain state
+          setDomain(prev => prev ? { ...prev, verified: true } : null);
 
           toast({
             title: "Domain verified",
@@ -106,38 +140,83 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
   };
 
   const handleDelete = async () => {
-    const res = await fetch("/api/domains/delete-domain", {
-      method: "POST",
-      body: JSON.stringify({
-        userId: userDb?.id,
-        customDomain: userDb?.domain,
-      }),
-    });
-
-    if (res.ok) {
-      toast({
-        title: "Domain deleted",
-        description: "Your domain has been deleted successfully",
+    setIsDeleting(true);
+    
+    try {
+      const res = await fetch("/api/domains/delete-domain", {
+        method: "POST",
+        body: JSON.stringify({
+          userId: userDb?.id,
+          customDomain: domain?.name,
+        }),
       });
+
+      if (res.ok) {
+        toast({
+          title: "Domain deleted",
+          description: "Your domain has been deleted successfully",
+        });
+        
+        // Close the dialog after successful deletion
+        setOpenDeleteDialog(false);
+        
+        // Update domain state
+        setDomain(null);
+        
+        // Optionally refresh the page or update the UI
+        window.location.reload();
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to delete domain",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsDeleting(false);
     }
   };
 
-
-
   const handleBulkUpdate = async () => {
-    const res = await fetch("/api/dub/links/bulk-update-url", {
-      method: "POST",
-      body: JSON.stringify({
-        tenantId: userDb?.id,
-        domain: userDb?.domain,
-      }),
-    });
-
-    if (res.ok) {
-      toast({ 
-        title: "Bulk update",
-        description: "Your domain has been bulk updated successfully",
+    setIsMigrating(true);
+    
+    try {
+      const res = await fetch("/api/dub/links/bulk-update-url", {
+        method: "POST",
+        body: JSON.stringify({
+          tenantId: userDb?.id,
+          domain: domain?.name,
+        }),
       });
+
+      if (res.ok) {
+        toast({ 
+          title: "Bulk update",
+          description: "Your domain has been bulk updated successfully",
+        });
+      } else {
+        toast({
+          title: "Error",
+          description: "Failed to update links",
+          variant: "destructive",
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      toast({
+        title: "Error",
+        description: "An unexpected error occurred",
+        variant: "destructive",
+      });
+    } finally {
+      setIsMigrating(false);
     }
   };  
 
@@ -156,9 +235,14 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
                   </h1>
 
                   <AddDomainDialog
-                    onDomainAdded={() => {}}
+                    onDomainAdded={(newDomain) => {
+                      setDomain({
+                        name: newDomain,
+                        verified: false
+                      });
+                    }}
                     userId={userDb?.id || ""}
-                    domainVerified={userDb?.domainVerified || false}
+                    domainVerified={!!domain?.verified}
                   />
                 </div>
 
@@ -281,16 +365,45 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
                   </Card>
 
                   {/* Domain List Card */}
-                  {userDb?.domain && (
+                  {domain?.name && (
                     
                    <div className="flex flex-col gap-4 w-full">
-                    <Button variant="outline" onClick={() => {
-                      handleBulkUpdate();
-                    }}>Bulk update</Button>
+
+                    {/* Migrate your links button */}
+                    <div className={cn("flex flex-row items-center gap-1", verifyDomain != "verified" && "hidden")}>
+                    <Button 
+                      variant="outline" 
+                      onClick={handleBulkUpdate} 
+                      className="w-fit bg-sky-100 hover:bg-sky-200"
+                      disabled={isMigrating}
+                    >
+                      {isMigrating ? (
+                        <span className="flex items-center gap-2">
+                          <Loader2 className="h-4 w-4 animate-spin" />
+                          Migrating...
+                        </span>
+                      ) : (
+                        "Migrate your links"
+                      )}
+                    </Button>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button variant="ghost" size="icon" className="rounded-full">
+                          <HelpCircle className="h-4 w-4" />
+                          <span className="sr-only">Help</span>
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent className="max-w-xs">
+                        <p>The destination URL and QR code for your landing page will now lead to your new verified domain.</p>
+                      </TooltipContent>
+                    </Tooltip>
+                    </div>
+
+                    {/* Domain card */}
                       <div className="flex items-center justify-between gap-2 bg-white border border-gray-200 rounded-xl py-4 px-6 w-full">
                       <div className="flex flex-row items-center gap-2">
                         <Globe className="w-4 h-4" />
-                        <p className="font-semibold">{userDb?.domain}</p>
+                        <p className="font-semibold">{domain.name}</p>
                       </div>
                       <div className="flex flex-row items-center gap-8">
                         <Button
@@ -379,14 +492,23 @@ export default function DomainsPage({ userDb }: { userDb: SelectUser }) {
                                     <Button
                                       variant="outline"
                                       onClick={() => setOpenDeleteDialog(false)}
+                                      disabled={isDeleting}
                                     >
                                       No
                                     </Button>
                                     <Button
                                       variant="default"
-                                      onClick={() => handleDelete()}
+                                      onClick={handleDelete}
+                                      disabled={isDeleting}
                                     >
-                                      Yes
+                                      {isDeleting ? (
+                                        <span className="flex items-center gap-2">
+                                          <Loader2 className="h-4 w-4 animate-spin" />
+                                          Deleting...
+                                        </span>
+                                      ) : (
+                                        "Yes"
+                                      )}
                                     </Button>
                                   </DialogFooter>
                                 </DialogContent>

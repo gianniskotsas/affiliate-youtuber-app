@@ -19,7 +19,7 @@ export default function AddDomainDialog({
   userId,
   domainVerified,
 }: {
-  onDomainAdded: () => void;
+  onDomainAdded: (domain: string) => void;
   userId: string;
   domainVerified: boolean;
 }) {
@@ -59,7 +59,7 @@ export default function AddDomainDialog({
           title: "Success",
           description: "Domain added! Verify it in your DNS provider.",
         });
-        onDomainAdded(); // Refresh the domain list
+        onDomainAdded(domain); // Call the callback with the new domain
       } else {
         toast({
           title: "Error",
