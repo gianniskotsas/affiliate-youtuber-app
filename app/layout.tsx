@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Libre_Baskerville } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
 import {
@@ -22,6 +23,12 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 //   weight: "100 900",
 // });
 
+const libreBaskerville = Libre_Baskerville({
+  weight: ['400', '700'],
+  variable: '--font-libre-baskerville',
+  subsets: ['latin'],
+})
+
 export const metadata: Metadata = {
   title: "Veevo",
   description: "Showcase your affiliate products in one place",
@@ -39,8 +46,8 @@ export default function RootLayout({
         socialButtonsVariant: 'auto',
       }
     }}>
-      <html lang="en">
-        <body>
+      <html lang="en" className={libreBaskerville.variable}>
+        <body> 
           {children}
           <Toaster />
           <SpeedInsights/>

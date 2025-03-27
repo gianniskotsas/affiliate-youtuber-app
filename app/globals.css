@@ -84,6 +84,9 @@ body {
     --sidebar-ring: 217.2 91.2% 59.8%;
     --color-clicks: 202 93.8% 93.7%;
   }
+  h1 {
+    font-family: var(--font-libre-baskerville);
+  }
 }
 
 @layer base {
@@ -94,8 +97,6 @@ body {
     @apply bg-background text-foreground;
   }
 }
-
-
 
 @layer base {
   * {
