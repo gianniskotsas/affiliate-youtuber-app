@@ -15,7 +15,7 @@ const config: Config = {
   theme: {
     extend: {
       fontFamily: {
-        libreBaskerville: ["var(--font-libre-baskerville)"],
+        cormorantGaramont: ["var(--font-cormorant-garamond)"],
       },
 
       colors: {

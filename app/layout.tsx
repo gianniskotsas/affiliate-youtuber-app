@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import localFont from "next/font/local";
-import { Libre_Baskerville } from "next/font/google";
+import { Cormorant_Garamond } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster"
 import "./globals.css";
 import {
@@ -23,9 +22,9 @@ import { SpeedInsights } from "@vercel/speed-insights/next"
 //   weight: "100 900",
 // });
 
-const libreBaskerville = Libre_Baskerville({
-  weight: ['400', '700'],
-  variable: '--font-libre-baskerville',
+const cormorantGaramond = Cormorant_Garamond({
+  weight: ['300','400','500','600','700'],
+  variable: '--font-cormorant-garamond',
   subsets: ['latin'],
 })
 
@@ -46,7 +45,7 @@ export default function RootLayout({
         socialButtonsVariant: 'auto',
       }
     }}>
-      <html lang="en" className={libreBaskerville.variable}>
+      <html lang="en" className={cormorantGaramond.variable}>
         <body> 
           {children}
           <Toaster />

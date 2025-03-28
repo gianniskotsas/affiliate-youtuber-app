@@ -58,21 +58,20 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="container mx-auto px-4 py-12 sm:py-24 text-center">
-        <div className="flex flex-col gap-4 items-center justify-center min-h-[300px] sm:min-h-[500px]">
-          <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold max-w-5xl mx-auto leading-tight font-kavivanar">
+        <div className="flex flex-col gap-4 sm:gap-8 items-center justify-center min-h-[300px] sm:min-h-[500px]">
+          <h1 className="text-4xl md:text-6xl lg:text-8xl font-400 max-w-5xl mx-auto leading-tight font-kavivanar">
             Elevate your affiliate revenue with short links
           </h1>
 
-          <p className="text-gray-700 max-w-2xl mx-auto text-sm md:text-base lg:text-lg">
-            Increase your affiliate sales by showing all your products in one
-            place and understanding which ones are the top performers
+          <p className="text-gray-700 max-w-2xl mx-auto text-lg sm:text-2xl">
+            Provide instant access to your affiliate products via a QR code placed on your content or showcase all your products in a dedicated page.
           </p>
 
           <Link
             href="sign-up"
             className={cn(
               buttonVariants({ variant: "default" }),
-              "mt-10 rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow"
+              "rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow"
             )}
           >
             Get Started
