@@ -19,7 +19,7 @@ import AppleCardsCarouselDemo from "@/components/apple-cards-carousel-demo";
 import HeroSection from "@/components/landing/heroSection";
 export default function Home() {
   return (
-    <div className="min-h-screen w-full">
+    <div className="min-h-screen w-full overflow-x-hidden">
       {/* Navigation */}
 
       {/* Hero Section */}
@@ -53,7 +53,7 @@ export default function Home() {
               </div>
 
               <Link
-                href="#"
+                href="/sign-in"
                 className="bg-white rounded-full px-6 py-2 font-medium shadow-sm hover:shadow-md transition-shadow"
               >
                 Login
