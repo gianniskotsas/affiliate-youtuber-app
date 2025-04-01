@@ -42,7 +42,7 @@ export default function FeatureSection() {
           Everything you need to boost affiliate revenue.
         </h1>
 
-        <p className="text-gray-700 max-w-2xl mx-auto text-lg sm:text-2xl">
+        <p className="text-muted-foreground max-w-2xl mx-auto text-lg sm:text-2xl">
           From showcasing products to tracking performance — it’s all built for
           creators who want results.
         </p>
