@@ -17,6 +17,8 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AppleCardsCarouselDemo from "@/components/apple-cards-carousel-demo";
 import HeroSection from "@/components/landing/heroSection";
+import FeatureSection from "@/components/landing/featureSection";
+
 export default function Home() {
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
@@ -24,7 +26,7 @@ export default function Home() {
 
       {/* Hero Section */}
       <main className="text-center">
-        <div className="bg-sidebar mx-auto px-4 py-4">
+        <div className="bg-sidebar mx-auto px-4 pt-4">
           <header className="container mx-auto px-4 py-4">
             <nav className="flex items-center justify-between">
               <div className="flex flex-row items-center gap-2">
@@ -85,29 +87,14 @@ export default function Home() {
 
           <HeroSection />
 
-          {/* Dashboard Preview */}
-          {/* <div className="w-full max-w-7xl mx-auto mt-12 h-1/4 sm:h-1/2 p-1.5 bg-neutral-500/10 rounded-2xl">
-            <Image
-              src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/Screenshot%202025-02-26%20at%2019.38.00.png"
-              alt="Affilify"
-              width={1920}
-              height={1080}
-              className="rounded-2xl"
-            />
-          </div> */}
+          {/* Features Preview */}
         </div>
       </main>
 
 
       {/* Logos */}
-      <div className="container mx-auto px-4 py-16 flex flex-wrap justify-center items-center gap-8 md:gap-16">
-        <div className="text-gray-500 font-bold text-xl">amazon</div>
-        <div className="text-gray-500 font-bold text-xl">ATLASSIAN</div>
-        <div className="text-gray-500 font-bold text-xl">GitHub</div>
-        <div className="text-gray-500 font-bold text-xl">LaunchDarkly</div>
-        <div className="text-gray-500 font-bold text-xl">NETFLIX</div>
-        <div className="text-gray-500 font-bold text-xl">Medium</div>
-      </div>
+      <FeatureSection />
+
     </div>
   );
 }

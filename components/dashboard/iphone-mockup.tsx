@@ -14,7 +14,6 @@ export default function MockupPage({
   userDb: SelectUser;
 }) {
 
-
   return (
     <IPhoneMockup
       screenWidth={300}

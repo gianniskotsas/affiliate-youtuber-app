@@ -1,11 +1,74 @@
+'use client'
+
 import Image from "next/image";
 import Link from "next/link";
 import IPhoneMockup from "react-device-mockup/dist/ios-mockup/IPhoneMockup";
+import { MobileContext } from "../dashboard/iphone-mockup";
+import VideoPage from "../video/videopage";
+
+// Mock data for demo purposes based on the actual schema
+const userDb = {
+  id: "user_123",
+  email: "demo@example.com",
+  username: "democreator",
+  bio: "Content creator sharing my favorite tech products",
+  profilePicture: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop",
+  socialAccounts: [
+    { name: "X", url: "https://x.com/democreator" },
+    { name: "YouTube", url: "https://youtube.com/democreator" },
+    { name: "Instagram", url: "https://instagram.com/democreator" },
+    { name: "TikTok", url: "https://tiktok.com/@democreator" },
+  ],
+  createdAt: new Date(),
+  domain: "democreator.com",
+  domainVerified: true,
+  stripeCustomerId: "cus_123456",
+  stripeSubscriptionId: "sub_123456",
+  stripeSubscriptionStatus: true,
+};
+
+// Mock products based on the products schema
+const demoProducts = [
+  {
+    id: "prod_123",
+    videoId: "vid_123",
+    productName: "Wireless Headphones",
+    shortLink: "https://amzn.to/headphones",
+    originalLink: "https://www.amazon.com/example-headphones/dp/B0123456789",
+    imageUrl: "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    productDescription: "Premium noise-cancelling wireless headphones",
+    createdAt: new Date(),
+  },
+  {
+    id: "prod_456",
+    videoId: "vid_123",
+    productName: "Smart Watch",
+    shortLink: "https://amzn.to/smartwatch",
+    originalLink: "https://www.amazon.com/example-smartwatch/dp/B0987654321",
+    imageUrl: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=3164&auto=format&fit=crop",
+    productDescription: "Fitness tracker with heart monitoring",
+    createdAt: new Date(),
+  },
+  {
+    id: "prod_789",
+    videoId: "vid_123",
+    productName: "Portable Charger",
+    shortLink: "https://amzn.to/powerbank",
+    originalLink: "https://www.amazon.com/example-powerbank/dp/B01234567890",
+    imageUrl: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=2787&auto=format&fit=crop",
+    productDescription: "20,000mAh power bank with fast charging capability",
+    createdAt: new Date(),
+  },
+];
+
+
 
 export default function HeroSection() {
   return (
-    <div className="flex justify-center">
-      <div className="relative mt-60 min-w-[777px] md:mt-[114px] md:min-w-[1792px]">
+    <div className="flex justify-center z-10 overflow-hidden">
+      <div className="relative mt-12 min-w-[777px] md:mt-[114px] md:min-w-[1792px]">
+       
+        {/* Product Left #2 - Wireless headphones */}
         <div
           className="absolute left-[-3%] top-[96px] z-[10] hidden aspect-[250/296] w-full max-w-[250px] rounded-3xl md:left-[0px] md:block"
           style={{ transform: "translateY(0px)", opacity: 1 }}
@@ -74,6 +137,8 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+
+        {/* Product Left #1 - Robot vacuum */}
         <div
           className="absolute left-[6%] top-[96px] z-[10] aspect-[340/380] w-full max-w-[204px] rounded-2xl xs:left-[4%] md:left-[280px] md:top-[26px] md:max-w-[340px] md:rounded-3xl"
           style={{ transform: "translateY(0px)", opacity: 1 }}
@@ -147,6 +212,8 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+
+        {/* Product Right #1 - Wallet Mockup */}
         <div
           className="absolute right-[4%] top-[96px] z-[10] aspect-[340/384] w-full max-w-[204px] rounded-2xl xs:right-[4%] md:right-[300px] md:top-[0px] md:aspect-[313/380] md:max-w-[313px] md:rounded-3xl"
           style={{ transform: "translateY(0px)", opacity: 1 }}
@@ -245,6 +312,8 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+
+        {/* Product Right #2 - Skin care */}
         <div
           className="absolute right-[-3%] top-[96px] z-[10] hidden aspect-[250/296] w-full max-w-[250px] rounded-3xl md:right-[5px] md:block"
           style={{ transform: "translateY(0px)", opacity: 1 }}
@@ -318,6 +387,8 @@ export default function HeroSection() {
             </div>
           </div>
         </div>
+
+        {/* iPhone Mockup */}
         <div className="relative mx-auto w-full max-w-[820px] ">
           <div
             className="pointer-events-none absolute left-[33px] top-[-10%] z-0 w-[800px] xs-medium:left-[-20%] xs-medium:w-[150%] md:left-[-40%] md:top-[-28%] md:w-[1329px]"
@@ -340,16 +411,24 @@ export default function HeroSection() {
                       frameColor={"#000000"}
                       hideStatusBar
                       transparentNavBar
-                      className="md:block hidden"
-                    />
+                      className="md:block hidden text-left"
+                    >
+                      <MobileContext.Provider value={true}>
+                        <VideoPage products={demoProducts} userDb={userDb} />
+                      </MobileContext.Provider>
+                    </IPhoneMockup>
                     <IPhoneMockup
                       screenWidth={224}
                       screenType={"notch"}
                       frameColor={"#000000"}
                       hideStatusBar
                       transparentNavBar
-                      className="md:hidden"
-                    />
+                      className="md:hidden text-left"
+                    >
+                      <MobileContext.Provider value={true}>
+                        <VideoPage products={demoProducts} userDb={userDb} />
+                      </MobileContext.Provider>
+                    </IPhoneMockup>
                   </div>
                 </div>
               </div>
