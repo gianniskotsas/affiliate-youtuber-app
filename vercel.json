@@ -1,0 +1,25 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "headers": [
+    {
+      "source": "/api/webhooks/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-store, max-age=0"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/webhooks/:path*/",
+      "destination": "/api/webhooks/:path*"
+    },
+    {
+      "source": "/ingest/:path*/",
+      "destination": "/ingest/:path*"
+    }
+  ]
+} 

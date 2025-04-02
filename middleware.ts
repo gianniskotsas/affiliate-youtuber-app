@@ -3,35 +3,41 @@ import { NextRequest, NextResponse } from "next/server";
 
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
+// Define paths that should bypass all middleware processing
+const bypassPaths = [
+  "/api/webhooks/clerk",
+  "/api/webhooks/",
+  "/ingest/",
+  "/ingest/e",
+  "/ingest/e/",
+  "/favicon.ico",
+  "/",
+];
+
 export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
   const host = req.headers.get("host") || "";
 
-   // Handle trailing slashes
-   if (pathname.endsWith("/") && pathname !== "/") {
+  // Skip middleware completely for webhook and PostHog paths
+  if (pathname.startsWith("/api/webhooks/") || pathname.startsWith("/ingest/")) {
+    return NextResponse.next();
+  }
+
+  // Handle trailing slashes for non-API routes
+  if (!pathname.startsWith("/api/") && pathname.endsWith("/") && pathname !== "/") {
     const newPathname = pathname.slice(0, -1);
     const newUrl = req.nextUrl.clone();
     newUrl.pathname = newPathname;
     console.log(`Redirecting from ${pathname} to ${newPathname}`);
     return NextResponse.redirect(newUrl);
   }
-  
-  // Exclude API routes and specifically the Clerk webhook from the custom domain logic
-  if (
-    pathname.startsWith("/api/webhooks/clerk") ||
-    pathname.startsWith("/api/") ||
-    pathname.startsWith("/ingest/") ||
-    pathname === "/favicon.ico" ||
-    pathname === "/" ||
-    pathname.startsWith("/api/webhooks/") ||
-    pathname === "/ingest/e" ||
-    pathname === "/ingest/e/"
-  ) {
-    console.log("Skipping middleware for API route:", pathname);
+
+  // Skip middleware for API routes
+  if (pathname.startsWith("/api/")) {
     return NextResponse.next();
   }
 
-  console.log('pathname', pathname)
+  console.log('pathname', pathname);
 
   if (isProtectedRoute(req)) await auth.protect();
 
