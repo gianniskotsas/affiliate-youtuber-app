@@ -2,7 +2,7 @@
 const nextConfig = {
   images: {
     domains: [
-      "api.microlink.io", // Microlink Image Preview
+      "api.microlink.io",
     ],
     remotePatterns: [
       {
@@ -40,7 +40,20 @@ const nextConfig = {
       },
     ];
   },
-  // This is required to support PostHog trailing slash API requests
+  async redirects() {
+    return [
+      {
+        source: "/api/webhooks/:path*/",
+        destination: "/api/webhooks/:path*",
+        permanent: false, // Avoid 308
+      },
+      {
+        source: "/api/webhooks/:path*",
+        destination: "/api/webhooks/:path*/",
+        permanent: false, // Avoid 308
+      },
+    ];
+  },
   skipTrailingSlashRedirect: true,
 };
 
