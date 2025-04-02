@@ -40,20 +40,6 @@ const nextConfig = {
       },
     ];
   },
-  async redirects() {
-    return [
-      {
-        source: "/api/webhooks/:path*/",
-        destination: "/api/webhooks/:path*",
-        permanent: false, // Avoid 308
-      },
-      {
-        source: "/api/webhooks/:path*",
-        destination: "/api/webhooks/:path*/",
-        permanent: false, // Avoid 308
-      },
-    ];
-  },
 };
 
 export default nextConfig;
