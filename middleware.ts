@@ -5,12 +5,16 @@ const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
+  const host = req.headers.get("host") || "";
 
-
+  // Exclude API routes from the custom domain logic
+  if (pathname.startsWith("/api/")) {
+    console.log("Skipping middleware for API route:", pathname);
+    return NextResponse.next();
+  }
 
   if (isProtectedRoute(req)) await auth.protect();
 
-  const host = req.headers.get("host") || "";
   if (host.includes("localhost")) return NextResponse.next();
 
   const protocol = req.headers.get("x-forwarded-proto") || "https";
