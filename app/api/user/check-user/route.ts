@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
   // See if user already exists in DB
   const existingUser = await db
-    .select()
+    .select({ userId: users.id })
     .from(users)
     .where(eq(users.id, userId))
     .limit(1);

@@ -22,7 +22,7 @@ export default function UpgradeModal({
   const handleUpgrade = async (priceId: string) => {
     setLoading(true);
 
-    console.log('[USER_ID]', userId);
+    console.log("[USER_ID]", userId);
 
     const callbackUrl = window.location.href;
     const response = await fetch("/api/stripe/checkout", {
@@ -67,8 +67,7 @@ export default function UpgradeModal({
                   <Feature text="Get detailed analytics" />
                   <Feature text="Customize your landing page" />
                   <Feature text="Custom domain" />
-                  <Feature text="Custom short links" />
-                  <Feature text="300 new links per month" />
+                  <Feature text="30 new links per month" />
                   <Feature text="10,000 tracked clicks per month" />
                   <Feature text="Unlimited product showcases" />
                 </ul>

@@ -10,11 +10,11 @@ export default function PricingSection() {
       {/* Header */}
       <div className="flex flex-col gap-4 sm:gap-8 items-center justify-center min-h-[300px] text-center sm:min-h-[400px]">
         <h1 className="text-4xl md:text-6xl lg:text-6xl font-400 max-w-5xl mx-auto leading-tight font-kavivanar">
-          Pricing{" "}
+          Pricing
         </h1>
 
-        <p className="text-muted-foreground max-w-2xl mx-auto text-lg sm:text-2xl">
-          Prices so low our accountant thinks we made a typo. We checked everywhere — couldn't find a better deal if we tried!
+        <p className="text-muted-foreground max-w-2xl mx-auto text-lg sm:text-xl">
+          Prices so low our accountant thinks we made a typo. 
         </p>
       </div>
 
@@ -31,8 +31,7 @@ export default function PricingSection() {
               <Feature text="Get detailed analytics" />
               <Feature text="Customize your landing page" />
               <Feature text="Custom domain" />
-              <Feature text="Custom short links" />
-              <Feature text="300 new links per month" />
+              <Feature text="30 new links per month" />
               <Feature text="10,000 tracked clicks per month" />
               <Feature text="Unlimited product showcases" />
             </ul>
@@ -46,7 +45,7 @@ export default function PricingSection() {
                 Monthly Pass
               </h3>
               <div className="text-center mb-4">
-                <span className="text-gray-500 line-through text-lg">$15</span>
+                {/* <span className="text-gray-500 line-through text-lg">$15</span> */}
                 <div className="flex items-center justify-center">
                   <span className="text-5xl font-bold">$9</span>
                   <span className="text-gray-500 ml-1">USD</span>
@@ -66,7 +65,7 @@ export default function PricingSection() {
             </div>
 
             {/* 1-Year Pass */}
-            <div className="rounded-xl p-6 mt-6 sm:mt-0 flex flex-col relative border border-[#065985] justify-center">
+            <div className="rounded-xl p-6 mt-6 text-[#065985] sm:mt-0 flex flex-col relative border-2 border-[#065985] justify-center">
               <div className="absolute -top-3 right-6 bg-[#065985] text-white text-xs font-bold px-3 py-1 rounded-full">
                 POPULAR
               </div>

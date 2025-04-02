@@ -1,18 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
-import {
-  Search,
-  Users,
-  Settings,
-  Bell,
-  ChevronDown,
-  Mic,
-  Video,
-  ExternalLink,
-  MoreVertical,
-  Plus,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import AppleCardsCarouselDemo from "@/components/apple-cards-carousel-demo";
@@ -68,7 +57,7 @@ export default function Home() {
               Elevate your affiliate revenue with short links
             </h1>
 
-            <p className="text-gray-700 max-w-2xl mx-auto text-lg sm:text-2xl">
+            <p className="text-muted-foreground max-w-2xl mx-auto text-lg sm:text-xl">
               Provide instant access to your affiliate products via a QR code
               placed on your content or showcase all your products in a
               dedicated page.
@@ -77,11 +66,11 @@ export default function Home() {
             <Link
               href="sign-up"
               className={cn(
-                buttonVariants({ variant: "default" }),
-                "rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow"
+                buttonVariants({ variant: "default", size: "lg" }),
+                "rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow group"
               )}
             >
-              Get Started
+              Get Started <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
@@ -90,7 +79,6 @@ export default function Home() {
           {/* Features Preview */}
         </div>
       </main>
-
 
       {/* Logos */}
       <FeatureSection />
