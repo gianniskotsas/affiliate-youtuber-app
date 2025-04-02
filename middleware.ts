@@ -6,26 +6,7 @@ const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
 
-  // Skip trailing slash redirect for API routes and static files
-  if (
-    pathname.startsWith("/api/") ||
-    pathname.startsWith("/_next/") ||
-    pathname.includes(".") ||
-    pathname === "/favicon.ico"
-  ) {
-    return NextResponse.next();
-  }
 
-  // Check if the pathname ends with a trailing slash and is not just "/"
-  if (pathname.endsWith('/') && pathname !== '/') {
-    // Remove the trailing slash
-    const newPathname = pathname.slice(0, -1);
-
-    // Redirect to the new pathname
-    const newUrl = req.nextUrl.clone();
-    newUrl.pathname = newPathname;
-    return NextResponse.redirect(newUrl);
-  }
 
   if (isProtectedRoute(req)) await auth.protect();
 
