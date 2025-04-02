@@ -1,6 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  trailingSlash: true,
   images: {
     domains: [
       "api.microlink.io",
