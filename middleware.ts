@@ -22,7 +22,10 @@ export default clerkMiddleware(async (auth, req) => {
     pathname.startsWith("/api/") ||
     pathname.startsWith("/ingest/") ||
     pathname === "/favicon.ico" ||
-    pathname === "/"
+    pathname === "/" ||
+    pathname.startsWith("/api/webhooks/") ||
+    pathname === "/ingest/e" ||
+    pathname === "/ingest/e/"
   ) {
     console.log("Skipping middleware for API route:", pathname);
     return NextResponse.next();
