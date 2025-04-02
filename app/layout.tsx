@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Cormorant_Garamond } from "next/font/google";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import {
   ClerkProvider,
@@ -10,6 +10,7 @@ import {
   // UserButton
 } from '@clerk/nextjs'
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { PostHogProvider } from "@/components/PostHogProvider"
 
 // const geistSans = localFont({
 //   src: "./fonts/GeistVF.woff",
@@ -26,7 +27,7 @@ const cormorantGaramond = Cormorant_Garamond({
   weight: ['300','400','500','600','700'],
   variable: '--font-cormorant-garamond',
   subsets: ['latin'],
-})
+});
 
 export const metadata: Metadata = {
   title: "Veevo",
@@ -35,21 +36,23 @@ export const metadata: Metadata = {
 
 export default function RootLayout({
   children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+}: Readonly<{ children: React.ReactNode }>) {
   return (
-    <ClerkProvider appearance={{
-      layout: {
-        socialButtonsPlacement: 'top',
-        socialButtonsVariant: 'auto',
-      }
-    }}>
+    <ClerkProvider
+      appearance={{
+        layout: {
+          socialButtonsPlacement: 'top',
+          socialButtonsVariant: 'auto',
+        }
+      }}
+    >
       <html lang="en" className={cormorantGaramond.variable}>
-        <body> 
-          {children}
-          <Toaster />
-          <SpeedInsights/>
+        <body>
+          <PostHogProvider>
+            {children}
+            <Toaster />
+            <SpeedInsights />
+          </PostHogProvider>
         </body>
       </html>
     </ClerkProvider>

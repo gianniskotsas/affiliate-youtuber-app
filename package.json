@@ -46,6 +46,8 @@
     "next": "14.2.23",
     "pg": "^8.13.2",
     "postgres": "^3.4.5",
+    "posthog-js": "^1.234.6",
+    "posthog-node": "^4.11.1",
     "qss": "^3.0.0",
     "react": "18.3.1",
     "react-canvas-confetti": "^2.0.7",
