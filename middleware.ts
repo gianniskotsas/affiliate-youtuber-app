@@ -13,6 +13,8 @@ export default clerkMiddleware(async (auth, req) => {
     return NextResponse.next();
   }
 
+  console.log('pathname', pathname)
+
   if (isProtectedRoute(req)) await auth.protect();
 
   if (host.includes("localhost")) return NextResponse.next();
