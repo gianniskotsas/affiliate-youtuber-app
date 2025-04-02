@@ -7,8 +7,14 @@ export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
   const host = req.headers.get("host") || "";
 
-  // Exclude API routes from the custom domain logic
-  if (pathname.startsWith("/api/") || pathname.startsWith("/ingest/") || pathname === "/favicon.ico" || pathname === "/") {
+  // Exclude API routes and specifically the Clerk webhook from the custom domain logic
+  if (
+    pathname.startsWith("/api/webhooks/clerk") ||
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/ingest/") ||
+    pathname === "/favicon.ico" ||
+    pathname === "/"
+  ) {
     console.log("Skipping middleware for API route:", pathname);
     return NextResponse.next();
   }

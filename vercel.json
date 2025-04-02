@@ -1,9 +1,8 @@
 {
     "routes": [
       {
-        "src": "/api/webhooks/(.*)/",
-        "dest": "/api/webhooks/$1",
-        "status": 307
+        "src": "/api/webhooks/clerk",
+        "dest": "/api/webhooks/clerk"
       }
     ],
     "trailingSlash": false

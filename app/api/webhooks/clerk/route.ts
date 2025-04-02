@@ -6,6 +6,8 @@ import { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 
 export async function POST(req: Request) {
+  console.log('req', req)
+
   // Get the headers
   const headerPayload = headers();
   const svix_id = headerPayload.get("svix-id");
