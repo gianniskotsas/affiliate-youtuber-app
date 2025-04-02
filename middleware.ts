@@ -7,6 +7,15 @@ export default clerkMiddleware(async (auth, req) => {
   const { pathname } = req.nextUrl;
   const host = req.headers.get("host") || "";
 
+   // Handle trailing slashes
+   if (pathname.endsWith("/") && pathname !== "/") {
+    const newPathname = pathname.slice(0, -1);
+    const newUrl = req.nextUrl.clone();
+    newUrl.pathname = newPathname;
+    console.log(`Redirecting from ${pathname} to ${newPathname}`);
+    return NextResponse.redirect(newUrl);
+  }
+  
   // Exclude API routes and specifically the Clerk webhook from the custom domain logic
   if (
     pathname.startsWith("/api/webhooks/clerk") ||
