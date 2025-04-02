@@ -18,8 +18,19 @@
       "destination": "/api/webhooks/:path*"
     },
     {
+      "source": "/api/webhooks/:path",
+      "destination": "/api/webhooks/:path"
+    },
+    {
       "source": "/ingest/:path*/",
       "destination": "/ingest/:path*"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/webhooks/(.*)/",
+      "dest": "/api/webhooks/$1",
+      "continue": true
     }
   ]
 } 
