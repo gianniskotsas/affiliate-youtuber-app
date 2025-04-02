@@ -4,6 +4,29 @@ import { NextRequest, NextResponse } from "next/server";
 const isProtectedRoute = createRouteMatcher(["/dashboard(.*)"]);
 
 export default clerkMiddleware(async (auth, req) => {
+  const { pathname } = req.nextUrl;
+
+  // Skip trailing slash redirect for API routes and static files
+  if (
+    pathname.startsWith("/api/") ||
+    pathname.startsWith("/_next/") ||
+    pathname.includes(".") ||
+    pathname === "/favicon.ico"
+  ) {
+    return NextResponse.next();
+  }
+
+  // Check if the pathname ends with a trailing slash and is not just "/"
+  if (pathname.endsWith('/') && pathname !== '/') {
+    // Remove the trailing slash
+    const newPathname = pathname.slice(0, -1);
+
+    // Redirect to the new pathname
+    const newUrl = req.nextUrl.clone();
+    newUrl.pathname = newPathname;
+    return NextResponse.redirect(newUrl);
+  }
+
   if (isProtectedRoute(req)) await auth.protect();
 
   const host = req.headers.get("host") || "";
@@ -13,7 +36,7 @@ export default clerkMiddleware(async (auth, req) => {
   const isCustomDomain = !host.endsWith("veevo.app");
 
   console.log("🌐 Middleware triggered for host:", host);
-  console.log("🛣️ Original pathname:", req.nextUrl.pathname);
+  console.log("🛣️ Original pathname:", pathname);
 
   if (!isCustomDomain) {
     return NextResponse.next(); // skip for veevo.app
@@ -35,7 +58,7 @@ export default clerkMiddleware(async (auth, req) => {
 
     if (data?.username && data?.verified) {
       const url = req.nextUrl.clone();
-      url.pathname = `/vv/${data.username}${req.nextUrl.pathname}`;
+      url.pathname = `/vv/${data.username}${pathname}`;
       console.log("🔁 Rewriting to:", url.pathname);
       return NextResponse.rewrite(url);
     }
