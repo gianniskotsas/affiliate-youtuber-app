@@ -1,9 +1,0 @@
-{
-    "routes": [
-      {
-        "src": "/api/webhooks/clerk",
-        "dest": "/api/webhooks/clerk"
-      }
-    ],
-    "trailingSlash": false
-  }
