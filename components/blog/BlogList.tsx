@@ -1,13 +1,13 @@
 'use client';
 
-import { BlogPost } from './BlogPost';
+import BlogPost from './BlogPost';
 import { BlogPostMeta } from '@/lib/mdx';
 
 interface BlogListProps {
   posts: (BlogPostMeta & { slug: string })[];
 }
 
-export function BlogList({ posts }: BlogListProps) {
+export default function BlogList({ posts }: BlogListProps) {
   if (posts.length === 0) {
     return (
       <div className="text-center py-12">

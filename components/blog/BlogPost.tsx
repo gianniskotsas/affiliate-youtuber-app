@@ -28,7 +28,7 @@ function formatDate(dateString: string) {
   }
 }
 
-export function BlogPost({ post, isFullPost = false }: BlogPostProps) {
+export default function BlogPost({ post, isFullPost = false }: BlogPostProps) {
   const { slug, frontmatter, content } = post;
   const { title, description, date, author, image, tags } = frontmatter;
 
