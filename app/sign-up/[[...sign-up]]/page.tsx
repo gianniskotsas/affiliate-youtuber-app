@@ -13,7 +13,7 @@ export default function Page() {
         />
       </div>
     </div>
-    <div className="w-1/2 flex items-center justify-center">
+    <div className="w-full sm:w-1/2 flex items-center justify-center">
       <SignUp />
     </div>
   </div>

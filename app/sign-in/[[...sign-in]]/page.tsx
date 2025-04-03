@@ -2,7 +2,7 @@ import { SignIn } from "@clerk/nextjs";
 import Image from "next/image";
 export default function Page() {
   return (
-    <div className="flex h-screen">
+    <div className="flex h-screen w-full">
       <div className="hidden md:block w-full md:w-1/2 relative">
         <div className="absolute inset-0">
           <Image
@@ -13,7 +13,7 @@ export default function Page() {
           />
         </div>
       </div>
-      <div className="w-1/2 flex items-center justify-center">
+      <div className="w-full sm:w-1/2 flex items-center justify-center">
         <SignIn
           appearance={{
             elements: {

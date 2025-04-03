@@ -78,8 +78,14 @@ export function AppSidebar({
                     className="size-6"
                   />
                 </div>
-                <div className="flex border border-neutral-800 rounded-full justify-center items-center">
-                  <UserButton />
+                <div className="flex border border-neutral-800 rounded-full justify-center z-20 items-center">
+                <UserButton
+                    appearance={{
+                      elements: {
+                        userButtonPopoverCard: { pointerEvents: "initial" },
+                      },
+                    }}
+                  />
                 </div>
               </div>
             </SidebarMenuButton>
