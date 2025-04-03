@@ -34,7 +34,7 @@ export default function BlogList({ posts }: BlogListProps) {
               image: post.image,
               tags: post.tags || [],
             },
-            content: null, // We don't need the content for the list view
+            content: '', // We don't need the content for the list view
           }}
         />
       ))}
