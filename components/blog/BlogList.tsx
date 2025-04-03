@@ -20,7 +20,7 @@ export function BlogList({ posts }: BlogListProps) {
   }
 
   return (
-    <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+    <div className="grid gap-8 md:grid-cols-2 grid-cols-1">
       {posts.map((post) => (
         <BlogPost
           key={post.slug}

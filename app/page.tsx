@@ -4,11 +4,9 @@ import Image from "next/image";
 import { ArrowRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import AppleCardsCarouselDemo from "@/components/apple-cards-carousel-demo";
 import HeroSection from "@/components/landing/heroSection";
 import FeatureSection from "@/components/landing/featureSection";
 import PricingSection from "@/components/landing/pricingSection";
-
 
 export default function Home() {
   
