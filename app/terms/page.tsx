@@ -58,7 +58,7 @@ export default function TermsOfService() {
           <section className="mb-8">
             <h2 className="text-2xl font-semibold mb-4">5. Limitation of Liability</h2>
             <p>
-              In no event shall Veevo be liable for any damages arising out of the use or inability to use the materials on Veevo's website.
+              In no event shall Veevo be liable for any damages arising out of the use or inability to use the materials on Veevo&apos;s website.
             </p>
           </section>
 
