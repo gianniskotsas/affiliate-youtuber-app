@@ -16,6 +16,7 @@ const config: Config = {
     extend: {
       fontFamily: {
         cormorantGaramont: ["var(--font-cormorant-garamond)"],
+        sans: ["var(--font-inter)", ...defaultTheme.fontFamily.sans],
       },
 
       colors: {

@@ -136,7 +136,10 @@ export async function POST(req: NextRequest) {
 
         await db
           .update(users)
-          .set({ stripeSubscriptionStatus: false }) // Set to false (canceled)
+          .set({ 
+            stripeSubscriptionStatus: false, // Set to false (canceled)
+            stripeSubscriptionId: "" // Clear the subscription ID
+          })
           .where(eq(users.stripeSubscriptionId, subscriptionId));
 
         // Set all videos from that user from active true to false

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Cormorant_Garamond } from "next/font/google";
+import { Cormorant_Garamond, Inter } from "next/font/google";
 import { Toaster } from "@/components/ui/toaster";
 import "./globals.css";
 import {
@@ -12,21 +12,16 @@ import {
 import { SpeedInsights } from "@vercel/speed-insights/next"
 import { PostHogProvider } from "@/components/PostHogProvider"
 
-// const geistSans = localFont({
-//   src: "./fonts/GeistVF.woff",
-//   variable: "--font-geist-sans",
-//   weight: "100 900",
-// });
-// const geistMono = localFont({
-//   src: "./fonts/GeistMonoVF.woff",
-//   variable: "--font-geist-mono",
-//   weight: "100 900",
-// });
 
 const cormorantGaramond = Cormorant_Garamond({
   weight: ['300','400','500','600','700'],
   variable: '--font-cormorant-garamond',
   subsets: ['latin'],
+});
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
 });
 
 export const metadata: Metadata = {
@@ -46,7 +41,7 @@ export default function RootLayout({
         }
       }}
     >
-      <html lang="en" className={cormorantGaramond.variable}>
+      <html lang="en" className={`${cormorantGaramond.variable} ${inter.variable}`}>
         <body>
           <PostHogProvider>
             {children}

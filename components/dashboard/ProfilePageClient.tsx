@@ -11,7 +11,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import { SelectUser } from "@/db/schema";
+import { SelectUser, SocialAccount } from "@/db/schema";
 import { z } from "zod";
 import Link from "next/link";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -19,6 +19,7 @@ import { useFieldArray, useForm } from "react-hook-form";
 import React from "react";
 import { social } from "@/lib/utils";
 import { IconType } from "react-icons/lib";
+import { Loader2 } from "lucide-react";
 
 import {
   Form,
@@ -91,8 +92,57 @@ export default function ProfilePageClient({
     control: form.control,
   });
 
-  function onSubmit(data: ProfileFormValues) {
-    console.log(data);
+  async function onSubmit(data: ProfileFormValues) {
+    try {
+      setLoading(true);
+      
+      // Ensure socialAccounts is an array
+      const socialAccounts = Array.isArray(data.socialAccounts) ? data.socialAccounts : [];
+      
+      const response = await fetch("/api/user/update-user", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          userId: userId,
+          data: {
+            username: data.username,
+            bio: data.bio,
+            socialAccounts: socialAccounts,
+          },
+        }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || "Failed to update profile");
+      }
+
+      const result = await response.json();
+      
+      // Update the local state with the new data
+      setUserDb({
+        ...userDb!,
+        username: data.username,
+        bio: data.bio,
+        socialAccounts: socialAccounts,
+      });
+      
+      toast({
+        title: "Profile Updated",
+        description: "Your profile has been updated successfully!",
+      });
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to update profile",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
   }
 
   if (isLoaded && userId && user) {
@@ -325,7 +375,16 @@ export default function ProfilePageClient({
                               />
                             ))}
                           </div>
-                          <Button type="submit">Update profile</Button>
+                          <Button type="submit" disabled={loading}>
+                            {loading ? (
+                              <>
+                                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                Updating...
+                              </>
+                            ) : (
+                              "Update profile"
+                            )}
+                          </Button>
                         </form>
                       </Form>
                     </div>

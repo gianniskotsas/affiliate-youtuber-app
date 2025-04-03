@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "../ui/button";
 import Image from "next/image";
+import { Loader2 } from "lucide-react";
 // Register FilePond Plugin
 registerPlugin(FilePondPluginImagePreview);
 
@@ -29,6 +30,7 @@ export default function ProfileImageUpload({
 }: ProfileImageUploadProps) {
   const [imageUrl, setImageUrl] = useState(existingImage || null);
   const [isUploading, setIsUploading] = useState(false); // Prevents duplicate uploads
+  const [isOpen, setIsOpen] = useState(false);
   const { toast } = useToast();
 
   async function handleFileUpload(files: File[]) {
@@ -62,6 +64,8 @@ export default function ProfileImageUpload({
         title: "Profile Image Updated",
         description: "Your profile image has been updated successfully!",
       });
+      // Close the dialog after successful upload
+      setIsOpen(false);
     } catch (error) {
       console.error("Upload error:", error);
       toast({ title: "Failed to upload image", variant: "destructive" });
@@ -89,11 +93,14 @@ export default function ProfileImageUpload({
       </div>
 
       {/* Upload Image Button + Modal */}
-      <Dialog>
+      <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" disabled={isUploading}>
             {isUploading ? (
-              "Uploading..."
+              <div className="flex flex-row items-center gap-2">
+                <Loader2 className="h-4 w-4 animate-spin" />
+                <span>Uploading...</span>
+              </div>
             ) : (
               <div className="flex flex-row items-center gap-2">
                 <svg

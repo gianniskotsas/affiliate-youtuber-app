@@ -8,7 +8,10 @@ import AppleCardsCarouselDemo from "@/components/apple-cards-carousel-demo";
 import HeroSection from "@/components/landing/heroSection";
 import FeatureSection from "@/components/landing/featureSection";
 import PricingSection from "@/components/landing/pricingSection";
+
+
 export default function Home() {
+  
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
       {/* Navigation */}
@@ -30,16 +33,13 @@ export default function Home() {
 
               <div className="hidden md:flex items-center gap-6">
                 <Link href="#" className="text-gray-800 hover:text-black">
-                  Home
+                  Features
                 </Link>
                 <Link href="#" className="text-gray-800 hover:text-black">
-                  About
+                  Pricing
                 </Link>
                 <Link href="#" className="text-gray-800 hover:text-black">
-                  Support
-                </Link>
-                <Link href="#" className="text-gray-800 hover:text-black">
-                  Download
+                  Blog
                 </Link>
               </div>
 
@@ -47,7 +47,9 @@ export default function Home() {
                 href="/sign-in"
                 className="bg-white rounded-full px-6 py-2 font-medium shadow-sm hover:shadow-md transition-shadow"
               >
-                Login
+                <div className="flex flex-row items-center gap-2 group">
+                  Login <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                </div>
               </Link>
             </nav>
           </header>
