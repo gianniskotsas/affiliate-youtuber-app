@@ -63,10 +63,18 @@ export async function getAllBlogPosts() {
       const fileContents = fs.readFileSync(fullPath, 'utf8');
       const { data } = matter(fileContents);
 
-      return {
+      // Ensure all required fields are present
+      const postData = {
         slug,
-        ...(data as Omit<BlogPostMeta, 'slug'>),
+        title: data.title || 'Untitled',
+        description: data.description || '',
+        date: data.date || new Date().toISOString(),
+        author: data.author || 'Veevo',
+        image: data.image || '',
+        tags: Array.isArray(data.tags) ? data.tags : [],
       };
+
+      return postData;
     })
   );
 
