@@ -5,7 +5,7 @@ export default function BlogNotFound() {
     <div className="container flex flex-col items-center justify-center min-h-[60vh] text-center">
       <h1 className="text-4xl font-bold mb-4">Blog Post Not Found</h1>
       <p className="text-xl text-muted-foreground mb-8">
-        The blog post you're looking for doesn't exist or has been moved.
+        The blog post you&apos;re looking for doesn&apos;t exist or has been moved.
       </p>
       <Link
         href="/blog"
