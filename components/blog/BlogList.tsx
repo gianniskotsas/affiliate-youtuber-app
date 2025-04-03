@@ -1,7 +1,7 @@
 'use client';
 
-import BlogPost from './BlogPost';
 import { BlogPostMeta } from '@/lib/mdx';
+import BlogPost from './BlogPost';
 
 interface BlogListProps {
   posts: (BlogPostMeta & { slug: string })[];

@@ -1,7 +1,9 @@
+'use client';
+
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import BlogList from '@/components/blog/BlogList';
 import { getAllBlogPosts } from '@/lib/mdx';
+import BlogList from '@/components/blog/BlogList';
 
 interface TagPageProps {
   params: {

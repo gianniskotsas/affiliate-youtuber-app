@@ -1,7 +1,9 @@
+'use client';
+
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import BlogPost from '@/components/blog/BlogPost';
 import { getBlogPostBySlug, getBlogPostSlugs } from '@/lib/mdx';
+import BlogPost from '@/components/blog/BlogPost';
 
 interface BlogPostPageProps {
   params: {

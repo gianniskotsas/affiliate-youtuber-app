@@ -1,6 +1,8 @@
+'use client';
+
 import { Metadata } from 'next';
-import BlogList from '@/components/blog/BlogList';
 import { getAllBlogPosts } from '@/lib/mdx';
+import BlogList from '@/components/blog/BlogList';
 
 export const metadata: Metadata = {
   title: 'Blog | Veevo',
