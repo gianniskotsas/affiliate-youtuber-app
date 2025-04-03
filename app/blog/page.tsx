@@ -1,5 +1,5 @@
 import { Metadata } from 'next';
-import { BlogList } from '@/components/blog/BlogList';
+import BlogList from '@/components/blog/BlogList';
 import { getAllBlogPosts } from '@/lib/mdx';
 
 export const metadata: Metadata = {
