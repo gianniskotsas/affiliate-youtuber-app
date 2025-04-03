@@ -1,6 +1,6 @@
 import { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { BlogList } from '@/components/blog/BlogList';
+import BlogList from '@/components/blog/BlogList';
 import { getAllBlogPosts } from '@/lib/mdx';
 
 interface TagPageProps {
