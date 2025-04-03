@@ -42,7 +42,7 @@ export async function getBlogPostBySlug(slug: string) {
   return {
     slug,
     frontmatter: data as Omit<BlogPostMeta, 'slug'>,
-    content, // Return raw MDX content
+    content, // Return raw MDX content as string
   };
 }
 

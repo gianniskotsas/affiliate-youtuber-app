@@ -41,12 +41,14 @@ export async function generateStaticParams() {
 export default async function BlogPostPage({ params }: BlogPostPageProps) {
   try {
     const post = await getBlogPostBySlug(params.slug);
+    
     return (
       <div className="container py-10">
         <BlogPost post={post} isFullPost />
       </div>
     );
   } catch (error) {
+    console.error('Error rendering blog post:', error);
     notFound();
   }
 } 

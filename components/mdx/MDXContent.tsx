@@ -1,9 +1,15 @@
-import { MDXRemote } from 'next-mdx-remote/rsc';
+'use client';
+
+import { useEffect, useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
+import remarkGfm from 'remark-gfm';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeSlug from 'rehype-slug';
 
-// Define custom components for MDX
+// Define custom components for markdown
 const components = {
   h1: ({ className, ...props }: React.HTMLAttributes<HTMLHeadingElement>) => (
     <h1
@@ -134,18 +140,23 @@ interface MDXContentProps {
   source: string;
 }
 
-export async function MDXContent({ source }: MDXContentProps) {
+export function MDXContent({ source }: MDXContentProps) {
   if (!source) {
     return null;
   }
   
-  console.log('MDX source type:', typeof source);
-  console.log('MDX source preview:', source.substring(0, 100) + '...');
-  
   try {
-    return <MDXRemote source={source} components={components} />;
+    return (
+      <ReactMarkdown
+        remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeHighlight, rehypeSlug]}
+        components={components}
+      >
+        {source}
+      </ReactMarkdown>
+    );
   } catch (err) {
-    console.error('MDX rendering error:', err);
-    return <p className="text-red-500">MDX rendering failed. Please check the console for details.</p>;
+    console.error('Markdown rendering error:', err);
+    return <p className="text-red-500">Markdown rendering failed. Please check the console for details.</p>;
   }
 } 
