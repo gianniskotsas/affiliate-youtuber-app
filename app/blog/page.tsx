@@ -1,5 +1,3 @@
-'use client';
-
 import { Metadata } from 'next';
 import { getAllBlogPosts } from '@/lib/mdx';
 import BlogList from '@/components/blog/BlogList';
