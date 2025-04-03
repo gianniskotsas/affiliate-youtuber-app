@@ -51,13 +51,13 @@ export function AppSidebar({
         name: "Billing",
         url: "/dashboard/billing",
         icon: "CreditCard",
-        active: userDb?.stripeSubscriptionStatus ? true : false,
+        active: userDb?.stripeSubscriptionId ? true : false,
       },
       {
         name: "Domains",
         url: "/dashboard/domains",
         icon: "Globe",
-        active: true,
+        active: userDb?.stripeSubscriptionStatus ? true : false,
       },
     ],
   };
@@ -87,7 +87,7 @@ export function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain projects={data.projects} />
+        <NavMain projects={data.projects} userDb={userDb} />
       </SidebarContent>
       <SidebarFooter>
         <div className="p-1 flex flex-col gap-2">

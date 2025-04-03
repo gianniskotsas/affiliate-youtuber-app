@@ -202,7 +202,7 @@ export default function Home() {
             </div>
           </div>
 
-          <div className="border-t mt-12 pt-8">
+          <div className="border-t sm:border-none mt-12 pt-8">
             <p className="text-center text-gray-600">
               © {new Date().getFullYear()} Veevo. All rights reserved.
             </p>

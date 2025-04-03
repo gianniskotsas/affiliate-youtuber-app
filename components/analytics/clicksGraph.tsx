@@ -63,9 +63,9 @@ const ClicksGraph = ({
             {clicksCount}
           </div>
           <div className="flex flex-col gap-1">
-            <CardTitle>Profile Clicks</CardTitle>
+            <CardTitle>Link Clicks</CardTitle>
             <CardDescription>
-              Number of clicks on your profile over time
+              Number of clicks on your links over time
             </CardDescription>
           </div>
         </div>

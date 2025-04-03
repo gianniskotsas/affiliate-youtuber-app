@@ -71,8 +71,8 @@ export default function ProfilePageClient({
   const { toast } = useToast();
   const { user } = useUser();
   const [userDb, setUserDb] = useState<SelectUser | null>(userData);
-  const [profileImage, setProfileImage] = useState<string | null>(
-    userData.profilePicture
+  const [profileImage, setProfileImage] = useState<string>(
+    userData.profilePicture || "/person_placeholder_md.jpeg"
   );
   const [loading, setLoading] = useState(false);
 

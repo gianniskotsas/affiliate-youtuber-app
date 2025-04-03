@@ -37,8 +37,12 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from "../ui/badge";
 import { cn } from "@/lib/utils";
+import UpgradeModal from "./upgradeModal";
+import { useState } from "react";
+import { SelectUser } from "@/db/schema";
 export function NavMain({
   projects,
+  userDb,
 }: {
   projects: {
     name: string;
@@ -46,9 +50,11 @@ export function NavMain({
     icon: string;
     active: boolean;
   }[];
+  userDb: SelectUser;
 }) {
   const { isMobile } = useSidebar();
   const pathname = usePathname();
+  const [open, setOpen] = useState(false);
 
   // Helper function to get icon component
   const getIcon = (iconName: string) => {
@@ -75,6 +81,7 @@ export function NavMain({
     <SidebarGroup className="group-data-[collapsible=icon]:hidden mt-4">
       <SidebarMenu>
         {projects.map((item) => {
+          
           const IconComponent = getIcon(item.icon);
           const isActive =
             (pathname === "/dashboard" && item.url === "/dashboard") ||
@@ -85,7 +92,7 @@ export function NavMain({
             <SidebarMenuItem key={item.name}>
               <SidebarMenuButton asChild>
                 <Link
-                  href={item.url}
+                  href={item.active ? item.url : "#"}
                   className={cn(
                     "flex flex-row justify-between",
                     item.active ? "" : "text-neutral-400 hover:text-neutral-400 hover:bg-neutral-100 focus:text-neutral-400 focus:bg-neutral-100 cursor-default ",
@@ -98,12 +105,13 @@ export function NavMain({
                   </div>
                   {!item.active && (
                     <Badge
-                    variant={item.name === "Analytics" ? "default" : "outline"}
+                    onClick={() => setOpen(true)}
+                    variant={item.name === "Analytics" || item.name === "Domains" ? "default" : "outline"}
                     className={cn({
-                      "text-neutral-500 font-norm bg-neutral-100": item.name !== "Analytics",
+                      "text-neutral-500 font-norm bg-neutral-100": item.name !== "Analytics" && item.name !== "Domains"
                     })}
                   >
-                    {item.name === "Analytics" ? "Pro" : "Coming soon"}
+                    {item.name === "Analytics" || item.name === "Domains" ? "Pro" : "Coming soon"}
                   </Badge>
                   )}
                 </Link>
@@ -112,6 +120,8 @@ export function NavMain({
           );
         })}
       </SidebarMenu>
+      <UpgradeModal open={open} setOpen={setOpen} userId={userDb.id} />
+
     </SidebarGroup>
   );
 }

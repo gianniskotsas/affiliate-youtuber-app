@@ -12,15 +12,15 @@ const userDb = {
   email: "demo@example.com",
   username: "democreator",
   bio: "Content creator sharing my favorite tech products",
-  profilePicture: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2080&auto=format&fit=crop",
+  profilePicture: "/person_placeholder_md.jpeg",
   socialAccounts: [
-    { name: "X", url: "https://x.com/democreator" },
-    { name: "YouTube", url: "https://youtube.com/democreator" },
-    { name: "Instagram", url: "https://instagram.com/democreator" },
-    { name: "TikTok", url: "https://tiktok.com/@democreator" },
+    { name: "X", url: "https://veevo.link/sign-up" },
+    { name: "YouTube", url: "https://veevo.link/sign-up" },
+    { name: "Instagram", url: "https://veevo.link/sign-up" },
+    { name: "TikTok", url: "https://veevo.link/sign-up" },
   ],
   createdAt: new Date(),
-  domain: "democreator.com",
+  domain: "veevo.link",
   domainVerified: true,
   stripeCustomerId: "cus_123456",
   stripeSubscriptionId: "sub_123456",
@@ -33,7 +33,7 @@ const demoProducts = [
     id: "headphones",
     videoId: "vid_123",
     productName: "Wireless Headphones",
-    shortLink: "https://amzn.to/headphones",
+    shortLink: "https://veevo.link/sign-up",
     originalLink: "https://www.amazon.com/example-headphones/dp/B0123456789",
     imageUrl: "/landing/headphones_landingPage_md.jpeg",
     productDescription: "Premium noise-cancelling wireless headphones",
@@ -43,7 +43,7 @@ const demoProducts = [
     id: "robotVacuum",
     videoId: "vid_123",
     productName: "Robot Vacuum",
-    shortLink: "https://amzn.to/robotvacuum",
+    shortLink: "https://veevo.link/sign-up",
     originalLink: "https://www.amazon.com/example-robotvacuum/dp/B0987654321",
     imageUrl: "/landing/robotVacuum_landingPage_md.jpeg",
     productDescription: "Effortless cleaning, no mess.",
@@ -53,7 +53,7 @@ const demoProducts = [
     id: "wallet",
     videoId: "vid_123",
     productName: "Magsafe Wallet",
-    shortLink: "https://amzn.to/wallet",
+    shortLink: "https://veevo.link/sign-up",
     originalLink: "https://www.amazon.com/example-wallet/dp/B01234567890",
     imageUrl: "/landing/wallet_landingPage_md.jpeg",
     productDescription: "A premium leather wallet for your iPhone.",
@@ -63,7 +63,7 @@ const demoProducts = [
     id: "skinCare",
     videoId: "vid_123",
     productName: "Skin Care",
-    shortLink: "https://amzn.to/skinCare",
+    shortLink: "https://veevo.link/sign-up",
     originalLink: "https://www.amazon.com/example-skinCare/dp/B01234567890",
     imageUrl: "/landing/skinCare_landingPage_md.jpeg",
     productDescription: "For smooth and radiant skin.",
@@ -98,7 +98,7 @@ export default function HeroSection() {
                   <Link
                     key="1"
                     className="group border rounded-2xl shadow-sm mb-4 flex flex-col text-left items-start w-full h-full p-2.5 bg-neutral-50"
-                    href="https://www.google.com"
+                      href="https://veevo.link/sign-up"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
@@ -172,7 +172,7 @@ export default function HeroSection() {
                     <Link
                       key="1"
                       className="group border rounded-2xl shadow-sm mb-4 flex flex-col text-left items-start w-full h-full p-2.5 bg-neutral-50"
-                      href="https://www.google.com"
+                      href="https://veevo.link/sign-up"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -247,7 +247,7 @@ export default function HeroSection() {
                     <Link
                       key="1"
                       className="group border rounded-2xl shadow-sm mb-4 flex flex-col text-left items-start w-full h-full p-2.5 bg-neutral-50"
-                      href="https://www.google.com"
+                      href="https://veevo.link/sign-up"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -347,7 +347,7 @@ export default function HeroSection() {
                     <Link
                       key="1"
                       className="group border rounded-2xl shadow-sm mb-4 flex flex-col text-left items-start w-full h-full p-2.5 bg-neutral-50"
-                      href="/sign-in"
+                      href="https://veevo.link/sign-up"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -369,10 +369,10 @@ export default function HeroSection() {
                       <div className="flex justify-between items-center w-full p-2.5">
                         <div className="flex flex-col items-left w-full">
                           <h3 className="text-sm font-semibold">
-                            Leather Wallet
+                            Skin Care
                           </h3>
                           <p className="text-xs text-gray-500 w-full">
-                            A premium leather wallet with a sleek design.
+                            For smooth and radiant skin.
                           </p>
                         </div>
                         <svg

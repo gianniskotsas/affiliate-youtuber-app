@@ -43,40 +43,50 @@ export default function VideoClient({
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mt-6">
                   {videos.length > 0 ? (
                     videos.map((video) => (
-                      <Link
-                        href={`/dashboard/video/${video.id}`}
-                        key={video.id}
-                        className="group rounded-lg border bg-card text-card-foreground shadow-sm relative overflow-hidden border-opacity-10 border-primary"
-                        style={{ aspectRatio: "16/9" }}
-                      >
-                        <Image
-                          src={video.videoThumbnail}
-                          alt={video.videoTitle}
-                          quality={20}
-                          fill
-                          className="object-cover"
-                        />
-                        <div className="absolute top-0 right-0 p-2 inset-0 group-hover:bg-black/40 transition-all duration-200"></div>
-                        <div className="absolute group-hover:block hidden top-0 right-0 bg-neutral-50 rounded-bl-xl border-neutral-50/60 border-l-4 border-b-4 z-50 p-1.5">
-                          {" "}
-                          <span className="text-neutral-60/90">
-                            <svg
-                              xmlns="http://www.w3.org/2000/svg"
-                              fill="none"
-                              viewBox="0 0 24 24"
-                              strokeWidth={2.5}
-                              stroke="currentColor"
-                              className="size-3"
-                            >
-                              <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
-                              />
-                            </svg>
-                          </span>
+                      <div key={video.id} className="flex flex-col gap-2 mt-4">
+                        <Link
+                          href={`/dashboard/video/${video.id}`}
+                          key={video.id}
+                          className="group rounded-lg border bg-card text-card-foreground shadow-sm relative overflow-hidden border-opacity-10 border-primary"
+                          style={{ aspectRatio: "16/9" }}
+                        >
+                          <Image
+                            src={video.videoThumbnail}
+                            alt={video.videoTitle}
+                            quality={20}
+                            fill
+                            className="object-cover"
+                          />
+                          <div className="absolute top-0 right-0 p-2 inset-0 group-hover:bg-black/40 transition-all duration-200"></div>
+                          <div className="absolute group-hover:block hidden top-0 right-0 bg-neutral-50 rounded-bl-xl border-neutral-50/60 border-l-4 border-b-4 z-50 p-1.5">
+                            {" "}
+                            <span className="text-neutral-60/90">
+                              <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                strokeWidth={2.5}
+                                stroke="currentColor"
+                                className="size-3"
+                              >
+                                <path
+                                  strokeLinecap="round"
+                                  strokeLinejoin="round"
+                                  d="m4.5 19.5 15-15m0 0H8.25m11.25 0v11.25"
+                                />
+                              </svg>
+                            </span>
+                          </div>
+                        </Link>
+                        <div className="flex flex-col gap-0.5">
+                          <p className="text-sm font-bold">
+                            {video.videoTitle}
+                          </p>
+                          <p className="text-xs text-neutral-500">
+                            {video.videoSlug}
+                          </p>
                         </div>
-                      </Link>
+                      </div>
                     ))
                   ) : (
                     <p className="text-center text-gray-500">
