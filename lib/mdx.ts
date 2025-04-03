@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 import matter from 'gray-matter';
 import { serialize } from 'next-mdx-remote/serialize';
@@ -21,9 +21,9 @@ export type BlogPostMeta = {
 };
 
 // Get all blog post slugs
-export function getBlogPostSlugs() {
-  const fileNames = fs.readdirSync(blogDirectory);
-  return fileNames.map((fileName) => {
+export async function getBlogPostSlugs() {
+  const fileNames = await fs.readdir(blogDirectory);
+  return fileNames.map((fileName: string) => {
     return {
       params: {
         slug: fileName.replace(/\.mdx$/, ''),
@@ -34,9 +34,10 @@ export function getBlogPostSlugs() {
 
 // Get blog post data by slug
 export async function getBlogPostBySlug(slug: string) {
-  const fullPath = path.join(blogDirectory, `${slug}.mdx`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
-  const { data, content } = matter(fileContents);
+  const filePath = path.join(process.cwd(), 'content', 'blog', `${slug}.mdx`);
+  const raw = await fs.readFile(filePath, 'utf8');
+
+  const { content, data } = matter(raw);
 
   return {
     slug,
@@ -47,12 +48,12 @@ export async function getBlogPostBySlug(slug: string) {
 
 // Get all blog posts
 export async function getAllBlogPosts() {
-  const fileNames = fs.readdirSync(blogDirectory);
+  const fileNames = await fs.readdir(blogDirectory);
   const allPostsData = await Promise.all(
-    fileNames.map(async (fileName) => {
+    fileNames.map(async (fileName: string) => {
       const slug = fileName.replace(/\.mdx$/, '');
       const fullPath = path.join(blogDirectory, fileName);
-      const fileContents = fs.readFileSync(fullPath, 'utf8');
+      const fileContents = await fs.readFile(fullPath, 'utf8');
       const { data } = matter(fileContents);
 
       // Ensure all required fields are present
@@ -71,7 +72,7 @@ export async function getAllBlogPosts() {
   );
 
   // Sort posts by date
-  return allPostsData.sort((a, b) => {
+  return allPostsData.sort((a: BlogPostMeta, b: BlogPostMeta) => {
     if (a.date < b.date) {
       return 1;
     } else {

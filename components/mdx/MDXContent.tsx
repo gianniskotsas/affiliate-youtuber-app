@@ -139,5 +139,13 @@ export async function MDXContent({ source }: MDXContentProps) {
     return null;
   }
   
-  return <MDXRemote source={source} components={components} />;
+  console.log('MDX source type:', typeof source);
+  console.log('MDX source preview:', source.substring(0, 100) + '...');
+  
+  try {
+    return <MDXRemote source={source} components={components} />;
+  } catch (err) {
+    console.error('MDX rendering error:', err);
+    return <p className="text-red-500">MDX rendering failed. Please check the console for details.</p>;
+  }
 } 
