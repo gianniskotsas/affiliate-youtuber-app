@@ -72,7 +72,7 @@ export default function ProfilePageClient({
   const { user } = useUser();
   const [userDb, setUserDb] = useState<SelectUser | null>(userData);
   const [profileImage, setProfileImage] = useState<string>(
-    userData.profilePicture || "/person_placeholder_md.jpeg"
+    userData.profilePicture || user?.imageUrl || "/person_placeholder_md.jpeg"
   );
   const [loading, setLoading] = useState(false);
 
