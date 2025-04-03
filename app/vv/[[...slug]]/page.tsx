@@ -1,5 +1,5 @@
 import { headers } from "next/headers";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { db } from "@/db";
 import { users, videos, products } from "@/db/schema";
 import { eq, and } from "drizzle-orm";
@@ -24,7 +24,7 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
       .where(eq(users.domain, host))
       .limit(1);
 
-    if (!user || !user.stripeSubscriptionId) return notFound();
+    if (!user) return notFound();
 
     // Use the user record from the custom domain
     username = user.username;
@@ -42,7 +42,11 @@ export default async function Page({ params }: { params: { slug?: string[] } }) 
       .where(and(eq(videos.userId, user.id), eq(videos.videoSlug, videoSlug)))
       .limit(1);
 
-    if (!video || !video.active) return notFound();
+    if (!video) return notFound();
+
+    console.log("video");
+
+    if (!video.active) return redirect("/not-published");
 
     const productsArray = await db
       .select()

@@ -106,9 +106,22 @@ const CreateProductButton = ({
         description: `Successfully added ${data.productName}!`,
       });
 
+      
       setOpen(false);
+
       // Pass the new product data back to parent for immediate UI update
       onProductAdded(newProduct);
+      // Reset form after successful submission
+      form.reset({
+        videoId: videoId,
+        productName: "",
+        productDescription: "",
+        originalLink: "",
+        imageUrl: "",
+      });
+      
+      // Reset image path state
+      setImagePath("");
     } catch (error) {
       console.error("Error creating product:", error);
 

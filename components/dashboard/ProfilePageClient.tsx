@@ -48,7 +48,6 @@ const profileFormSchema = z.object({
     .string()
     .min(2, { message: "Username must be at least 2 characters." })
     .max(30, { message: "Username must not be longer than 30 characters." }),
-  email: z.string().email({ message: "Invalid email format." }),
   bio: z.string().max(160),
   socialAccounts: z
     .array(
@@ -81,7 +80,6 @@ export default function ProfilePageClient({
     mode: "onChange",
     defaultValues: {
       username: userDb?.username ?? "", // Ensures empty string if undefined
-      email: userDb?.email ?? "",
       bio: userDb?.bio ?? "",
       socialAccounts: userDb?.socialAccounts ?? [],
     },
@@ -210,79 +208,6 @@ export default function ProfilePageClient({
                                   e.preventDefault(); // Prevents form auto-submission
                                   const input = document.querySelector(
                                     "#username-input"
-                                  ) as HTMLElement;
-                                  if (input) {
-                                    const isDisabled =
-                                      input.getAttribute("data-disabled") ===
-                                      "true";
-                                    input.setAttribute(
-                                      "data-disabled",
-                                      isDisabled ? "false" : "true"
-                                    );
-                                    input.toggleAttribute("disabled");
-                                    if (!isDisabled) {
-                                      e.currentTarget.classList.add("hidden");
-                                    }
-                                  }
-                                }}
-                              >
-                                <svg
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  fill="none"
-                                  viewBox="0 0 24 24"
-                                  strokeWidth={1.5}
-                                  stroke="currentColor"
-                                  className="size-4"
-                                >
-                                  <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10"
-                                  />
-                                </svg>
-                              </Button>
-                            </div>
-                          </div>
-                          <div className="flex flex-row items-center space-x-2 w-full">
-                            <div className="flex-grow">
-                              <FormField
-                                control={form.control}
-                                name="email"
-                                render={({ field }) => (
-                                  <FormItem>
-                                    <FormLabel>Email</FormLabel>
-                                    <FormControl>
-                                      <Input
-                                        placeholder="example@example.com"
-                                        {...field}
-                                        data-disabled="true" // ✅ Store disabled state in an attribute
-                                        disabled={
-                                          document
-                                            .querySelector("#email-input")
-                                            ?.getAttribute("data-disabled") ===
-                                          "true"
-                                        }
-                                        id="email-input"
-                                      />
-                                    </FormControl>
-                                    <FormMessage />
-                                  </FormItem>
-                                )}
-                              />
-                            </div>
-                            <div className="flex items-center h-full">
-                              <Button
-                                className={cn(
-                                  document
-                                    .querySelector("#email-input")
-                                    ?.getAttribute("data-disabled") !==
-                                    "true" && "hidden",
-                                  "mt-8 px-2.5 aspect-square border-none"
-                                )}
-                                onClick={(e) => {
-                                  e.preventDefault(); // Prevents form auto-submission
-                                  const input = document.querySelector(
-                                    "#email-input"
                                   ) as HTMLElement;
                                   if (input) {
                                     const isDisabled =
