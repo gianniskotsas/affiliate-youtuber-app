@@ -1,6 +1,4 @@
-'use client';
-
-import { MDXRemote } from 'next-mdx-remote';
+import { MDXRemote } from 'next-mdx-remote/rsc';
 import Image from 'next/image';
 import Link from 'next/link';
 import { cn } from '@/lib/utils';
@@ -133,13 +131,13 @@ const components = {
 };
 
 interface MDXContentProps {
-  source: any;
+  source: string;
 }
 
-export function MDXContent({ source }: MDXContentProps) {
+export async function MDXContent({ source }: MDXContentProps) {
   if (!source) {
     return null;
   }
   
-  return <MDXRemote {...source} components={components} />;
+  return <MDXRemote source={source} components={components} />;
 } 

@@ -38,18 +38,10 @@ export async function getBlogPostBySlug(slug: string) {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
 
-  // Serialize the MDX content
-  const mdxSource = await serialize(content, {
-    mdxOptions: {
-      remarkPlugins: [remarkGfm],
-      rehypePlugins: [rehypeSlug, rehypeHighlight],
-    },
-  });
-
   return {
     slug,
     frontmatter: data as Omit<BlogPostMeta, 'slug'>,
-    content: mdxSource,
+    content, // Return raw MDX content
   };
 }
 

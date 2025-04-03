@@ -1,5 +1,3 @@
-'use client';
-
 import Image from 'next/image';
 import Link from 'next/link';
 import { format, parseISO } from 'date-fns';
@@ -11,7 +9,7 @@ interface BlogPostProps {
   post: {
     slug: string;
     frontmatter: Omit<BlogPostMeta, 'slug'>;
-    content: any;
+    content: string;
   };
   isFullPost?: boolean;
 }
