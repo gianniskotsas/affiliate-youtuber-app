@@ -41,7 +41,7 @@ export async function POST(req: Request) {
     const shortLink = shortLinkResult.shortLink;
 
     // Insert new product record
-    const newProduct = await db
+    const [newProduct] = await db
       .insert(products)
       .values({
         videoId,
@@ -51,6 +51,7 @@ export async function POST(req: Request) {
         imageUrl,
         productDescription,
       })
+      .returning()
       .execute();
 
     return NextResponse.json(newProduct, { status: 201 });

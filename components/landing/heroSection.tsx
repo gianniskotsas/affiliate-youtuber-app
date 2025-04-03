@@ -46,7 +46,7 @@ const demoProducts = [
     shortLink: "https://amzn.to/robotvacuum",
     originalLink: "https://www.amazon.com/example-robotvacuum/dp/B0987654321",
     imageUrl: "/landing/robotVacuum_landingPage_md.jpeg",
-    productDescription: "Fitness tracker with heart monitoring",
+    productDescription: "Effortless cleaning, no mess.",
     createdAt: new Date(),
   },
   {
@@ -56,7 +56,7 @@ const demoProducts = [
     shortLink: "https://amzn.to/wallet",
     originalLink: "https://www.amazon.com/example-wallet/dp/B01234567890",
     imageUrl: "/landing/wallet_landingPage_md.jpeg",
-    productDescription: "20,000mAh power bank with fast charging capability",
+    productDescription: "A premium leather wallet for your iPhone.",
     createdAt: new Date(),
   },
   {
@@ -66,7 +66,7 @@ const demoProducts = [
     shortLink: "https://amzn.to/skinCare",
     originalLink: "https://www.amazon.com/example-skinCare/dp/B01234567890",
     imageUrl: "/landing/skinCare_landingPage_md.jpeg",
-    productDescription: "20,000mAh power bank with fast charging capability",
+    productDescription: "For smooth and radiant skin.",
     createdAt: new Date(),
   },
 ];

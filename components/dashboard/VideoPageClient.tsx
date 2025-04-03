@@ -80,6 +80,19 @@ export default function EditVideoPage({
     setProducts(productsData);
   };
 
+  // Function to handle a newly created product
+  const handleProductAdded = (newProduct: SelectProduct) => {
+    if (newProduct) {
+      // Add the new product to the existing products array
+      console.log("Adding new product to UI:", newProduct);
+      setProducts(prevProducts => [...prevProducts, newProduct]);
+    } else {
+      // Fallback to fetching all products if no product data is returned
+      console.log("Fetching all products from server");
+      fetchProducts();
+    }
+  };
+
   if (!video) return null;
   if (!videoId) return null;
 
@@ -452,7 +465,7 @@ export default function EditVideoPage({
                           </div>
                           <CreateProductButton
                             videoId={videoId as string}
-                            onProductAdded={fetchProducts}
+                            onProductAdded={handleProductAdded}
                           />
                         </div>
 

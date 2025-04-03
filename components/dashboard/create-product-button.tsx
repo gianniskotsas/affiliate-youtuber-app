@@ -32,6 +32,7 @@ import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/lib/supabase";
 import { deleteImage } from "@/lib/utils";
 import FilePondUploader from "./filepondUploader";
+import { Loader2 } from "lucide-react";
 registerPlugin(FilePondPluginImagePreview);
 
 // ✅ Zod Schema for Validation
@@ -50,11 +51,12 @@ const CreateProductButton = ({
   onProductAdded,
 }: {
   videoId: string;
-  onProductAdded: () => void;
+  onProductAdded: (newProduct?: any) => void;
 }) => {
   const { toast } = useToast();
   const [open, setOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
   const [imagePath, setImagePath] = useState<string | null>(""); // Store image path for deletion
 
   const form = useForm<ProductFormData>({
@@ -83,6 +85,7 @@ const CreateProductButton = ({
   // ✅ Handle Form Submission
   const onSubmit = async (data: ProductFormData) => {
     console.log(data);
+    setSubmitting(true);
 
     try {
       const response = await fetch("/api/products/create-product", {
@@ -95,13 +98,17 @@ const CreateProductButton = ({
         throw new Error("Failed to create product");
       }
 
+      // Get the newly created product data
+      const newProduct = await response.json();
+
       toast({
         title: "Product Created",
         description: `Successfully added ${data.productName}!`,
       });
 
       setOpen(false);
-      onProductAdded();
+      // Pass the new product data back to parent for immediate UI update
+      onProductAdded(newProduct);
     } catch (error) {
       console.error("Error creating product:", error);
 
@@ -115,6 +122,8 @@ const CreateProductButton = ({
         description: "Failed to create product. Try again.",
         variant: "destructive",
       });
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -275,8 +284,15 @@ const CreateProductButton = ({
               </div>
             </div>
             <DialogFooter>
-              <Button type="submit" disabled={uploading}>
-                {uploading ? "Uploading..." : "Create Product"}
+              <Button type="submit" disabled={uploading || submitting}>
+                {submitting ? (
+                  <span className="flex items-center gap-2">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    Creating...
+                  </span>
+                ) : (
+                  "Create Product"
+                )}
               </Button>
               <Button variant="outline" onClick={() => setOpen(false)}>
                 Cancel
