@@ -30,32 +30,42 @@ const userDb = {
 // Mock products based on the products schema
 const demoProducts = [
   {
-    id: "prod_123",
+    id: "headphones",
     videoId: "vid_123",
     productName: "Wireless Headphones",
     shortLink: "https://amzn.to/headphones",
     originalLink: "https://www.amazon.com/example-headphones/dp/B0123456789",
-    imageUrl: "https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    imageUrl: "/landing/headphones_landingPage_md.jpeg",
     productDescription: "Premium noise-cancelling wireless headphones",
     createdAt: new Date(),
   },
   {
-    id: "prod_456",
+    id: "robotVacuum",
     videoId: "vid_123",
-    productName: "Smart Watch",
-    shortLink: "https://amzn.to/smartwatch",
-    originalLink: "https://www.amazon.com/example-smartwatch/dp/B0987654321",
-    imageUrl: "https://images.unsplash.com/photo-1546868871-7041f2a55e12?q=80&w=3164&auto=format&fit=crop",
+    productName: "Robot Vacuum",
+    shortLink: "https://amzn.to/robotvacuum",
+    originalLink: "https://www.amazon.com/example-robotvacuum/dp/B0987654321",
+    imageUrl: "/landing/robotVacuum_landingPage_md.jpeg",
     productDescription: "Fitness tracker with heart monitoring",
     createdAt: new Date(),
   },
   {
-    id: "prod_789",
+    id: "wallet",
     videoId: "vid_123",
-    productName: "Portable Charger",
-    shortLink: "https://amzn.to/powerbank",
-    originalLink: "https://www.amazon.com/example-powerbank/dp/B01234567890",
-    imageUrl: "https://images.unsplash.com/photo-1609091839311-d5365f9ff1c5?q=80&w=2787&auto=format&fit=crop",
+    productName: "Magsafe Wallet",
+    shortLink: "https://amzn.to/wallet",
+    originalLink: "https://www.amazon.com/example-wallet/dp/B01234567890",
+    imageUrl: "/landing/wallet_landingPage_md.jpeg",
+    productDescription: "20,000mAh power bank with fast charging capability",
+    createdAt: new Date(),
+  },
+  {
+    id: "skinCare",
+    videoId: "vid_123",
+    productName: "Skin Care",
+    shortLink: "https://amzn.to/skinCare",
+    originalLink: "https://www.amazon.com/example-skinCare/dp/B01234567890",
+    imageUrl: "/landing/skinCare_landingPage_md.jpeg",
     productDescription: "20,000mAh power bank with fast charging capability",
     createdAt: new Date(),
   },
@@ -98,8 +108,8 @@ export default function HeroSection() {
                         style={{ paddingTop: "90.25%" }}
                       >
                         <Image
-                          src="https://images.unsplash.com/photo-1524678606370-a47ad25cb82a?q=80&w=3869&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                          alt="Profile Picture"
+                          src="/landing/headphones_landingPage_md.jpeg"
+                          alt="Wireless Headphones"
                           layout="fill"
                           objectFit="cover"
                           className="rounded-xl"
@@ -172,8 +182,8 @@ export default function HeroSection() {
                           style={{ paddingTop: "90%" }}
                         >
                           <Image
-                            src="https://glhckkdhdbpinqmzpcqs.supabase.co/storage/v1/object/public/thumbnails/webapp/robot-vacuum.jpg"
-                            alt="Profile Picture"
+                            src="/landing/robotVacuum_landingPage_md.jpeg"
+                            alt="Robot Vacuum"
                             layout="fill"
                             objectFit="cover"
                             className="rounded-xl"
@@ -247,8 +257,8 @@ export default function HeroSection() {
                           style={{ paddingTop: "100%" }}
                         >
                           <Image
-                            src="https://images.unsplash.com/photo-1620774825063-2ecb4615748f?q=80&w=3024&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            alt="Profile Picture"
+                            src="/landing/wallet_landingPage_md.jpeg"
+                            alt="Magsafe Wallet"
                             layout="fill"
                             objectFit="cover"
                             className="rounded-xl"
@@ -285,7 +295,7 @@ export default function HeroSection() {
                 </div>
               </div>
             </div>
-            <div className="text-20 absolute right-[-30px] top-[30px] flex items-center gap-[6px] rounded-full bg-white py-[8px] pl-[10px] pr-4 font-medium">
+            <div className="text-20 border shadow-lg absolute right-[-30px] top-[30px] flex items-center gap-[6px] rounded-full bg-white py-[8px] pl-[10px] pr-4 font-medium">
               <div className="h-[25px] w-[25px]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -337,7 +347,7 @@ export default function HeroSection() {
                     <Link
                       key="1"
                       className="group border rounded-2xl shadow-sm mb-4 flex flex-col text-left items-start w-full h-full p-2.5 bg-neutral-50"
-                      href="https://www.google.com"
+                      href="/sign-in"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -347,8 +357,8 @@ export default function HeroSection() {
                           style={{ paddingTop: "86.25%" }}
                         >
                           <Image
-                            src="https://images.unsplash.com/photo-1567721913486-6585f069b332?q=80&w=3388&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                            alt="Profile Picture"
+                            src="/landing/skinCare_landingPage_md.jpeg"
+                            alt="Skin Care"
                             layout="fill"
                             objectFit="cover"
                             className="rounded-xl"

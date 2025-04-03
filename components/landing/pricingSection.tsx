@@ -6,9 +6,9 @@ import { cn } from "@/lib/utils";
 
 export default function PricingSection() {
   return (
-    <div className="container mx-auto px-4 py-16 flex flex-wrap justify-center items-center  gap-8 md:gap-16">
+    <div className="container mx-auto px-4 py-2 flex flex-wrap justify-center items-center mb-16">
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:gap-8 items-center justify-center min-h-[300px] text-center sm:min-h-[400px]">
+      <div className="flex flex-col gap-4 sm:gap-8 items-center justify-center min-h-[150px] py-8 text-center sm:min-h-[300px]">
         <h1 className="text-4xl md:text-6xl lg:text-6xl font-400 max-w-5xl mx-auto leading-tight font-kavivanar">
           Pricing
         </h1>

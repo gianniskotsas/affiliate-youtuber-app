@@ -1,7 +1,9 @@
+"use client";
+
 import Link from "next/link";
 import Image from "next/image";
 
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MoveUpRight } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import HeroSection from "@/components/landing/heroSection";
@@ -9,7 +11,6 @@ import FeatureSection from "@/components/landing/featureSection";
 import PricingSection from "@/components/landing/pricingSection";
 
 export default function Home() {
-  
   return (
     <div className="min-h-screen w-full overflow-x-hidden">
       {/* Navigation */}
@@ -30,14 +31,39 @@ export default function Home() {
               </div>
 
               <div className="hidden md:flex items-center gap-6">
-                <Link href="#" className="text-gray-800 hover:text-black">
+                <Link
+                  href="#features"
+                  className="text-gray-800 hover:underline hover:text-black transition-colors duration-300"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document
+                      .getElementById("features")
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
                   Features
                 </Link>
-                <Link href="#" className="text-gray-800 hover:text-black">
+                <Link
+                  href="#pricing"
+                  className="text-gray-800 hover:text-black hover:underline transition-colors duration-300"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    document
+                      .getElementById("pricing")
+                      ?.scrollIntoView({ behavior: "smooth" });
+                  }}
+                >
                   Pricing
                 </Link>
-                <Link href="#" className="text-gray-800 hover:text-black">
-                  Blog
+                <Link
+                  href="/blog"
+                  target="_blank"
+                  className="text-gray-800 hover:text-black hover:underline transition-colors duration-300 group"
+                >
+                  <div className="flex flex-row gap-0 items-center">
+                    Blog{" "}
+                    <MoveUpRight className="w-4 h-4 ml-1 text-gray-800 group-hover:block group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+                  </div>
                 </Link>
               </div>
 
@@ -46,7 +72,8 @@ export default function Home() {
                 className="bg-white rounded-full px-6 py-2 font-medium shadow-sm hover:shadow-md transition-shadow"
               >
                 <div className="flex flex-row items-center gap-2 group">
-                  Login <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                  Login{" "}
+                  <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                 </div>
               </Link>
             </nav>
@@ -70,7 +97,8 @@ export default function Home() {
                 "rounded-full px-8 py-3 font-medium shadow-md hover:shadow-lg transition-shadow group"
               )}
             >
-              Get Started <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+              Get Started{" "}
+              <ArrowRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
             </Link>
           </div>
 
@@ -81,9 +109,106 @@ export default function Home() {
       </main>
 
       {/* Logos */}
-      <FeatureSection />
+      <div id="features">
+        <FeatureSection />
+      </div>
 
-      <PricingSection />
+      <div id="pricing">
+        <PricingSection />
+      </div>
+
+      {/* Footer */}
+      <footer className=" border-t">
+        <div className="container mx-auto px-4 py-12">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+            <div className="col-span-1 md:col-span-2">
+              <div className="flex items-center gap-2 mb-4">
+                <Image
+                  src="/veevo_logo_circle.png"
+                  alt="Veevo logo"
+                  width={32}
+                  height={32}
+                />
+                <span className="text-xl font-semibold">Veevo</span>
+              </div>
+              <p className="text-gray-600 max-w-md">
+                Boost affiliate revenue with short links and QR codes for your
+                products.
+              </p>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Product</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="#features"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document
+                        .getElementById("features")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Features
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="#pricing"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      document
+                        .getElementById("pricing")
+                        ?.scrollIntoView({ behavior: "smooth" });
+                    }}
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Pricing
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/blog"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Blog
+                  </Link>
+                </li>
+              </ul>
+            </div>
+
+            <div>
+              <h3 className="font-semibold mb-4">Boring stuff</h3>
+              <ul className="space-y-2">
+                <li>
+                  <Link
+                    href="/privacy"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Privacy Policy
+                  </Link>
+                </li>
+                <li>
+                  <Link
+                    href="/terms"
+                    className="text-gray-600 hover:text-gray-900"
+                  >
+                    Terms of Service
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="border-t mt-12 pt-8">
+            <p className="text-center text-gray-600">
+              © {new Date().getFullYear()} Veevo. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </footer>
     </div>
   );
 }
