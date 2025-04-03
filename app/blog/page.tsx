@@ -8,7 +8,7 @@ export const metadata: Metadata = {
 };
 
 export default async function BlogPage() {
-  const posts = await getAllBlogPosts();
+  const posts = await getAllBlogPosts() || [];
 
   return (
     <div className="max-w-3xl mx-auto">

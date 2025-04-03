@@ -137,5 +137,9 @@ interface MDXContentProps {
 }
 
 export function MDXContent({ source }: MDXContentProps) {
+  if (!source) {
+    return null;
+  }
+  
   return <MDXRemote {...source} components={components} />;
 } 

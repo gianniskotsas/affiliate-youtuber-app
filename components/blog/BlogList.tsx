@@ -8,7 +8,7 @@ interface BlogListProps {
 }
 
 export default function BlogList({ posts }: BlogListProps) {
-  if (posts.length === 0) {
+  if (!posts || posts.length === 0) {
     return (
       <div className="text-center py-12">
         <h2 className="text-2xl font-bold mb-2">No blog posts found</h2>
@@ -32,7 +32,7 @@ export default function BlogList({ posts }: BlogListProps) {
               date: post.date,
               author: post.author,
               image: post.image,
-              tags: post.tags,
+              tags: post.tags || [],
             },
             content: null, // We don't need the content for the list view
           }}

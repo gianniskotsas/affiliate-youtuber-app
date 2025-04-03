@@ -54,10 +54,10 @@ export default function BlogPost({ post, isFullPost = false }: BlogPostProps) {
             </div>
           )}
           <div className="prose prose-slate dark:prose-invert max-w-none">
-            <MDXContent source={content} />
+            {content ? <MDXContent source={content} /> : <p>Content not available</p>}
           </div>
           <div className="mt-8 flex flex-wrap gap-2">
-            {tags.map((tag) => (
+            {tags && tags.map((tag) => (
               <Link
                 key={tag}
                 href={`/blog/tag/${tag}`}
