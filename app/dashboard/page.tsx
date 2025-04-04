@@ -8,40 +8,22 @@ import VideoClient from "@/components/dashboard/VideoClient";
 export default async function VideoPage() {
   const { userId } = await auth();
 
-  const userDb = userId ? await getUserById(userId) : null;
-
-  if (!userDb) {
+  // If no userId from Clerk, show error/login prompt
+  if (!userId) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="flex items-center gap-2">
-          <svg
-            className="animate-spin h-5 w-5"
-            xmlns="http://www.w3.org/2000/svg"
-            fill="none"
-            viewBox="0 0 24 24"
-          >
-            <circle
-              className="opacity-25"
-              cx="12"
-              cy="12"
-              r="10"
-              stroke="currentColor"
-              strokeWidth="4"
-            ></circle>
-            <path
-              className="opacity-75"
-              fill="currentColor"
-              d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-            ></path>
-          </svg>
-          <span>Loading</span>
-        </div>
+        <p>Please sign in to access the dashboard</p>
       </div>
     );
   }
 
   try {
-    const videos = await fetch(
+    // Try to get user from database
+    const userDb = await getUserById(userId);
+    
+    // Attempt to fetch videos regardless of whether user exists in DB yet
+    // The API will handle the case where the user doesn't exist
+    const videosResponse = await fetch(
       `${process.env.APP_URL}/api/videos/fetch-videos`,
       {
         method: "POST",
@@ -50,15 +32,13 @@ export default async function VideoPage() {
       }
     );
 
-    console.log(videos);
+    const videosData = await videosResponse.json();
 
-    const videosData = await videos.json();
-
-    console.log(videosData);
-
-    return <VideoClient userDb={userDb} videosDb={videosData} />;
+    // Pass both the userId from Clerk and the userDb (which might be null for new users)
+    // The client component will handle this case
+    return <VideoClient userDb={userDb} videosDb={videosData} clerkUserId={userId} />;
   } catch (error) {
-    console.error("Error fetching video data:", error);
-    return <div>Error loading video information</div>;
+    console.error("Error fetching data:", error);
+    return <div>Error loading dashboard. Please refresh the page.</div>;
   }
 }

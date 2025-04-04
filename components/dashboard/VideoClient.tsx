@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { AppSidebar } from "@/components/dashboard/app-sidebar";
 import Image from "next/image";
 import {
@@ -11,19 +11,57 @@ import {
 import AddVideoModal from "@/components/dashboard/create-video-button";
 import { SelectVideo, SelectUser } from "@/db/schema";
 import Link from "next/link";
+import { useToast } from "@/hooks/use-toast";
 
 export default function VideoClient({
   userDb,
   videosDb,
+  clerkUserId,
 }: {
-  userDb: SelectUser;
+  userDb: SelectUser | null;
   videosDb: SelectVideo[];
+  clerkUserId: string;
 }) {
   const [videos, setVideos] = useState<SelectVideo[]>(videosDb);
+  const [user, setUser] = useState<SelectUser | null>(userDb);
+  const { toast } = useToast();
+
+  // Poll for user data if it doesn't exist yet
+  useEffect(() => {
+    if (!user && clerkUserId) {
+      const checkForUser = async () => {
+        try {
+          const response = await fetch('/api/users/get-user', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userId: clerkUserId }),
+          });
+          
+          if (response.ok) {
+            const userData = await response.json();
+            if (userData) {
+              setUser(userData);
+            }
+          }
+        } catch (error) {
+          console.error('Error fetching user:', error);
+        }
+      };
+      
+      // Check immediately
+      checkForUser();
+      
+      // Then poll every 2 seconds until we get the user
+      const interval = setInterval(checkForUser, 2000);
+      
+      // Clean up on component unmount
+      return () => clearInterval(interval);
+    }
+  }, [user, clerkUserId]);
 
   return (
     <SidebarProvider>
-      <AppSidebar userDb={userDb} />
+      <AppSidebar userDb={user} clerkUserId={clerkUserId} />
       <div className="flex flex-col w-full bg-sidebar">
         <SidebarTrigger className="sm:hidden p-6" />
         <SidebarInset className="bg-sidebar md:pt-1.5">
@@ -33,7 +71,7 @@ export default function VideoClient({
                 <h1 className="text-xl font-semibold leading-7 text-neutral-900 md:text-2xl">
                   Videos
                 </h1>
-                <div className="flex flex-row-reverse items-center justify-between  gap-4">
+                <div className="flex flex-row-reverse items-center justify-between gap-4">
                   <AddVideoModal isOpen={false} onClose={() => {}} />
                   <div>
                     <div className="flex items-center gap-2"></div>
@@ -41,7 +79,16 @@ export default function VideoClient({
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 mt-6">
-                  {videos.length > 0 ? (
+                  {!user && (
+                    <div className="col-span-3 text-center py-10">
+                      <p className="text-gray-500 mb-2">Setting up your account...</p>
+                      <div className="flex justify-center">
+                        <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-gray-900"></div>
+                      </div>
+                    </div>
+                  )}
+                  
+                  {user && videos.length > 0 ? (
                     videos.map((video) => (
                       <div key={video.id} className="flex flex-col gap-2 mt-4">
                         <Link
@@ -88,11 +135,11 @@ export default function VideoClient({
                         </div>
                       </div>
                     ))
-                  ) : (
-                    <p className="text-center text-gray-500">
+                  ) : user && videos.length === 0 ? (
+                    <p className="col-span-3 text-center text-gray-500">
                       No videos found.
                     </p>
-                  )}
+                  ) : null}
                 </div>
               </div>
             </div>

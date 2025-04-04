@@ -50,7 +50,7 @@ export function NavMain({
     icon: string;
     active: boolean;
   }[];
-  userDb: SelectUser;
+  userDb: SelectUser | null;
 }) {
   const { isMobile } = useSidebar();
   const pathname = usePathname();
@@ -120,8 +120,7 @@ export function NavMain({
           );
         })}
       </SidebarMenu>
-      <UpgradeModal open={open} setOpen={setOpen} userId={userDb.id} />
-
+      {userDb && <UpgradeModal open={open} setOpen={setOpen} userId={userDb.id} />}
     </SidebarGroup>
   );
 }
