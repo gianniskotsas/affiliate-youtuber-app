@@ -10,8 +10,8 @@ import VideoPage from "../video/videopage";
 const userDb = {
   id: "user_123",
   email: "demo@example.com",
-  username: "democreator",
-  bio: "Content creator sharing my favorite tech products",
+  username: "Veevo",
+  bio: "Let's grow your affiliate marketing together!",
   profilePicture: "/person_placeholder_md.jpeg",
   socialAccounts: [
     { name: "X", url: "https://veevo.link/sign-up" },

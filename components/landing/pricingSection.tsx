@@ -14,7 +14,7 @@ export default function PricingSection() {
         </h1>
 
         <p className="text-muted-foreground max-w-2xl mx-auto text-lg sm:text-xl">
-          Prices so low our accountant thinks we made a typo. 
+          Prices so low our accountant thinks we made a typo.
         </p>
       </div>
 
@@ -41,9 +41,12 @@ export default function PricingSection() {
           <div className="grid md:grid-cols-2 gap-4">
             {/* Monthly Pass */}
             <div className="border-2 shadow-md rounded-xl p-6 flex flex-col justify-center">
-              <h3 className="text-xl font-bold mb-4 text-center">
-                Monthly Pass
+              <h3 className="text-xl text-neutral-800 font-bold text-center">
+                Monthly plan
               </h3>
+              <p className="w-full text-center text-sm text-muted-foreground mb-10">
+                For curious starters
+              </p>
               <div className="text-center mb-4">
                 {/* <span className="text-gray-500 line-through text-lg">$15</span> */}
                 <div className="flex items-center justify-center">
@@ -56,9 +59,7 @@ export default function PricingSection() {
               </p>
               <Link
                 href={`/dashboard`}
-                className={cn(
-                  buttonVariants({ variant: "default" })
-                )}
+                className={cn(buttonVariants({ variant: "default" }))}
               >
                 Get started
               </Link>
@@ -67,11 +68,14 @@ export default function PricingSection() {
             {/* 1-Year Pass */}
             <div className="rounded-xl p-6 mt-6 text-[#065985] sm:mt-0 flex flex-col relative border-2 border-[#065985] justify-center">
               <div className="absolute -top-3 right-6 bg-[#065985] text-white text-xs font-bold px-3 py-1 rounded-full">
-                POPULAR
+                40% OFF
               </div>
-              <h3 className="text-xl font-bold mb-4 text-center">
+              <h3 className="text-xl text-neutral-800 font-bold text-center">
                 1-Year Pass
               </h3>
+              <p className="w-full text-center text-sm text-muted-foreground mb-4">
+                For commited creators
+              </p>
               <div className="text-center mb-4">
                 <span className="text-gray-500 line-through text-lg">$99</span>
                 <div className="flex items-center justify-center">
@@ -80,13 +84,11 @@ export default function PricingSection() {
                 </div>
               </div>
               <p className="text-gray-500 text-center text-sm mb-6">
-                One-time payment. 40% off
+                One-time payment.
               </p>
               <Link
                 href={`/dashboard`}
-                className={cn(
-                  buttonVariants({ variant: "default" })
-                )}
+                className={cn(buttonVariants({ variant: "default" }))}
               >
                 Get started
               </Link>
